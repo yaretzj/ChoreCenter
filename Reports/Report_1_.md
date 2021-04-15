@@ -80,6 +80,9 @@
         - **Progress**
             - Designed UI mock-up for first prototype using Figma
             - Helped setting up the database entities and API specification
+        - **Issues**
+            - Figuring out testing routines for the UI prototype such as parsing files.
+            - Trying to figure out a good design to allow different views for parent and child account.
     
     - #### Plans and Goals
         - Implement and have Basic UI components based on the graphical mock-up by Apr 20th
