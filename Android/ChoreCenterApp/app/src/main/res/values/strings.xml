@@ -17,4 +17,5 @@
     <string name="button_choose_parent">Parent</string>
     <string name="button_choose_kid">Kid</string>
     <string name="button_get_started">Get Started!</string>
+    <string name="button_signout">Sign out</string>
 </resources>

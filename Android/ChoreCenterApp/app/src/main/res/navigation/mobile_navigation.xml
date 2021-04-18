@@ -22,4 +22,10 @@
         android:name="com.cse403chorecenter.chorecenterapp.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_sign_out"
+        android:name="com.cse403chorecenter.chorecenterapp.ui.signout.SignoutFragment"
+        android:label="@string/button_signout"
+        tools:layout="@layout/fragment_signout" />
 </navigation>
