@@ -35,6 +35,7 @@ public class UserLogin extends AppCompatActivity {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        // require backend Google OAuth 2.0 setup
 
 
         // Get the Intent that started this activity and extract the string
