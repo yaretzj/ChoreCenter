@@ -10,17 +10,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChoreCenterApp">
         <activity
+            android:name=".ChooseAccountType"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".UserNavigation"
             android:label="@string/title_activity_user_navigation"
-            android:theme="@style/Theme.ChoreCenterApp.NoActionBar"
             android:parentActivityName=".UserLogin"
-            ></activity>
+            android:theme="@style/Theme.ChoreCenterApp.NoActionBar" />
         <activity
             android:name=".UserLogin"
-            android:parentActivityName=".MainActivity"
-            ></activity>
-        <activity
-            android:name=".MainActivity">
+            android:parentActivityName=".ChooseAccountType" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

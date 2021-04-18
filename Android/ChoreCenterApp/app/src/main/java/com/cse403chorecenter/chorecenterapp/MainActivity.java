@@ -15,9 +15,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /** Called when the user taps the Login button */
-    public void directToLogin(View view) {
+    public void directToChooseAccountType(View view) {
         // Do something in response to button
-        Intent intent = new Intent(this, UserLogin.class);
+        Intent intent = new Intent(this, ChooseAccountType.class);
         // EditText editText = (EditText) findViewById(R.id.editText);
         // String message = editText.getText().toString();
         // intent.putExtra(EXTRA_MESSAGE, message);

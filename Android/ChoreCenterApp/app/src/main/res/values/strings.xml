@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Chore Center App</string>
+    <string name="app_name">Chore Center</string>
     <string name="edit_message">Description</string>
     <string name="button_send">send</string>
     <string name="title_activity_user_navigation">UserNavigation</string>
@@ -14,4 +14,7 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="button_login">Login</string>
+    <string name="button_choose_parent">Parent</string>
+    <string name="button_choose_kid">Kid</string>
+    <string name="button_get_started">Get Started!</string>
 </resources>
