@@ -13,6 +13,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_create_chore">Create Chore</string>
     <string name="button_login">Login</string>
     <string name="button_choose_parent">Parent</string>
     <string name="button_choose_kid">Kid</string>

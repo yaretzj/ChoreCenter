@@ -16,5 +16,9 @@
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_slideshow" />
+        <item
+            android:id="@+id/nav_create_chore"
+            android:title="@string/menu_create_chore"
+            android:icon="@drawable/ic_menu_camera" />
     </group>
 </menu>
