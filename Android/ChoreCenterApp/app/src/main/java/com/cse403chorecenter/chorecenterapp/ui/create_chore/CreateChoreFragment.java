@@ -36,8 +36,6 @@ public class CreateChoreFragment extends Fragment {
             @Override
             public void onClick(View view)
             {
-
-
                 if(editChoreName == null || editChoreName.getText().toString().isEmpty()
                                 || editChorePoints == null || editChorePoints.getText().toString().isEmpty()) {
                     textView.setText("please input both fields");
@@ -48,7 +46,6 @@ public class CreateChoreFragment extends Fragment {
                 String chorePointsStr = editChorePoints.getText().toString();
 
                 // Check chorePoints is an integer
-                // TODO sanitise choreName input
                 try {
                     int chorePointsInt = Integer.parseInt(chorePointsStr);
                     editChoreName.setText("");
