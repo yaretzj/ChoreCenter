@@ -24,5 +24,9 @@
             android:id="@+id/nav_sign_out"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/button_signout" />
+        <item
+            android:id="@+id/nav_create_reward"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Create Reward" />
     </group>
 </menu>
