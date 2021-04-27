@@ -2,7 +2,7 @@
 
 ## Documentation
 
-Here is the link to our Google Drive containing all of our documentation including our API Spec, ER diagram, and living Requirements document.
+Here is the link to our Google Drive containing all of our documentation including our API Spec, ER diagram, and living requirements and policies document.
 [Google Drive](https://drive.google.com/drive/folders/1J5OaJRo03NArYajHCUIxO428yIO8nbLm?usp=sharing)
 
 ## Overview
