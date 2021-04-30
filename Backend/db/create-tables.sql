@@ -13,7 +13,7 @@ CREATE TABLE Children (
     ParentGoogleAccountId VARCHAR(2048),
     GoogleTokenId VARCHAR(2048),
     GoogleAccountId VARCHAR(2048),
-    Points INT
+    Points INT DEFAULT 0,
     PRIMARY KEY (GoogleAccountId),
     FOREIGN KEY (ParentGoogleAccountId) REFERENCES Parents(GoogleAccountId)
 );
