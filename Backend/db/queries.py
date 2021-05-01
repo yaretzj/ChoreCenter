@@ -1,28 +1,50 @@
-from pypika import Query, Table
+from pypika import Query, Tables, Field, Parameter
 
 # Setup: run pip install pypika
 # To convert queries into raw SQL strings, use str(q) or q.get_sql()
 
-parents = Table("Parents")
-children = Table("Children")
-chores = Table("Chores")
-rewards = Table("Rewards")
-rewardRedemptionHistory = Table("RewardRedemptionHistory")
+(
+    parents_table,
+    children_table,
+    chores_table,
+    rewards_table,
+    redemption_history_table,
+) = Tables("Parents", "Children", "Chores", "Rewards", "RewardRedemptionHistory")
 
 
-def create_parent(name, email, token_id, account_id):
+def create_parent() -> str:
+    query = """Insert into Parents(Name, Email, GoogleTokenId, GoogleAccountId) \
+        OUTPUT INSERTED.Name, INSERTED.Email, INSERTED.ParentCode Values (?, ?, ?, ?);"""
+    return query
+
+
+def create_child() -> str:
     query = (
-        Query.into(parents)
-        .columns("Name", "Email", "GoogleTokenId", "GoogleAccountId")
-        .insert(name, email, token_id, account_id)
+        Query.into(children_table)
+        .columns(
+            "Name", "Email", "ParentGoogleAccountId", "GoogleTokenId", "GoogleAccountId"
+        )
+        .insert(
+            Parameter("?"),
+            Parameter("?"),
+            Parameter("?"),
+            Parameter("?"),
+            Parameter("?"),
+        )
     )
-    return query
+    return query.get_sql()
 
 
-def create_child(name, email, token_id, account_id, parent_code):
-    # TODO: add columns statement here
-    query = Query.into(children).insert(name, email, token_id, account_id, parent_code)
-    return query
+def get_child_by_account_id(columns: tuple = ("*")) -> str:
+    query = children_table.select(*columns).where(
+        children_table.GoogleAccountId == Parameter("?")
+    )
+    return query.get_sql()
+
+
+def get_parent_by_code() -> str:
+    query = parents_table.select("*").where(parents_table.ParentCode == Parameter("?"))
+    return query.get_sql()
 
 
 def create_chore(parent_account_id, name, desc, status, assigned, points):
@@ -51,4 +73,4 @@ def create_reward(parent_account_id, name, desc, points):
 
 
 # Test to show example generated SQL string
-print(create_parent("John Doe", "jdoe@uw.edu", "333", "1234").get_sql())
+# print(get_parent_by_code(("name", "Email")))
