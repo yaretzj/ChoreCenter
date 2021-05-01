@@ -35,27 +35,23 @@ jobs:
           distribution: 'adopt'
           architecture: x64
       - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+        run: chmod +x ./Android/gradlew
       - name: Run the Gradle package task
-        run: ./gradlew -b ci.gradle package
+        run: ./Android/gradlew -b ci.gradle package
       - name: Cache Gradle packages
         uses: actions/cache@v2
         with:
           path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
+            ~/Android/.gradle/caches
+            ~/Android/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./Android/gradlew build
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
         # Restoring these files from a GitHub Actions cache might cause problems for future builds.
         run: |
-          rm -f ~/.gradle/caches/modules-2/modules-2.lock
-          rm -f ~/.gradle/caches/modules-2/gc.properties
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Package
-          path: build/libs
+          rm -f ~/Android/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/Android/.gradle/caches/modules-2/gc.properties
