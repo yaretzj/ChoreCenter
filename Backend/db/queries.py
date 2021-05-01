@@ -16,10 +16,9 @@ def create_parent(name, email, token_id, account_id):
 
 
 def create_child(name, email, token_id, account_id, parent_code):
-    q = Query.into(children).insert(
-        name,
-        email,
-    )
+    q = Query.into(children).insert(name, email, account_id, parent_code)
+    return q
+
 
 
 # Test to show example generated SQL string
