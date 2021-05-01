@@ -25,7 +25,7 @@
     <fragment
         android:id="@+id/nav_create_chore"
         android:name="com.cse403chorecenter.chorecenterapp.ui.create_chore.CreateChoreFragment"
-        android:label="@string/menu_create_chore"
+        android:label="@string/create_chore"
         tools:layout="@layout/fragment_create_chore" />
     <fragment
         android:id="@+id/nav_sign_out"

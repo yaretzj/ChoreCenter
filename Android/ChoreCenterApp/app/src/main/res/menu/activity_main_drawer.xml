@@ -18,7 +18,7 @@
             android:title="@string/menu_slideshow" />
         <item
             android:id="@+id/nav_create_chore"
-            android:title="@string/menu_create_chore"
+            android:title="@string/create_chore"
             android:icon="@drawable/ic_menu_camera" />
         <item
             android:id="@+id/nav_sign_out"

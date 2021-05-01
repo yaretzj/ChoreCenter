@@ -29,6 +29,9 @@ public class CreateChoreFragment extends Fragment {
 
         EditText editChoreName = (EditText) view.findViewById(R.id.editCreateChoreName);
         EditText editChorePoints = (EditText) view.findViewById(R.id.editCreateChorePoints);
+        // Chore description can be null or empty
+        EditText editChoreDesc = (EditText) view.findViewById(R.id.editChoreDescription);
+
 
         Button button = (Button) view.findViewById(R.id.button_create_chore);
         button.setOnClickListener(new View.OnClickListener()
@@ -38,7 +41,7 @@ public class CreateChoreFragment extends Fragment {
             {
                 if(editChoreName == null || editChoreName.getText().toString().isEmpty()
                                 || editChorePoints == null || editChorePoints.getText().toString().isEmpty()) {
-                    textView.setText("please input both fields");
+                    textView.setText("please input the chore name and chore points");
                     return;
                 }
 
@@ -50,6 +53,7 @@ public class CreateChoreFragment extends Fragment {
                     int chorePointsInt = Integer.parseInt(chorePointsStr);
                     editChoreName.setText("");
                     editChorePoints.setText("");
+                    editChoreDesc.setText("");
                 } catch (NumberFormatException e) {
                     textView.setText("please input a number for the chore points");
                     return;
