@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ChoreCenterApp">
+        <activity android:name=".UserSignout"></activity>
         <activity
             android:name=".ChooseAccountType"
             android:parentActivityName=".MainActivity" />
