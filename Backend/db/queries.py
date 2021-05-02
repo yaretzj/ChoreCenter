@@ -13,12 +13,13 @@ from pypika import Query, Tables, Field, Parameter
 
 
 def create_parent() -> str:
-    query = """Insert into Parents(Name, Email, GoogleTokenId, GoogleAccountId) \
-        OUTPUT INSERTED.Name, INSERTED.Email, INSERTED.ParentCode Values (?, ?, ?, ?);"""
-    return query
+    """Special query for returning the name, email, and parent code on insertion."""
+    return """Insert into Parents(Name, Email, GoogleTokenId, GoogleAccountId) \
+              OUTPUT INSERTED.Name, INSERTED.Email, INSERTED.ParentCode Values (?, ?, ?, ?);"""
 
 
 def create_child() -> str:
+    """Insert a new child with the listed fields."""
     query = (
         Query.into(children_table)
         .columns(
@@ -36,6 +37,7 @@ def create_child() -> str:
 
 
 def get_child_by_account_id(columns: tuple = ("*")) -> str:
+    """Return the columns passed in where the children's google account id matches a given parameter."""
     query = children_table.select(*columns).where(
         children_table.GoogleAccountId == Parameter("?")
     )
@@ -49,7 +51,7 @@ def get_parent_by_code() -> str:
 
 def create_chore(parent_account_id, name, desc, status, assigned, points):
     query = (
-        Query.into(chores)
+        Query.into(chores_table)
         .columns(
             "ParentGoogleAccountId",
             "Name",
@@ -65,7 +67,7 @@ def create_chore(parent_account_id, name, desc, status, assigned, points):
 
 def create_reward(parent_account_id, name, desc, points):
     query = (
-        Query.into(rewards)
+        Query.into(rewards_table)
         .columns("ParentGoogleAccountId", "Name", "Description", "Points")
         .insert(parent_account_id, name, desc, points)
     )
@@ -73,4 +75,5 @@ def create_reward(parent_account_id, name, desc, points):
 
 
 # Test to show example generated SQL string
+# print(get_child_by_account_id(("Name", "Points")))
 # print(get_parent_by_code(("name", "Email")))
