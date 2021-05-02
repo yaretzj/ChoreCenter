@@ -59,17 +59,25 @@ def create_parent():
     db_conn = get_db_conn()
     cursor = db_conn.cursor()
 
-    cursor.execute(
-        queries.create_parent(),
-        body["Name"],
-        body["Email"],
-        body["GoogleTokenId"],
-        body["GoogleAccountId"],
-    )
-    create_parent_response_model = CreateParentResponseModel(
-        *cursor.fetchone()
-    )  # Get parent data returned by SQL
-    db_conn.commit()
+    try:
+        cursor.execute(
+            queries.create_parent(),
+            body["Name"],
+            body["Email"],
+            body["GoogleTokenId"],
+            body["GoogleAccountId"],
+        )
+        create_parent_response_model = CreateParentResponseModel(
+            *cursor.fetchone()
+        )  # Get parent data returned by SQL
+        db_conn.commit()
+    except:
+        abort(
+            400,
+            "Parent account with AccountId {} already exists.".format(
+                body["GoogleAccountId"]
+            ),
+        )
 
     return create_parent_response_model.get_response(), 201
 
