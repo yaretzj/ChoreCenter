@@ -19,4 +19,9 @@
     <string name="button_choose_kid">Kid</string>
     <string name="button_get_started">Get Started!</string>
     <string name="button_signout">Sign out</string>
+    <string name="menu_redeem_reward">Redeem Reward</string>
+    <string name="button_redeem_reward">Redeem</string>
+    <string name="grid_layout_manager">Grid Layout Manager</string>
+    <string name="linear_layout_manager">Linear Layout Manager</string>
+    <string name="element_text">Element</string>
 </resources>
