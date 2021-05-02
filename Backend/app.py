@@ -3,12 +3,12 @@
 """
 import db.queries as queries
 import pyodbc
-
 from dotenv import dotenv_values
-from flask import abort, Flask, request
+from flask import abort, Flask, g, request
 from models.response_models import CreateParentResponseModel
 
 config = dotenv_values()
+app = Flask(__name__)
 
 # Need to install Microsoft ODBC driver for SQL Server
 # Mac: https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/install-microsoft-odbc-driver-sql-server-macos?view=sql-server-ver15
@@ -17,28 +17,28 @@ config = dotenv_values()
 # Some other example server values are
 # server = 'localhost\sqlexpress' # for a named instance
 # server = 'myserver,port' # to specify an alternate port
-def setup_db_conn():
-    server = config["DB_SERVER"]
-    database = config["DB_NAME"]
-    username = config["DB_USERNAME"]
-    password = config["DB_PASSWORD"]
+def get_db_conn():
+    if "db_conn" not in g:
+        g.db_conn = pyodbc.connect(
+            "DRIVER={ODBC Driver 17 for SQL Server};SERVER="
+            + config["DB_SERVER"]
+            + ";DATABASE="
+            + config["DB_NAME"]
+            + ";UID="
+            + config["DB_USERNAME"]
+            + ";PWD="
+            + config["DB_PASSWORD"]
+        )
 
-    cnxn = pyodbc.connect(
-        "DRIVER={ODBC Driver 17 for SQL Server};SERVER="
-        + server
-        + ";DATABASE="
-        + database
-        + ";UID="
-        + username
-        + ";PWD="
-        + password
-    )
-    return cnxn
+    return g.db_conn
 
 
-app = Flask(__name__)
-db_conn = setup_db_conn()
-cursor = db_conn.cursor()
+@app.teardown_request
+def close_db_conn(e):
+    db_conn = g.pop("db_conn", None)
+    if db_conn is not None:
+        db_conn.close()
+    print("Closed db connection")
 
 
 @app.route("/")
@@ -55,6 +55,9 @@ def create_parent():
         ["Name", "Email", "GoogleTokenId", "GoogleAccountId"], body
     ):
         abort(400, "Invalid request body")
+
+    db_conn = get_db_conn()
+    cursor = db_conn.cursor()
 
     cursor.execute(
         queries.create_parent(),
@@ -116,35 +119,43 @@ def create_child():
     ):
         abort(400, "Invalid request body")
 
-    # try:
-    cursor.execute(queries.get_parent_by_code(), body["ParentCode"])
-    # except:
-    #     abort(400, "Invalid Parent Code")
+    db_conn = get_db_conn()
+    cursor = db_conn.cursor()
+    try:
+        cursor.execute(queries.get_parent_by_code(), body["ParentCode"])
+    except:
+        abort(400, "Invalid Parent Code")
 
-    res = cursor.fetchone()
-    print(res.GoogleAccountId)
-
-    if not res:
+    parent_res = cursor.fetchone()
+    if not parent_res:
         abort(404, "Parent Code not found")
 
     res = create_child_account_txn(
+        db_conn,
+        cursor,
         body["Name"],
         body["Email"],
-        res.GoogleAccountId,
+        parent_res.GoogleAccountId,
         body["GoogleTokenId"],
         body["GoogleAccountId"],
     )
     if res:
         return (
             "Created Child Account with AccountID {}".format(body["GoogleAccountId"]),
-            200,
+            201,
         )
     else:
         abort(500)
 
 
 def create_child_account_txn(
-    name: str, email: str, parent_acc_id: str, token_id: str, acc_id: str
+    db_conn: pyodbc.Connection,
+    cursor: pyodbc.Cursor,
+    name: str,
+    email: str,
+    parent_acc_id: str,
+    token_id: str,
+    acc_id: str,
 ):
     try:
         db_conn.autocommit = False
@@ -195,7 +206,7 @@ def get_redeemed_rewards_child():
     pass
 
 
-def validate_request_body(fields: list, body: dict):
+def validate_request_body(fields: list, body: dict) -> bool:
     return all(f in body for f in fields)
 
 
