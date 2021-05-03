@@ -1,4 +1,4 @@
-from pypika import Query, Tables, Field, Parameter
+from pypika import Query, Tables, Parameter
 
 # Setup: run pip install pypika
 # To convert queries into raw SQL strings, use str(q) or q.get_sql()
@@ -141,13 +141,36 @@ def get_rewards_by_parent() -> str:
     return query.get_sql()
 
 
-def get_rewards_by_child() -> str:
-    """Return the rewards for the child requesting."""
-    # TODO: determine subquery so can retrieve using children's account id
+# Get rewards by child is implemented in app.py through getting the parent's
+# id from the child's id query and using that in get_rewards_by_parent.
+
+
+def get_reward_redemption_by_parent() -> str:
+    """Return the reward history for the parent requesting."""
     query = (
-        Query.from_(rewards_table)
+        Query.from_(redemption_history_table)
         .select("*")
-        .where(rewards_table.ParentGoogleAccountId == Parameter("?"))
+        .where(redemption_history_table.ParentGoogleAccountId == Parameter("?"))
+    )
+    return query.get_sql()
+
+
+def get_reward_redemption_by_child() -> str:
+    """Return the reward history for the child requesting."""
+    query = (
+        Query.from_(redemption_history_table)
+        .select("*")
+        .where(redemption_history_table.ChildGoogleAccountId == Parameter("?"))
+    )
+    return query.get_sql()
+
+
+def get_reward_redemption_by_reward() -> str:
+    """Return the reward history for a given reward."""
+    query = (
+        Query.from_(redemption_history_table)
+        .select("*")
+        .where(redemption_history_table.RewardId == Parameter("?"))
     )
     return query.get_sql()
 

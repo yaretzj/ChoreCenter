@@ -178,6 +178,7 @@ def get_rewards_parent():
 
 
 def get_rewards_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
+    """Gets the rewards for a given parent account id."""
     try:
         cursor.execute(queries.get_rewards_by_parent(), account_id)
     except Exception:
@@ -307,6 +308,7 @@ def validate_request_body(fields: list, body: dict) -> bool:
 
 
 def get_parent_id_for_child(cursor: pyodbc.Cursor, child_account_id: str) -> str:
+    """Gets the corresponding parent id for a child's id."""
     try:
         cursor.execute(
             queries.get_child_by_account_id(("ParentGoogleAccountId",)),
