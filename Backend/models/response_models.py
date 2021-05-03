@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Tuple, Optional
 
 
 class CreateParentResponseModel:
@@ -66,6 +66,38 @@ class GetChoresResponseModel:
         return {"Chores": [chore.get_response() for chore in self.chores]}
 
 
+class RewardModel:
+    def __init__(self, reward: Tuple[str, str, str, str, int, datetime, datetime]):
+        (
+            self.reward_id,
+            self.parent_account_id,
+            self.name,
+            self.description,
+            self.points,
+            self.created_time,
+            self.last_update_time,
+        ) = reward
+
+    def get_response(self) -> dict:
+        return {
+            "RewardId": self.reward_id,
+            "ParentGoogleAccountId": self.parent_account_id,
+            "Name": self.name,
+            "Description": self.description,
+            "Points": self.points,
+            "CreatedTime": self.created_time,
+            "LastUpdateTime": self.last_update_time,
+        }
+
+
+class GetRewardsResponseModel:
+    def __init__(self, rewards: list):
+        self.rewards = [RewardModel(reward) for reward in rewards]
+
+    def get_response(self) -> dict:
+        return {"Rewards": [reward.get_response() for reward in self.rewards]}
+
+
 class CreateChoresParentResponseModel:
     def __init__(
         self,
@@ -83,7 +115,7 @@ class CreateChoresParentResponseModel:
     ):
         self.response = {
             "ChoreId": chore_id,
-            "AccountId": account_id,
+            "ParentGoogleAccountId": account_id,
             "ChoreName": chore_name,
             "Description": desc,
             "Status": status,

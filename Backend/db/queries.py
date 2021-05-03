@@ -90,7 +90,7 @@ def create_reward_history() -> str:
 ##########################
 
 
-def get_child_by_account_id(columns: tuple = ("*")) -> str:
+def get_child_by_account_id(columns: tuple = ("*",)) -> str:
     """Return the columns passed in where the children's
     google account id matches a given parameter."""
     query = (

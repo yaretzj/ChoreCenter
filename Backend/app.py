@@ -7,7 +7,11 @@ from dotenv import dotenv_values
 from flask import abort, Flask, g, request
 from typing import Tuple
 
-from models.response_models import CreateParentResponseModel, GetChoresResponseModel
+from models.response_models import (
+    CreateParentResponseModel,
+    GetChoresResponseModel,
+    GetRewardsResponseModel,
+)
 import db.queries as queries
 
 INTIIAL_CHORE_STATUS = "Created"
@@ -126,12 +130,14 @@ def get_chores_parent():
     validate_request_body(["GoogleAccountId"], body)
     _, cursor = get_db_conn()
 
+    return get_chores_helper(cursor, body["GoogleAccountId"])
+
+
+def get_chores_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
     try:
-        cursor.execute(queries.get_chores_by_parent(), body["GoogleAccountId"])
+        cursor.execute(queries.get_chores_by_parent(), account_id)
     except Exception:
-        abort(
-            404, "Parent Account ID {} does not exist".format(body["GoogleAccountId"])
-        )
+        abort(404, "Parent Account ID {} does not exist".format(account_id))
 
     return GetChoresResponseModel(cursor.fetchall()).get_response()
 
@@ -164,7 +170,20 @@ def create_reward():
 # GetRewardsParent
 @app.route("/api/parents/rewards", methods=["POST"])
 def get_rewards_parent():
-    pass
+    body = request.json
+    validate_request_body(["GoogleAccountId"], body)
+    _, cursor = get_db_conn()
+
+    return get_rewards_helper(cursor, body["GoogleAccountId"])
+
+
+def get_rewards_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
+    try:
+        cursor.execute(queries.get_rewards_by_parent(), account_id)
+    except Exception:
+        abort(404, "Parent Account ID {} does not exist".format(account_id))
+
+    return GetRewardsResponseModel(cursor.fetchall()).get_response()
 
 
 # GetRedeemedRewards
@@ -243,7 +262,13 @@ def create_child_account_txn(
 # GetChoresChild
 @app.route("/api/children/chores", methods=["POST"])
 def get_chores_child():
-    pass
+    body = request.json
+    validate_request_body(["GoogleAccountId"], body)
+    _, cursor = get_db_conn()
+
+    return get_chores_helper(
+        cursor, get_parent_id_for_child(cursor, body["GoogleAccountId"])
+    )
 
 
 # UpdateChoreChild
@@ -253,9 +278,15 @@ def update_chore_child():
 
 
 # GetRewardsChild
-@app.route("/api/children/rewards/", methods=["POST"])
+@app.route("/api/children/rewards", methods=["POST"])
 def get_rewards_child():
-    pass
+    body = request.json
+    validate_request_body(["GoogleAccountId"], body)
+    _, cursor = get_db_conn()
+
+    return get_rewards_helper(
+        cursor, get_parent_id_for_child(cursor, body["GoogleAccountId"])
+    )
 
 
 # RedeemReward
@@ -273,6 +304,22 @@ def get_redeemed_rewards_child():
 def validate_request_body(fields: list, body: dict) -> bool:
     if not all(f in body for f in fields):
         abort(400, "Incomplete request body")
+
+
+def get_parent_id_for_child(cursor: pyodbc.Cursor, child_account_id: str) -> str:
+    try:
+        cursor.execute(
+            queries.get_child_by_account_id(("ParentGoogleAccountId",)),
+            child_account_id,
+        )
+    except Exception as exc:
+        abort(400, str(exc))
+
+    child_res = cursor.fetchone()
+    if not child_res:
+        abort(404, "Child Account ID not found")
+
+    return child_res.ParentGoogleAccountId
 
 
 # cursor.execute("Select * from Parents")
