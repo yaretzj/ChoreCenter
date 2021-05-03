@@ -175,6 +175,31 @@ def get_reward_redemption_by_reward() -> str:
     return query.get_sql()
 
 
+##########################
+#  SQL update statements #
+##########################
+
+
+def update_child_points() -> str:
+    """Update the amount of points for a child (given account id) by the given amount."""
+    query = (
+        Query.update(children_table)
+        .set(children_table.Points, Parameter("?"))
+        .where(children_table.GoogleAccountId == Parameter("?"))
+    )
+    return query.get_sql()
+
+
+def update_chore_status() -> str:
+    """Update the status for a chore (given id) to the given status."""
+    query = (
+        Query.update(chores_table)
+        .set(chores_table.Status, Parameter("?"))
+        .where(chores_table.ChoreId == Parameter("?"))
+    )
+    return query.get_sql()
+
+
 # Test to show example generated SQL string
 # print(get_child_by_account_id(("Name", "Points")))
 # print(get_rewards_by_parent())
