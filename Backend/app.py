@@ -11,6 +11,8 @@ from models.response_models import (
     CreateParentResponseModel,
     GetChoresResponseModel,
     GetRewardsResponseModel,
+    RewardRedemptionHistoryParentResponseModel,
+    RewardRedemptionHistoryChildResponseModel,
 )
 import db.queries as queries
 
@@ -53,9 +55,9 @@ def close_db_conn(_):
 
 @app.route("/")
 def hello_world():
-    con, cur = get_db_conn()
-    cur.execute("Select * from parents")
-    print(cur.fetchall())
+    # con, cur = get_db_conn()
+    # cur.execute("Select * from parents")
+    # print(cur.fetchall())
     return "Hello, world!"
 
 
@@ -188,9 +190,20 @@ def get_rewards_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
 
 
 # GetRedeemedRewards
-@app.route("/api/parents/rewards/redeemed", methods=["POST"])
+@app.route("/api/parents/rewards/history", methods=["POST"])
 def get_redeemed_rewards_parent():
-    pass
+    body = request.json
+    validate_request_body(["GoogleAccountId"], body)
+    _, cursor = get_db_conn()
+
+    try:
+        cursor.execute(
+            queries.get_reward_redemption_by_parent(), body["GoogleAccountId"]
+        )
+    except Exception as exc:
+        abort(404, str(exc))
+
+    return RewardRedemptionHistoryParentResponseModel(cursor.fetchall()).get_response()
 
 
 # CreateChildAccount
@@ -248,13 +261,13 @@ def create_child_account_txn(
         cursor.execute(
             queries.create_child(), name, email, parent_acc_id, token_id, acc_id
         )
+        db_conn.commit()
     except pyodbc.DatabaseError:
         db_conn.rollback()
-        create_child_account_txn(
+        return create_child_account_txn(
             db_conn, cursor, name, email, parent_acc_id, token_id, acc_id
         )
     else:
-        db_conn.commit()
         return True
     # finally:
     #     db_conn.autocommit = True
@@ -293,13 +306,66 @@ def get_rewards_child():
 # RedeemReward
 @app.route("/api/children/rewards/redeem", methods=["POST"])
 def redeem_reward():
-    pass
+    body = request.json
+    validate_request_body(["GoogleAccountId", "RewardId"], body)
+    db_conn, cursor = get_db_conn()
+    res = redeem_reward_txn(db_conn, cursor, body["RewardId"], body["GoogleAccountId"])
+
+    return {"RemainingPoints": res}
+
+
+def redeem_reward_txn(db_conn, cursor, reward_id, child_account_id):
+    try:
+        db_conn.autocommit = False
+        cursor.execute(queries.get_child_by_account_id(), child_account_id)
+        child = cursor.fetchone()
+        if not child:
+            abort(404, "Child Account ID does not exist")
+        cursor.execute(queries.get_reward_by_id(), reward_id)
+        reward = cursor.fetchone()
+        if (
+            not reward
+            or not reward.ParentGoogleAccountId == child.ParentGoogleAccountId
+        ):
+            abort(404, "Reward does not exist")
+
+        if int(reward.Points) > int(child.Points):
+            abort(405, "Insufficient points")
+        remaining_points = int(child.Points) - int(reward.Points)
+        cursor.execute(
+            queries.update_child_points(),
+            remaining_points,
+            child_account_id,
+        )
+        cursor.execute(
+            queries.create_reward_history(),
+            reward.RewardId,
+            child.GoogleAccountId,
+            child.ParentGoogleAccountId,
+        )
+        cursor.commit()
+    except pyodbc.DatabaseError:
+        db_conn.rollback()
+        return redeem_reward_txn(db_conn, cursor, reward_id, child_account_id)
+    else:
+        return remaining_points
 
 
 # GetRedeemedRewardsChild
-@app.route("/api/children/rewards/redeemed", methods=["POST"])
+@app.route("/api/children/rewards/history", methods=["POST"])
 def get_redeemed_rewards_child():
-    pass
+    body = request.json
+    validate_request_body(["GoogleAccountId"], body)
+    _, cursor = get_db_conn()
+
+    try:
+        cursor.execute(
+            queries.get_reward_redemption_by_child(), body["GoogleAccountId"]
+        )
+    except Exception as exc:
+        abort(404, str(exc))
+
+    return RewardRedemptionHistoryChildResponseModel(cursor.fetchall()).get_response()
 
 
 def validate_request_body(fields: list, body: dict) -> bool:

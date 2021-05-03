@@ -18,7 +18,8 @@ from pypika import Query, Tables, Parameter
 
 
 def create_parent() -> str:
-    """Special query for returning the name, email, and parent code on insertion."""
+    """Special query for returning the name, email, and parent code on insertion.
+    pypika does not support the OUTPUT clause so this query cannot be generated with pypika."""
     return """Insert into Parents(Name, Email, GoogleTokenId, GoogleAccountId) \
               OUTPUT INSERTED.Name, INSERTED.Email, INSERTED.ParentCode Values (?, ?, ?, ?);"""
 
@@ -152,7 +153,11 @@ def get_reward_redemption_by_parent() -> str:
         .select("*")
         .where(redemption_history_table.ParentGoogleAccountId == Parameter("?"))
     )
-    return query.get_sql()
+    # return query.get_sql()
+    return """select rh.RewardId, r.Name, r.Description, rh.RedeemedTime, c.Name as 'ChildName' \
+            from RewardRedemptionHistory as rh, Rewards as r, Children as c where \
+            rh.ParentGoogleAccountId = ? and rh.RewardId = r.RewardId and \
+            c.GoogleAccountId = rh.ChildGoogleAccountId;"""
 
 
 def get_reward_redemption_by_child() -> str:
@@ -162,7 +167,10 @@ def get_reward_redemption_by_child() -> str:
         .select("*")
         .where(redemption_history_table.ChildGoogleAccountId == Parameter("?"))
     )
-    return query.get_sql()
+    # return query.get_sql()
+    return """select rh.RewardId, r.Name, r.Description, rh.RedeemedTime \
+            from RewardRedemptionHistory as rh join Rewards as r on \
+            rh.ChildGoogleAccountId = ? and rh.RewardId = r.RewardId;"""
 
 
 def get_reward_redemption_by_reward() -> str:
@@ -171,6 +179,15 @@ def get_reward_redemption_by_reward() -> str:
         Query.from_(redemption_history_table)
         .select("*")
         .where(redemption_history_table.RewardId == Parameter("?"))
+    )
+    return query.get_sql()
+
+
+def get_reward_by_id() -> str:
+    query = (
+        Query.from_(rewards_table)
+        .select("*")
+        .where(rewards_table.RewardId == Parameter("?"))
     )
     return query.get_sql()
 

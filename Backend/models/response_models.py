@@ -98,6 +98,68 @@ class GetRewardsResponseModel:
         return {"Rewards": [reward.get_response() for reward in self.rewards]}
 
 
+class RewardRedemptionParentModel:
+    def __init__(self, redemption: Tuple[str, str, str, datetime]):
+        (
+            self.reward_id,
+            self.name,
+            self.description,
+            self.redeeded_time,
+            self.child_name,
+        ) = redemption
+
+    def get_response(self) -> dict:
+        return {
+            "RewardId": self.reward_id,
+            "Name": self.name,
+            "Description": self.description,
+            "ChildName": self.child_name,
+            "RedeemedTime": self.redeeded_time,
+        }
+
+
+class RewardRedemptionHistoryParentResponseModel:
+    def __init__(self, redemption_history: list):
+        self.redemption_history = [
+            RewardRedemptionParentModel(rh) for rh in redemption_history
+        ]
+
+    def get_response(self) -> dict:
+        return {
+            "‘RedeemedRewards": [rh.get_response() for rh in self.redemption_history]
+        }
+
+
+class RewardRedemptionChildModel:
+    def __init__(self, redemption: Tuple[str, str, str, datetime]):
+        (
+            self.reward_id,
+            self.name,
+            self.description,
+            self.redeeded_time,
+        ) = redemption
+
+    def get_response(self) -> dict:
+        return {
+            "RewardId": self.reward_id,
+            "Name": self.name,
+            "Description": self.description,
+            "RedeemedTime": self.redeeded_time,
+        }
+
+
+class RewardRedemptionHistoryChildResponseModel:
+    def __init__(self, redemption_history: list):
+        self.redemption_history = [
+            RewardRedemptionChildModel(rh) for rh in redemption_history
+        ]
+
+    def get_response(self) -> dict:
+        return {
+            "‘RedeemedRewards": [rh.get_response() for rh in self.redemption_history]
+        }
+
+
 class CreateChoresParentResponseModel:
     def __init__(
         self,
