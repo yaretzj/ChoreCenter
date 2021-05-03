@@ -7,7 +7,7 @@
     tools:context=".ChooseAccountType">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/redeemRewardBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="directToParentLogin"
@@ -26,5 +26,5 @@
         android:text="@string/button_choose_kid"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/redeemRewardBtn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

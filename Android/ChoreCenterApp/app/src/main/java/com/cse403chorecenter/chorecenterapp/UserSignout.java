@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -16,7 +19,7 @@ public class UserSignout extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_signout);
 
-        UserLogin.mGoogleSignInClient.signOut()
+        GoogleSignIn.getClient(this, UserLogin.gso).signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -29,7 +32,7 @@ public class UserSignout extends AppCompatActivity {
     }
 
     private void revokeAccess() {
-        UserLogin.mGoogleSignInClient.revokeAccess()
+        GoogleSignIn.getClient(this, UserLogin.gso).revokeAccess()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    /** Called when the user taps the Login button */
+    /** Called when the user taps the Get Start button */
     public void directToChooseAccountType(View view) {
         // Do something in response to button
         Intent intent = new Intent(this, ChooseAccountType.class);
