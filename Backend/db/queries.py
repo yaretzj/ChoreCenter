@@ -50,7 +50,7 @@ def create_chore() -> str:
             "Name",
             "Description",
             "Status",
-            "AssignedTo",
+            # "AssignedTo",
             "Points",
         )
         .insert(
@@ -59,7 +59,7 @@ def create_chore() -> str:
             Parameter("?"),
             Parameter("?"),
             Parameter("?"),
-            Parameter("?"),
+            # Parameter("?"),
         )
     )
     return query.get_sql()

@@ -1,23 +1,27 @@
 """
     Flask Server
 """
-import db.queries as queries
+# from datetime import datetime
 import pyodbc
 from dotenv import dotenv_values
 from flask import abort, Flask, g, request
-from models.response_models import CreateParentResponseModel
+from typing import Tuple
+
+from models.response_models import CreateParentResponseModel, GetChoresResponseModel
+import db.queries as queries
+
+INTIIAL_CHORE_STATUS = "Created"
 
 config = dotenv_values()
 app = Flask(__name__)
 
-# Need to install Microsoft ODBC driver for SQL Server
-# Mac: https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/install-microsoft-odbc-driver-sql-server-macos?view=sql-server-ver15
-# Windows: https://docs.microsoft.com/en-us/sql/connect/odbc/windows/system-requirements-installation-and-driver-files?view=sql-server-ver15#installing-microsoft-odbc-driver-for-sql-server
 
-# Some other example server values are
-# server = 'localhost\sqlexpress' # for a named instance
-# server = 'myserver,port' # to specify an alternate port
-def get_db_conn():
+def get_db_conn() -> Tuple[pyodbc.Connection, pyodbc.Cursor]:
+    """
+    Add SQL Server database connection to flask global if it does not already exist.
+    Returns the database connection and cursor.
+    """
+
     if "db_conn" not in g:
         g.db_conn = pyodbc.connect(
             "DRIVER={ODBC Driver 17 for SQL Server};SERVER="
@@ -30,11 +34,13 @@ def get_db_conn():
             + config["DB_PASSWORD"]
         )
 
-    return g.db_conn
+    return g.db_conn, g.db_conn.cursor()
 
 
 @app.teardown_request
-def close_db_conn(e):
+def close_db_conn(_):
+    """Close database connection on teardown."""
+
     db_conn = g.pop("db_conn", None)
     if db_conn is not None:
         db_conn.close()
@@ -43,21 +49,20 @@ def close_db_conn(e):
 
 @app.route("/")
 def hello_world():
-    return "Hello, World!"
+    con, cur = get_db_conn()
+    cur.execute("Select * from parents")
+    print(cur.fetchall())
+    return "Hello, world!"
 
 
-# CreateParentAccount
 @app.route("/api/parents/new/", methods=["POST"])
 def create_parent():
+    """CreateParentAccount"""
+
     body = request.json
+    validate_request_body(["Name", "Email", "GoogleTokenId", "GoogleAccountId"], body)
 
-    if not validate_request_body(
-        ["Name", "Email", "GoogleTokenId", "GoogleAccountId"], body
-    ):
-        abort(400, "Invalid request body")
-
-    db_conn = get_db_conn()
-    cursor = db_conn.cursor()
+    _, cursor = get_db_conn()
 
     try:
         cursor.execute(
@@ -70,8 +75,8 @@ def create_parent():
         create_parent_response_model = CreateParentResponseModel(
             *cursor.fetchone()
         )  # Get parent data returned by SQL
-        db_conn.commit()
-    except:
+        cursor.commit()
+    except Exception:
         abort(
             400,
             "Parent account with AccountId {} already exists.".format(
@@ -83,9 +88,29 @@ def create_parent():
 
 
 # CreateChore
-@app.route("/api/parents/chores/new/", methods=["POST"])
+@app.route("/api/parents/chores/new", methods=["POST"])
 def create_chore_parent():
-    pass
+    body = request.json
+    validate_request_body(["GoogleAccountId", "Name", "Description", "Points"], body)
+    _, cursor = get_db_conn()
+
+    try:
+        cursor.execute(
+            queries.create_chore(),
+            body["GoogleAccountId"],
+            body["Name"],
+            body["Description"],
+            INTIIAL_CHORE_STATUS,
+            int(body["Points"]),
+        )
+        cursor.commit()
+    except Exception as ex:
+        print(ex)
+        abort(
+            404, "Parent Account ID {} does not exist".format(body["GoogleAccountId"])
+        )
+
+    return "Created chore", 201
 
 
 # UpdateChoreParent
@@ -97,18 +122,48 @@ def update_chore_parent():
 # GetChoresParent
 @app.route("/api//parents/chores", methods=["POST"])
 def get_chores_parent():
-    pass
+    body = request.json
+    validate_request_body(["GoogleAccountId"], body)
+    _, cursor = get_db_conn()
+
+    try:
+        cursor.execute(queries.get_chores_by_parent(), body["GoogleAccountId"])
+    except Exception:
+        abort(
+            404, "Parent Account ID {} does not exist".format(body["GoogleAccountId"])
+        )
+
+    return GetChoresResponseModel(cursor.fetchall()).get_response()
 
 
 # CreateReward
 @app.route("/api/parents/rewards/new", methods=["POST"])
 def create_reward():
-    pass
+    body = request.json
+    validate_request_body(["Name", "GoogleAccountId", "Description", "Points"], body)
+
+    _, cursor = get_db_conn()
+
+    try:
+        cursor.execute(
+            queries.create_reward(),
+            body["GoogleAccountId"],
+            body["Name"],
+            body["Description"],
+            int(body["Points"]),
+        )
+        cursor.commit()
+    except Exception:
+        abort(
+            404, "Parent Account ID {} does not exist".format(body["GoogleAccountId"])
+        )
+
+    return "Created reward", 201
 
 
 # GetRewardsParent
-@app.route("/api/parents/rewards/", methods=["POST"])
-def get_reward_parent():
+@app.route("/api/parents/rewards", methods=["POST"])
+def get_rewards_parent():
     pass
 
 
@@ -122,16 +177,15 @@ def get_redeemed_rewards_parent():
 @app.route("/api/children/new", methods=["POST"])
 def create_child():
     body = request.json
-    if not validate_request_body(
+    validate_request_body(
         ["Name", "Email", "GoogleTokenId", "GoogleAccountId", "ParentCode"], body
-    ):
-        abort(400, "Invalid request body")
+    )
 
-    db_conn = get_db_conn()
-    cursor = db_conn.cursor()
+    db_conn, cursor = get_db_conn()
+
     try:
         cursor.execute(queries.get_parent_by_code(), body["ParentCode"])
-    except:
+    except Exception:
         abort(400, "Invalid Parent Code")
 
     parent_res = cursor.fetchone()
@@ -174,14 +228,16 @@ def create_child_account_txn(
         cursor.execute(
             queries.create_child(), name, email, parent_acc_id, token_id, acc_id
         )
-    except pyodbc.DatabaseError as err:
+    except pyodbc.DatabaseError:
         db_conn.rollback()
-        create_child_account_txn(name, email, parent_acc_id, acc_id, token_id)
+        create_child_account_txn(
+            db_conn, cursor, name, email, parent_acc_id, token_id, acc_id
+        )
     else:
         db_conn.commit()
         return True
-    finally:
-        db_conn.autocommit = True
+    # finally:
+    #     db_conn.autocommit = True
 
 
 # GetChoresChild
@@ -215,7 +271,8 @@ def get_redeemed_rewards_child():
 
 
 def validate_request_body(fields: list, body: dict) -> bool:
-    return all(f in body for f in fields)
+    if not all(f in body for f in fields):
+        abort(400, "Incomplete request body")
 
 
 # cursor.execute("Select * from Parents")
