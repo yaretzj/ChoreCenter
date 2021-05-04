@@ -102,6 +102,17 @@ def get_child_by_account_id(columns: tuple = ("*",)) -> str:
     return query.get_sql()
 
 
+def get_parent_by_account_id(columns: tuple = ("*",)) -> str:
+    """Return the columns passed in where the parent's
+    google account id matches a given parameter."""
+    query = (
+        Query.from_(parents_table)
+        .select(*columns)
+        .where(parents_table.GoogleAccountId == Parameter("?"))
+    )
+    return query.get_sql()
+
+
 def get_parent_by_code() -> str:
     """Return a parent row with the given parent code."""
     query = (
@@ -169,7 +180,7 @@ def get_reward_redemption_by_child() -> str:
     )
     # return query.get_sql()
     return """select rh.RewardId, r.Name, r.Description, rh.RedeemedTime \
-            from RewardRedemptionHistory as rh join Rewards as r on \
+            from RewardRedemptionHistory as rh, Rewards as r where \
             rh.ChildGoogleAccountId = ? and rh.RewardId = r.RewardId;"""
 
 

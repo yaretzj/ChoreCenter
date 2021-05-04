@@ -12,13 +12,38 @@ class CreateParentResponseModel:
         return {"Name": self.name, "Email": self.email, "ParentCode": self.parent_code}
 
 
-class ParentModel:
-    def __init__(self):
-        pass
+class GetParentAccountResponseModel:
+    def __init__(self, parent_acc: tuple):
+        self.name, self.email, _, self.account_id, self.parent_code = parent_acc
 
-class ChildModel:
-    def __init__(self):
-        pass
+    def get_response(self) -> dict:
+        return {
+            "Name": self.name,
+            "Email": self.email,
+            "GoogleAccountId": self.account_id,
+            "ParentCode": self.parent_code,
+        }
+
+
+class GetChildAccountResponseModel:
+    def __init__(self, child_acc: tuple):
+        (
+            self.name,
+            self.email,
+            self.parent_account_id,
+            _,
+            self.account_id,
+            self.points,
+        ) = child_acc
+
+    def get_response(self) -> dict:
+        return {
+            "Name": self.name,
+            "Email": self.email,
+            "GoogleAccountId": self.account_id,
+            "ParentGoogleAccountId": self.parent_account_id,
+            "Points": self.points,
+        }
 
 
 class ChoreModel:
