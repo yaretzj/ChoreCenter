@@ -20,7 +20,7 @@ public class ChooseAccountType extends AppCompatActivity {
         Intent intent = new Intent(this, UserLogin.class);
         // EditText editText = (EditText) findViewById(R.id.editText);
         // String message = editText.getText().toString();
-        String chosenType = "parent";
+        String chosenType = "parents";
         intent.putExtra(MainActivity.EXTRA_MESSAGE, chosenType);
         startActivity(intent);
     }
@@ -29,7 +29,7 @@ public class ChooseAccountType extends AppCompatActivity {
     public void directToKidLogin(View view) {
         // Do something in response to button
         Intent intent = new Intent(this, UserLogin.class);
-        String chosenType = "kid";
+        String chosenType = "children";
         intent.putExtra(MainActivity.EXTRA_MESSAGE, chosenType);
         startActivity(intent);
     }
