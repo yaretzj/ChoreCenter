@@ -6,10 +6,6 @@ defaults:
 jobs:
   test-flask:
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: 3.8
 
     steps:
     - uses: actions/checkout@v2
