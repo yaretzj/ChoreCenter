@@ -13,6 +13,8 @@ from models.response_models import (
     GetRewardsResponseModel,
     RewardRedemptionHistoryParentResponseModel,
     RewardRedemptionHistoryChildResponseModel,
+    ParentModel,
+    ChildModel,
 )
 import db.queries as queries
 
@@ -84,7 +86,7 @@ def create_parent():
         cursor.commit()
     except Exception:
         abort(
-            400,
+           400,
             "Parent account with AccountId {} already exists.".format(
                 body["GoogleAccountId"]
             ),
@@ -92,6 +94,43 @@ def create_parent():
 
     return create_parent_response_model.get_response(), 201
 
+
+@app.route("/api/parents/info/", methods=["POST"])
+def get_parent():
+    """GetParentInfo"""
+
+    body = request.json
+    validate_request_body(["GoogleAccountId"], body)
+    _, cursor = get_db_conn()
+
+    return get_parent_helper(cursor, body["GoogleAccountId"])
+
+def get_parent_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
+    try:
+        cursor.execute(queries.get_parent_by_code(), account_id)
+    except Exception:
+        abort(404, "Parent Account ID {} does not exist".format(account_id))
+
+    return ParentModel(cursor.fetchall()).get_response()
+
+
+@app.route("/api/parents/info/", methods=["POST"])
+def get_child():
+    """GetChildInfo"""
+
+    body = request.json
+    validate_request_body(["GoogleAccountId"], body)
+    _, cursor = get_db_conn()
+
+    return get_child_helper(cursor, body["GoogleAccountId"])
+
+def get_child_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
+    try:
+        cursor.execute(queries.get_child_by_account_id(), account_id)
+    except Exception:
+        abort(404, "Child Account ID {} does not exist".format(account_id))
+
+    return ChildModel(cursor.fetchall()).get_response()
 
 # CreateChore
 @app.route("/api/parents/chores/new", methods=["POST"])

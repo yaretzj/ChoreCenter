@@ -12,6 +12,15 @@ class CreateParentResponseModel:
         return {"Name": self.name, "Email": self.email, "ParentCode": self.parent_code}
 
 
+class ParentModel:
+    def __init__(self):
+        pass
+
+class ChildModel:
+    def __init__(self):
+        pass
+
+
 class ChoreModel:
     def __init__(
         self,
