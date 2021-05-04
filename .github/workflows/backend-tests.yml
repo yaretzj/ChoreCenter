@@ -4,7 +4,7 @@ defaults:
   run:
     working-directory: ./Backend
 jobs:
-  test flask:
+  test-flask:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
