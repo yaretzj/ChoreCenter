@@ -28,7 +28,7 @@ public class ChooseAccountType extends AppCompatActivity {
     /** Called when the user taps the Kid button */
     public void directToKidLogin(View view) {
         // Do something in response to button
-        Intent intent = new Intent(this, UserLogin.class);
+        Intent intent = new Intent(this, KidMain.class);
         String chosenType = "kid";
         intent.putExtra(MainActivity.EXTRA_MESSAGE, chosenType);
         startActivity(intent);
