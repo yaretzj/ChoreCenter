@@ -186,10 +186,10 @@ public class RedeemRewardFragment extends Fragment {
      * RewardModel helps handling store and retrieve information about rewards
      */
     public static class RewardModel {
-        final String name;
-        final long points;
-        final String description;
-        final String id;
+        private final String name;
+        private final long points;
+        private final String description;
+        private final String id;
 
         public RewardModel(String name, long points, String description, String id) {
             this.name = name;
@@ -198,19 +198,19 @@ public class RedeemRewardFragment extends Fragment {
             this.id = id;
         }
 
-        String getName() {
+        public String getName() {
             return name;
         }
 
-        long getPoints() {
+        public long getPoints() {
             return points;
         }
 
-        String getDescription() {
+        public String getDescription() {
             return description;
         }
 
-        String getId() {
+        public String getId() {
             return id;
         }
     }
