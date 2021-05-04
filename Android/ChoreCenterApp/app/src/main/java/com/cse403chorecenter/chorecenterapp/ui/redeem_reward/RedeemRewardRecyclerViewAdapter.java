@@ -1,6 +1,5 @@
 package com.cse403chorecenter.chorecenterapp.ui.redeem_reward;
 
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cse403chorecenter.chorecenterapp.R;
-import com.cse403chorecenter.chorecenterapp.UserNavigation;
+import com.cse403chorecenter.chorecenterapp.UserLogin;
 
+import org.json.JSONObject;
+
+import java.io.DataOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -108,20 +112,37 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "Clicked reward id: " + RewardId);
-                    //HttpClient httpclient = new DefaultHttpClient();
-                    //    HttpResponse response = httpclient.execute(new HttpPost("/api/child/rewards/redeem?GoogleTokenId=" + account.id));
-                    //    StatusLine statusLine = response.getStatusLine();
-                    //    if(statusLine.getStatusCode() == HttpStatus.SC_OK){
-                    //        ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    //        response.getEntity().writeTo(out);
-                    //        String responseString = out.toString();
-                    //        out.close();
-                    //        //..more logic
-                    //    } else{
-                    //        //Closes the connection.
-                    //        response.getEntity().getContent().close();
-                    //        throw new IOException(statusLine.getReasonPhrase());
-                    //    }
+                    // TODO: Set the http request
+//                    try {
+//                        URL url = new URL("10.0.2.2:5000/api/" + UserLogin.ACCOUNT_TYPE + "/rewards/redeem");
+//                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//                        conn.setRequestMethod("POST");
+//                        conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+//                        conn.setRequestProperty("Accept","application/json");
+//                        conn.setDoOutput(true);
+//                        conn.setDoInput(true);
+//
+//                        JSONObject jsonObj = new JSONObject();
+//                        jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);
+//                        jsonObj.put("RewardId", RewardId);
+//
+//                        Log.i("JSON", jsonObj.toString());
+//                        DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+//                        os.writeBytes(jsonObj.toString());
+//
+//                        os.flush();
+//                        os.close();
+//
+//                        Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+//                        Log.i("MSG" , conn.getResponseMessage());
+//
+//                        conn.disconnect();
+//
+//                        // TODO: handle response
+//
+//                    } catch (Exception e) {
+//                        System.out.println(e.getMessage());
+//                    }
                 }
             });
         }

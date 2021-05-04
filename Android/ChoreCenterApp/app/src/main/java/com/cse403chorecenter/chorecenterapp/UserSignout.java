@@ -19,7 +19,7 @@ public class UserSignout extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_signout);
 
-        GoogleSignIn.getClient(this, UserLogin.gso).signOut()
+        GoogleSignIn.getClient(this, UserLogin.GSO).signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -29,15 +29,5 @@ public class UserSignout extends AppCompatActivity {
 
         Intent intent = new Intent(this, ChooseAccountType.class);
         startActivity(intent);
-    }
-
-    private void revokeAccess() {
-        GoogleSignIn.getClient(this, UserLogin.gso).revokeAccess()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // ...
-                    }
-                });
     }
 }
