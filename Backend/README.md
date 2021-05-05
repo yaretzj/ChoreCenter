@@ -16,3 +16,8 @@
 - Create a local copy of the `.env.example` file using the command `cp .env.example .env`. Replace the placeholders after the `=` sign with the corresponding config values. Reach out to a member of the backend team if you need the env variable strings.
 - Before you can run the server you will need to export the `FLASK_APP` environment variable to tell your terminal the application to work with with the command `export FLASK_APP=app.py`
 - Run the flask server with the command `flask run`. The server runs on port 5000 by default. If you want to run the server on a different port, export an environment variable named `FLASK_RUN_PORT` and set it to the desired port number. If set, `flask run` will run the server on the port number defined in `FLASK_RUN_PORT`.
+
+### Deploying Instructions
+- Do all the above instructions above to set up the server
+- Set the `FLASK_RUN_PORT` to 80 to connect via http
+- Run flask using the `flask run --host=0.0.0.0` to then make the server visable to the external network
