@@ -9,8 +9,9 @@
 - You will need to install the following packages using pip with the command `pip3 install <package_name>` [TODO: will be automated with Anaconda in the future]
     - flask
     - pyodbc
-    - pyipka
+    - pypika
     - python-dotenv
+    - pytest
 - If you are developing on the backend, you will also want to install `pylint` and `black`. Use black to format files before pushing code to GitHub
 - Create a local copy of the `.env.example` file using the command `cp .env.example .env`. Replace the placeholders after the `=` sign with the corresponding config values. Reach out to a member of the backend team if you need the env variable strings.
 - Before you can run the server you will need to export the `FLASK_APP` environment variable to tell your terminal the application to work with with the command `export FLASK_APP=app.py`
