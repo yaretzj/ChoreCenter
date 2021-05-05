@@ -14,10 +14,10 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
       env:
-        DB_SERVER: ${{ secrets.DB_SERVER }}
-        DB_NAME: ${{ secrets.DB_NAME }}
-        DB_USERNAME: ${{ secrets.DB_USERNAME }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_SERVER: ${{ secrets.DbServer }}
+        DB_NAME: ${{ secrets.DbName }}
+        DB_USERNAME: ${{ secrets.DbUsername }}
+        DB_PASSWORD: ${{ secrets.DbPassword }}
     - name: Install Dependencies
       run: |
         echo "Test"
