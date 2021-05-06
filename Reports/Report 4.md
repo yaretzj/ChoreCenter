@@ -10,15 +10,19 @@
     - **Progress**
         - Github Actions testing pipeline set up for the front and backend teams
         - Basic unit tests written to test app functionality
-        - Successful login with Google OAuth attempted
+        - Successful login with Google OAuth attempted on the frontend
+        - Backend Flask server set up with all but 2 MVP APIs implemented along with database queries
+        - Added triggers to auto-update certain columns in the tables on inserts and updates
+        - Set up Azure VM for backend server deployment and installed required drivers and packages
     - **Issues**
         - Setting up our Github Actions CI/CD to work with our test had some tricky parts in the process
-        - Frontend team had some troubles setting up the backend server
+        - Frontend team had some troubles setting up the backend server locally
+        - Bakcned had some trouble importing python modules from the parent directory
 
 - ### Plans and Goals
     - Bridging the gap between frontend and backend to implement functionality for our beta release and use case
     - Create some mock data that we can use for testing
-    - Expand documentation for setting up our project
+    - Expand documentation for setting up our project and running it locally
 
 
 ## Contributions of individual team members:
@@ -49,12 +53,17 @@
 
     - #### Progress and Issues
         - **Progress**
-            - a
+            - Had a meeting with the bakend team to set up barebones Flask server endpoints
+            - Updated cretain tables schemas and added triggers to tables in backend team meeting
+            - Set up Flask server and implemented all but 2 of the APIs needed for the MVP
+            - Added a couple simple example tests to test the API functionality
         - **Issues**
-            - a
+            - Had lot of trouble figuring out how to imoprt modules from a parent directory
     
     - #### Plans and Goals
-        - 
+        - Finish the remaining 2 endpoints needed for MVP and beta release
+        - Start looking into authenticating requests with Google OAuth endpoints using the user's GoogleIdToken (after beta release)
+        - Work on creating user sessions so only an initial login request needs to be authenticated with Google rather than every requrest made to the APIs 
 
 - ### Jaden
     - #### Past Goals
