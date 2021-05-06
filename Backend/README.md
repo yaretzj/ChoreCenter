@@ -5,7 +5,7 @@
     - Windows: https://docs.microsoft.com/en-us/sql/connect/odbc/windows/system-requirements-installation-and-driver-files?view=sql-server-ver15#installing-microsoft-odbc-driver-for-sql-server
 - You can check your python version using `python3 --version` (the python3 command points to the python 3 installation on my machine, replace python3 and pip3 in all commands if the python3 command gives you an error on your machine. If `python3 --version` does not work and `python --version` outputs Python 2.x.x you need to install Python 3. Instructions at https://www.python.org/downloads/).
 - Create a virtual environment in the Backend directory with the command `python3 -m venv venv`
-- Use the command `. venv/bin/activate` to activate the virtual environment. You can deactivate the virtual environment with the command `deactivate` when you are done using the application.
+- Use the command `. venv/bin/activate` on Mac or `. venv/Scripts/activate` on Windows to activate the virtual environment. You can deactivate the virtual environment with the command `deactivate` when you are done using the application.
 - You will need to install the following packages using pip with the command `pip3 install <package_name>` [TODO: will be automated with Anaconda in the future]
     - flask
     - pyodbc
