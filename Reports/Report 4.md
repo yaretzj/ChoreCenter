@@ -57,6 +57,7 @@
             - Updated cretain tables schemas and added triggers to tables in backend team meeting
             - Set up Flask server and implemented all but 2 of the APIs needed for the MVP
             - Added a couple simple example tests to test the API functionality
+            - Set up a python script to create tables on Azure SQL Server
         - **Issues**
             - Had lot of trouble figuring out how to imoprt modules from a parent directory
     
@@ -64,6 +65,7 @@
         - Finish the remaining 2 endpoints needed for MVP and beta release
         - Start looking into authenticating requests with Google OAuth endpoints using the user's GoogleIdToken (after beta release)
         - Work on creating user sessions so only an initial login request needs to be authenticated with Google rather than every requrest made to the APIs 
+        - Imporve create table python script to also support dropping all tables
 
 - ### Jaden
     - #### Past Goals
