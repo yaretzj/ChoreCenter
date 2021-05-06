@@ -4,9 +4,6 @@ import os
 from flask import Flask
 
 import sys
-
-sys.path.append("..")
-
 from app import app
 
 

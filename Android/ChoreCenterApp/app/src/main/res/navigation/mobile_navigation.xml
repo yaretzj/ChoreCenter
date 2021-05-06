@@ -22,7 +22,11 @@
         android:name="com.cse403chorecenter.chorecenterapp.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
-
+    <fragment
+        android:id="@+id/nav_create_chore"
+        android:name="com.cse403chorecenter.chorecenterapp.ui.create_chore.CreateChoreFragment"
+        android:label="@string/menu_create_chore"
+        tools:layout="@layout/fragment_create_chore" />
     <fragment
         android:id="@+id/nav_sign_out"
         android:name="com.cse403chorecenter.chorecenterapp.ui.signout.SignoutFragment"

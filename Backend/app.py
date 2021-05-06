@@ -2,8 +2,9 @@
     Flask Server
 """
 # from datetime import datetime
+import os
 import pyodbc
-from dotenv import dotenv_values
+from dotenv import dotenv_values, load_dotenv
 from flask import abort, Flask, g, request
 from typing import Tuple
 
@@ -20,7 +21,8 @@ import db.queries as queries
 
 INTIIAL_CHORE_STATUS = "Created"
 
-config = dotenv_values()
+load_dotenv()
+# config = dotenv_values()
 app = Flask(__name__)
 
 
@@ -33,13 +35,13 @@ def get_db_conn() -> Tuple[pyodbc.Connection, pyodbc.Cursor]:
     if "db_conn" not in g:
         g.db_conn = pyodbc.connect(
             "DRIVER={ODBC Driver 17 for SQL Server};SERVER="
-            + config["DB_SERVER"]
+            + os.getenv("DB_SERVER")  # config["DB_SERVER"]
             + ";DATABASE="
-            + config["DB_NAME"]
+            + os.getenv("DB_NAME")  # config["DB_NAME"]
             + ";UID="
-            + config["DB_USERNAME"]
+            + os.getenv("DB_USERNAME")  # config["DB_USERNAME"]
             + ";PWD="
-            + config["DB_PASSWORD"]
+            + os.getenv("DB_PASSWORD")  # config["DB_PASSWORD"]
         )
 
     return g.db_conn, g.db_conn.cursor()
