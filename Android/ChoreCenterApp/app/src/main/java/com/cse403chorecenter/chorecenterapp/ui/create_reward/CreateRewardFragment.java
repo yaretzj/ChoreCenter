@@ -11,7 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.cse403chorecenter.chorecenterapp.CreateChoreAsyncTask;
+import com.cse403chorecenter.chorecenterapp.CreateRewardAsyncTask;
 import com.cse403chorecenter.chorecenterapp.R;
+
+import java.util.concurrent.ExecutionException;
 
 public class CreateRewardFragment extends Fragment {
 
@@ -23,6 +27,8 @@ public class CreateRewardFragment extends Fragment {
 
         EditText editRewardName = (EditText) view.findViewById(R.id.editCreateReward);
         EditText editRewardPoints = (EditText) view.findViewById(R.id.editCreateRewardPoints);
+        // Reward description can be null or empty
+        EditText editRewardDesc = (EditText) view.findViewById(R.id.editRewardDescription);
 
         Button button = (Button) view.findViewById(R.id.button_create_reward);
         button.setOnClickListener(new View.OnClickListener()
@@ -36,20 +42,46 @@ public class CreateRewardFragment extends Fragment {
                     return;
                 }
 
+                // Null description is represented by an empty string
+                if (editRewardDesc == null) {
+                    editRewardDesc.setText("");
+                }
+
                 String rewardName = editRewardName.getText().toString();
                 String rewardPointsStr = editRewardPoints.getText().toString();
+                String rewardDesc = editRewardDesc.getText().toString();
+                int rewardPointsInt;
 
                 // Check chorePoints is an integer
                 try {
-                    int rewardPointsInt = Integer.parseInt(rewardPointsStr);
+                    rewardPointsInt = Integer.parseInt(rewardPointsStr);
                     editRewardName.setText("");
                     editRewardPoints.setText("");
+                    editRewardDesc.setText("");
                 } catch (NumberFormatException e) {
                     textView.setText("please input a number for the reward points");
                     return;
                 }
 
-                textView.setText("Reward " + rewardName + " created");
+                // input checks passed
+                //send to server
+                String request = "{\"GoogleAccountId\": \"1\", \"Name\": \"" + rewardName +
+                                                    "\", \"Description\": \""+ rewardDesc + "\", \"Points\": \"" + rewardPointsInt + "\"}";
+                CreateRewardAsyncTask networkRequest = new CreateRewardAsyncTask();
+                networkRequest = (CreateRewardAsyncTask) networkRequest.execute(request);
+
+                // output response
+                try {
+                    String response = networkRequest.get();
+                    if(response != null) {
+                        textView.setText(response.toString());
+                    } else
+                        textView.setText("failed");
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

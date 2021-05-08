@@ -30,25 +30,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editCreateReward" />
 
+    <EditText
+        android:id="@+id/editRewardDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:hint="Reward Description"
+        android:inputType="text|textMultiLine"
+        android:gravity="top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editCreateRewardPoints" />
+
     <Button
         android:id="@+id/button_create_reward"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="52dp"
         android:text="Create Reward"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editCreateRewardPoints" />
+        app:layout_constraintTop_toBottomOf="@+id/editRewardDescription" />
 
     <TextView
         android:id="@+id/text_create_reward"
         android:layout_width="394dp"
         android:layout_height="27dp"
-        android:layout_marginTop="52dp"
         android:textAlignment="center"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/button_create_reward"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_create_reward" />
+        app:layout_constraintTop_toBottomOf="@+id/editRewardDescription" />
 </androidx.constraintlayout.widget.ConstraintLayout>

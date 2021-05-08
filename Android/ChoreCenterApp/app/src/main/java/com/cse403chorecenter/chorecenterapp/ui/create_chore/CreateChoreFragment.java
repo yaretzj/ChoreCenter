@@ -82,7 +82,7 @@ public class CreateChoreFragment extends Fragment {
                 CreateChoreAsyncTask networkRequest = new CreateChoreAsyncTask();
                 networkRequest = (CreateChoreAsyncTask) networkRequest.execute(request);
 
-                //output response code
+                // output response
                 try {
                     String response = networkRequest.get();
                     if(response != null) {
@@ -94,42 +94,6 @@ public class CreateChoreFragment extends Fragment {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                /*
-                try {
-                    String request = "{\"GoogleAccountId\":, \"Name\": " + choreName + ", \"Description\": "+ choreDesc + ", \"Points\": " + chorePointsInt + "}";
-
-                    //url = new URL("http://chorecenter.westus2.cloudapp.azure.com/api/parents/chores/new");
-                    //HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                    //con.setRequestMethod("POST");
-                    //con.setRequestProperty("Content-Type", "application/json");
-                    //con.setRequestProperty("Accept", "application/json");
-                    //con.setDoOutput(true);
-
-                    //write the post request
-
-                    //con.getOutputStream();
-                    //wr.writeBytes(request);
-                    //wr.flush();
-                    //wr.close();
-
-                    /*
-                    //print response from server
-                    try(BufferedReader br = new BufferedReader(
-                            new InputStreamReader(con.getInputStream(), "utf-8"))) {
-                        StringBuilder response = new StringBuilder();
-                        String responseLine = null;
-                        while ((responseLine = br.readLine()) != null) {
-                            response.append(responseLine.trim());
-                        }
-                        textView.setText(response.toString());
-                    }
-
-                } catch (IOException e) {
-                    textView.setText(e.toString());
-                    return;
-                }
-                */
-                //textView.setText("Chore " + choreName + " created");
             }
         });
 
