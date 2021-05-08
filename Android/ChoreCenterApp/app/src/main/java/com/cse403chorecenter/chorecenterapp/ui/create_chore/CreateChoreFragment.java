@@ -15,8 +15,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.cse403chorecenter.chorecenterapp.CreateChoreAsyncTask;
 import com.cse403chorecenter.chorecenterapp.R;
 import com.cse403chorecenter.chorecenterapp.UserSignout;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 public class CreateChoreFragment extends Fragment {
     private CreateChoreViewModel createChoreViewModel;
@@ -39,18 +50,25 @@ public class CreateChoreFragment extends Fragment {
             @Override
             public void onClick(View view)
             {
-                if(editChoreName == null || editChoreName.getText().toString().isEmpty()
+                if (editChoreName == null || editChoreName.getText().toString().isEmpty()
                                 || editChorePoints == null || editChorePoints.getText().toString().isEmpty()) {
                     textView.setText("please input the chore name and chore points");
                     return;
                 }
 
+                // Null description is represented by an empty string
+                if (editChoreDesc == null) {
+                    editChoreDesc.setText("");
+                }
+
                 String choreName = editChoreName.getText().toString();
                 String chorePointsStr = editChorePoints.getText().toString();
+                String choreDesc = editChoreDesc.getText().toString();
+                int chorePointsInt;
 
                 // Check chorePoints is an integer
                 try {
-                    int chorePointsInt = Integer.parseInt(chorePointsStr);
+                    chorePointsInt = Integer.parseInt(chorePointsStr);
                     editChoreName.setText("");
                     editChorePoints.setText("");
                     editChoreDesc.setText("");
@@ -58,8 +76,60 @@ public class CreateChoreFragment extends Fragment {
                     textView.setText("please input a number for the chore points");
                     return;
                 }
+                // input checks passed
+                //send to server
+                String request = "{\"GoogleAccountId\": \"1\", \"Name\": \"" + choreName + "\", \"Description\": \""+ choreDesc + "\", \"Points\": \"" + chorePointsInt + "\"}";
+                CreateChoreAsyncTask networkRequest = new CreateChoreAsyncTask();
+                networkRequest = (CreateChoreAsyncTask) networkRequest.execute(request);
 
-                textView.setText("Chore " + choreName + " created");
+                //output response code
+                try {
+                    String response = networkRequest.get();
+                    if(response != null) {
+                        textView.setText(response.toString());
+                    } else
+                        textView.setText("failed");
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                /*
+                try {
+                    String request = "{\"GoogleAccountId\":, \"Name\": " + choreName + ", \"Description\": "+ choreDesc + ", \"Points\": " + chorePointsInt + "}";
+
+                    //url = new URL("http://chorecenter.westus2.cloudapp.azure.com/api/parents/chores/new");
+                    //HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    //con.setRequestMethod("POST");
+                    //con.setRequestProperty("Content-Type", "application/json");
+                    //con.setRequestProperty("Accept", "application/json");
+                    //con.setDoOutput(true);
+
+                    //write the post request
+
+                    //con.getOutputStream();
+                    //wr.writeBytes(request);
+                    //wr.flush();
+                    //wr.close();
+
+                    /*
+                    //print response from server
+                    try(BufferedReader br = new BufferedReader(
+                            new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                        StringBuilder response = new StringBuilder();
+                        String responseLine = null;
+                        while ((responseLine = br.readLine()) != null) {
+                            response.append(responseLine.trim());
+                        }
+                        textView.setText(response.toString());
+                    }
+
+                } catch (IOException e) {
+                    textView.setText(e.toString());
+                    return;
+                }
+                */
+                //textView.setText("Chore " + choreName + " created");
             }
         });
 
