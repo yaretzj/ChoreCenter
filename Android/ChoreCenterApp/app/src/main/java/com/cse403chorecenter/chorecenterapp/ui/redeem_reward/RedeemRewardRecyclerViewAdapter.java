@@ -10,14 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cse403chorecenter.chorecenterapp.R;
+import com.cse403chorecenter.chorecenterapp.ServiceHandler;
 import com.cse403chorecenter.chorecenterapp.UserLogin;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Provide views to RecyclerView with data from mDataSet.
@@ -67,7 +67,7 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
     public RewardViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view.
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.text_row_item, viewGroup, false);
+                .inflate(R.layout.text_row_reward_item, viewGroup, false);
 
         return new RewardViewHolder(v);
     }
@@ -112,39 +112,45 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "Clicked reward id: " + RewardId);
-                    // TODO: Set the http request
-//                    try {
-//                        URL url = new URL("10.0.2.2:5000/api/" + UserLogin.ACCOUNT_TYPE + "/rewards/redeem");
-//                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//                        conn.setRequestMethod("POST");
-//                        conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-//                        conn.setRequestProperty("Accept","application/json");
-//                        conn.setDoOutput(true);
-//                        conn.setDoInput(true);
-//
-//                        JSONObject jsonObj = new JSONObject();
-//                        jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);
-//                        jsonObj.put("RewardId", RewardId);
-//
-//                        Log.i("JSON", jsonObj.toString());
-//                        DataOutputStream os = new DataOutputStream(conn.getOutputStream());
-//                        os.writeBytes(jsonObj.toString());
-//
-//                        os.flush();
-//                        os.close();
-//
-//                        Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-//                        Log.i("MSG" , conn.getResponseMessage());
-//
-//                        conn.disconnect();
-//
-//                        // TODO: handle response
-//
-//                    } catch (Exception e) {
-//                        System.out.println(e.getMessage());
-//                    }
+
+                    // redeem reward
+                    submitChore(RewardId);
                 }
             });
         }
+    }
+
+    /** submit a chore for the kid account */
+    public static boolean submitChore(String rewardId) {
+        try {
+            // checking account status on the server
+            ServiceHandler sh = new ServiceHandler();
+            String[] params = new String[2];
+            // params[0] = "http://chorecenter.westus2.cloudapp.azure.com/api/children/rewards/redeem";
+            params[0] = "http://10.0.2.2:80/api/children/rewards/redeem";
+
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);
+            jsonObj.put("RewardId", rewardId);
+            params[1] = jsonObj.toString();
+            sh = (ServiceHandler) sh.execute(params);
+
+            // output response
+            try {
+                String response = sh.get();
+                if(response != null) {
+                    Log.i(TAG, response);
+                    return !response.equals("404") && !response.equals("500") && !response.equals("400");
+                }
+                return false;
+            } catch (ExecutionException e) {
+                Log.e(TAG, "Async execution error: " + e.getMessage());
+            } catch (InterruptedException e) {
+                Log.e(TAG, "Async interrupted error: " + e.getMessage());
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Json parsing error: " + e.getMessage());
+        }
+        return false;
     }
 }

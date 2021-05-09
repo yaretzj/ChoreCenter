@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cse403chorecenter.chorecenterapp.R;
+import com.cse403chorecenter.chorecenterapp.ServiceHandler;
+import com.cse403chorecenter.chorecenterapp.ui.submit_chore.SubmitChoreFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class RedeemRewardFragment extends Fragment {
     private static final String TAG = "RecyclerViewFragment";
@@ -150,36 +153,8 @@ public class RedeemRewardFragment extends Fragment {
     private void initDataset() throws FileNotFoundException {
         mDataset = new ArrayList<>();
 
-        String jsonStr = "{\"Rewards\": [{\"RewardId\": \"103\", \"ParentGoogleAccountId\": \"e654\",\"RewardName\": \"ice cream\"," +
-                "\"Description\": \"a very very hot ice cream\",\"Points\": 2000,\"CreatedTime\": \"2021-4-2\", \"UpdatedTime\": \"2021-5-2\"," +
-                "\"NumberOfRedemptions\": 7 }, {\"RewardId\": \"105\",\"ParentGoogleAccountId\": \"e654\",\"RewardName\": \"hotpot\"," +
-                "\"Description\": \"a very very cold hotpot\",\"Points\": 10000,\"CreatedTime\": \"2021-4-12\",\"UpdatedTime\": \"2021-5-11\"," +
-                "\"NumberOfRedemptions\": 2 }] }";
-        // TODO: use http request to get actual data
-        try {
-            JSONObject jsonObj = new JSONObject(jsonStr);
-
-            // Getting JSON Array node
-            JSONArray rewards = jsonObj.getJSONArray("Rewards");
-
-            // looping through All Rewards
-            for (int i = 0; i < rewards.length(); i++) {
-                JSONObject c = rewards.getJSONObject(i);
-                mDataset.add(new RewardModel(c.getString("RewardName"), c.getLong("Points"),
-                        c.getString("Description"), c.getString("RewardId")));
-            }
-        } catch (final JSONException e) {
-            Log.e(TAG, "Json parsing error: " + e.getMessage());
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Toast.makeText(getApplicationContext(),
-//                            "Json parsing error: " + e.getMessage(),
-//                            Toast.LENGTH_LONG).show();
-//                }
-//            });
-
-        }
+        // use http request to get rewards
+        getRewards();
     }
 
     /**
@@ -213,5 +188,55 @@ public class RedeemRewardFragment extends Fragment {
         public String getId() {
             return id;
         }
+    }
+
+    /** Get all the rewards created by the parent */
+    public boolean getRewards() {
+        try {
+            // checking account status on the server
+            ServiceHandler sh = new ServiceHandler();
+            String[] params = new String[2];
+            // params[0] = "http://chorecenter.westus2.cloudapp.azure.com/api/children/rewards";
+            params[0] = "http://10.0.2.2:80/api/children/rewards";
+
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("GoogleAccountId", com.cse403chorecenter.chorecenterapp.UserLogin.ACCOUNT_ID);
+            params[1] = jsonObj.toString();
+            sh = (ServiceHandler) sh.execute(params);
+
+            // output response
+            try {
+                String response = sh.get();
+
+                if(response != null) {
+                    Log.i(TAG, response);
+                    JSONObject jsonResponseObject = new JSONObject(response);
+
+                    try {
+                        // Getting JSON Array node
+                        JSONArray chores = jsonResponseObject.getJSONArray("Rewards");
+
+                        // looping through All Rewards
+                        for (int i = 0; i < chores.length(); i++) {
+                            JSONObject c = chores.getJSONObject(i);
+                            mDataset.add(new RedeemRewardFragment.RewardModel(c.getString("Name"), c.getLong("Points"),
+                                    c.getString("Description"), c.getString("RewardId")));
+                        }
+                    } catch (final JSONException e) {
+                        Log.e(TAG, "Json parsing error: " + e.getMessage());
+                    }
+
+                    return !response.equals("404") && !response.equals("500") && !response.equals("400");
+                } else
+                    return false;
+            } catch (ExecutionException e) {
+                Log.e(TAG, "Async execution error: " + e.getMessage());
+            } catch (InterruptedException e) {
+                Log.e(TAG, "Async interrupted error: " + e.getMessage());
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Json parsing error: " + e.getMessage());
+        }
+        return false;
     }
 }

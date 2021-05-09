@@ -25,7 +25,7 @@
     <fragment
         android:id="@+id/nav_create_chore"
         android:name="com.cse403chorecenter.chorecenterapp.ui.create_chore.CreateChoreFragment"
-        android:label="@string/menu_create_chore"
+        android:label="@string/create_chore"
         tools:layout="@layout/fragment_create_chore" />
     <fragment
         android:id="@+id/nav_redeem_reward"
@@ -37,4 +37,14 @@
         android:name="com.cse403chorecenter.chorecenterapp.ui.signout.SignoutFragment"
         android:label="@string/button_signout"
         tools:layout="@layout/fragment_signout" />
+    <fragment
+        android:id="@+id/nav_create_reward"
+        android:name="com.cse403chorecenter.chorecenterapp.ui.create_reward.CreateRewardFragment"
+        android:label="@string/menu_create_reward"
+        tools:layout="@layout/fragment_create_reward" />
+    <fragment
+        android:id="@+id/nav_submit_chore"
+        android:name="com.cse403chorecenter.chorecenterapp.ui.submit_chore.SubmitChoreFragment"
+        android:label="@string/menu_submit_chore"
+        tools:layout="@layout/fragment_submit_chore" />
 </navigation>

@@ -16,35 +16,24 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 public class UserLogin extends AppCompatActivity implements View.OnClickListener {
-    public static GoogleSignInOptions GSO = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .requestIdToken("1008730141731-1lj701n3a3upvf71trttd97g6ugsj381.apps.googleusercontent.com")  // set up your own Google API console project to use here
-            .build();
     private static final String TAG = "UserLogin";
     public static final int RC_SIGN_IN = 403;
+    public static GoogleSignInOptions GSO;
     public static String ACCOUNT_TYPE;
     public static String ACCOUNT_ID;
-    public static long ACCOUNT_BALANCE;
+    public static String ACCOUNT_ID_TOKEN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_login);
         findViewById(R.id.button_login).setOnClickListener(this);
-
-        // Get the Intent that started this activity "ChooseAccountType" and
-        // extract the string passed through the intent
-        Intent intent = getIntent();
-        ACCOUNT_TYPE = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
-        ACCOUNT_ID = null;
-        ACCOUNT_BALANCE = 0;
     }
 
     @Override
@@ -53,13 +42,27 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
         switch (v.getId()) {
             case R.id.button_login:
                 signIn();
-                break;
-                case R.id.button_delete_account:
+            case R.id.button_delete_account:
                 revokeAccess();
-                break;
-
+            default:
+                // no action
         }
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Get the Intent that started this activity "ChooseAccountType" and
+        // extract the string passed through MainActivity.EXTRA_MESSAGE
+        Intent intent = getIntent();
+        GSO = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken("551695683870-tn6t4q27f5qpfe8jb61dt0jbr6qjf1fm.apps.googleusercontent.com")  // set up Google API console project to use here
+                .build();
+        ACCOUNT_TYPE = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        ACCOUNT_ID = "5";
+        ACCOUNT_ID_TOKEN = "exp_token";
     }
 
     /** Called when the user taps the Login button */
@@ -67,33 +70,6 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
         // Build a GoogleSignInClient with the options specified by gso.
         GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, GSO);
         startActivityForResult(mGoogleSignInClient.getSignInIntent(), RC_SIGN_IN);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-
-        if (account != null) {
-            ACCOUNT_ID = account.getId();
-            // TODO: check if the account exists on server before proceeding
-            // TODO: implement KidNavigation
-//            if (accountExists(account)) {
-//                if (ACCOUNT_TYPE.equals("parents")) {
-                    startActivity(new Intent(this, ParentNavigation.class));
-//                }
-//                startActivity(new Intent(this, KidNavigation.class));
-//            } else {
-//                // direct to sign up activity
-//                if (ACCOUNT_TYPE.equals("parents")) {
-//                    startActivity(new Intent(this, ParentSignup.class));
-//                }
-//                startActivity(new Intent(this, KidSignup.class));
-//            }
-        }
     }
 
     @Override
@@ -113,23 +89,24 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-            // Signed in successfully, check sign up
             if (account != null) {
-                ACCOUNT_ID = account.getId();
-                // TODO: check if the account exists on server before proceeding
-                // TODO: implement KidNavigation
-//                if (accountExists(account)) {
-//                    if (ACCOUNT_TYPE.equals("parents")) {
+                // Signed in successfully
+
+                //ACCOUNT_ID = account.getId();
+                // check if the account exists on server before proceeding
+                if (accountExists(account)) {
+                    if (ACCOUNT_TYPE.equals("parents")) {
                         startActivity(new Intent(this, ParentNavigation.class));
-//                    }
-//                    startActivity(new Intent(this, KidNavigation.class));
-//                } else {
-//                    // direct to sign up activity
-//                    if (ACCOUNT_TYPE.equals("parents")) {
-//                        startActivity(new Intent(this, ParentSignup.class));
-//                    }
-//                    startActivity(new Intent(this, KidSignup.class));
-//                }
+                    } else {
+                        startActivity(new Intent(this, KidNavigation.class));
+                    }
+                } else {
+                    if (ACCOUNT_TYPE.equals("parents")) {
+                        startActivity(new Intent(this, ParentSignup.class));
+                    } else {
+                        startActivity(new Intent(this, KidSignup.class));
+                    }
+                }
             } else {
                 // Sign in failed, retry
                 Intent intent = new Intent(this, ChooseAccountType.class);
@@ -146,38 +123,40 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
     }
 
     public boolean accountExists(GoogleSignInAccount account) {
-        // Set the http request for checking account status on server
         try {
-            URL url = new URL("10.0.2.2:5000/api/" + ACCOUNT_TYPE + "/info");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-            conn.setRequestProperty("Accept","application/json");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
+            // checking account status on the server
+            ServiceHandler sh = new ServiceHandler();
+            String[] params = new String[2];
+            if (ACCOUNT_TYPE.equals("parents")) {
+                // params[0] = "http://chorecenter.westus2.cloudapp.azure.com/api/parents/info";
+                params[0] = "http://10.0.2.2:80/api/parents/info";
+            } else {
+                // params[0] = "http://chorecenter.westus2.cloudapp.azure.com/api/children/info";
+                params[0] = "http://10.0.2.2:80/api/children/info";
+            }
 
             JSONObject jsonObj = new JSONObject();
-            jsonObj.put("GoogleAccountId", account.getId());
+            jsonObj.put("GoogleAccountId", ACCOUNT_ID);
+            jsonObj.put("GoogleTokenId", ACCOUNT_ID_TOKEN);
+            params[1] = jsonObj.toString();
+            sh = (ServiceHandler) sh.execute(params);
 
-            Log.i("JSON", jsonObj.toString());
-            DataOutputStream os = new DataOutputStream(conn.getOutputStream());
-            os.writeBytes(jsonObj.toString());
-
-            os.flush();
-            os.close();
-
-            Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-            Log.i("MSG" , conn.getResponseMessage());
-
-            conn.disconnect();
-
-            // TODO: parse response body
-
-            return conn.getResponseCode() != 404;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            // output response
+            try {
+                String response = sh.get();
+                if(response != null) {
+                    return !response.equals("404") && !response.equals("500") && !response.equals("400");
+                } else
+                    return false;
+            } catch (ExecutionException e) {
+                Log.e(TAG, "Async execution error: " + e.getMessage());
+            } catch (InterruptedException e) {
+                Log.e(TAG, "Async interrupted error: " + e.getMessage());
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Json parsing error: " + e.getMessage());
         }
+        return false;
     }
 
     private void revokeAccess() {

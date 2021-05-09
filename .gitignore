@@ -12,3 +12,9 @@ out/
 
 # dump files
 *.hprof
+
+# python
+venv/
+
+# env variables
+.env

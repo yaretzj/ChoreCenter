@@ -10,13 +10,17 @@ import android.view.View;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 public class ParentSignup extends AppCompatActivity {
+    private static final String TAG = "ParentSignup";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,47 +32,48 @@ public class ParentSignup extends AppCompatActivity {
     public void onClickSignUp(View view) {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        // Set http request for parent account creation
-        // Set the http request
-        try {
-            URL url = new URL("10.0.2.2:5000/api/parents/new");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-            conn.setRequestProperty("Accept","application/json");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-
-            JSONObject jsonObj = new JSONObject();
-            jsonObj.put("GoogleTokenId", account.getIdToken());
-            jsonObj.put("GoogleAccountId", account.getId());
-            jsonObj.put("Name", account.getDisplayName());
-            jsonObj.put("Email", account.getEmail());
-
-            Log.i("JSON", jsonObj.toString());
-            DataOutputStream os = new DataOutputStream(conn.getOutputStream());
-            os.writeBytes(jsonObj.toString());
-
-            os.flush();
-            os.close();
-
-            Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-            Log.i("MSG" , conn.getResponseMessage());
-
-            conn.disconnect();
-
-            // TODO: handle error status
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            Intent intent = new Intent(this, ParentSignup.class);
-            startActivity(intent);
+        // parent account creation
+        if (account != null) {
+            Log.i(TAG, Objects.requireNonNull(account.getEmail()));
+            accountSignup(account);
         }
 
         Intent intent = new Intent(this, ChooseAccountType.class);
-        // EditText editText = (EditText) findViewById(R.id.editText);
-        // String message = editText.getText().toString();
-        // intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
+    }
+
+    /** sign up for the parent account */
+    public boolean accountSignup(GoogleSignInAccount account) {
+        try {
+            // checking account status on the server
+            ServiceHandler sh = new ServiceHandler();
+            String[] params = new String[2];
+            // params[0] = "http://chorecenter.westus2.cloudapp.azure.com/api/parents/new";
+            params[0] = "http://10.0.2.2:80/api/parents/new";
+
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);
+            jsonObj.put("GoogleTokenId", UserLogin.ACCOUNT_ID_TOKEN);
+            jsonObj.put("Name", "Debugger");
+            jsonObj.put("Email", "deb@gmail.com");
+            params[1] = jsonObj.toString();
+            sh = (ServiceHandler) sh.execute(params);
+
+            // output response
+            try {
+                String response = sh.get();
+                if(response != null) {
+                    return !response.equals("404") && !response.equals("500") && !response.equals("400");
+                } else
+                    return false;
+            } catch (ExecutionException e) {
+                Log.e(TAG, "Async execution error: " + e.getMessage());
+            } catch (InterruptedException e) {
+                Log.e(TAG, "Async interrupted error: " + e.getMessage());
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Json parsing error: " + e.getMessage());
+        }
+        return false;
     }
 }
