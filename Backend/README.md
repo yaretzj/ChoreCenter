@@ -31,7 +31,8 @@ Based off of tutorial from CSE 344
 - Finally, click "Set server firewall" at the top of the page. You may need to change the settings before you can upload data. The easiest option is to add a rule that allows connections from any client, which you can do from below. Be sure to click "Save" once you have added this rule.
 
 ##### Virtual Machine
-- Follow this tutorial for the Virtual Machine and set up according to suitable pricing: https://docs.microsoft.com/en-us/azure/virtual-machines/windows/quick-create-portal Lowest tier is good enough for testing project.
+- Follow this tutorial for the Virtual Machine and set up according to suitable pricing: https://docs.microsoft.com/en-us/azure/virtual-machines/windows/quick-create-portal 
+Cheapest tier (B1s) is good enough for testing project.
 - Connect to the VM and now download the most recent version of Python3
 - Install all the librarys in the requirements.txt in the backend folder as described below
 
