@@ -147,7 +147,37 @@ def create_chore_parent():
 # UpdateChoreParent
 @app.route("/api/parents/chores/<chore_id>/update", methods=["POST"])
 def update_chore_parent(chore_id):
-    pass
+    body = request.json
+    validate_request_body(["GoogleAccountId"], body)
+    db_conn, cursor = get_db_conn()
+
+    account_id = body.pop("GoogleAccountId")
+    columns = body.keys()
+    if len(columns) == 0:
+        abort(400, "No fields to update")
+
+    try:
+        cursor.execute(queries.get_chore_by_id_and_parent(), chore_id, account_id)
+    except Exception as exc:
+        abort(500, str(exc))
+
+    chore = cursor.fetchone()
+    if not chore:
+        abort(404, "ChoreId {} does not exist".format(chore_id))
+
+    update_values = [body[key] for key in columns]
+    try:
+        cursor.execute(queries.update_chore(columns), *update_values, chore_id)
+        cursor.commit()
+    except Exception as exc:
+        abort(500, str(exc))
+
+    try:
+        cursor.execute(queries.get_chore_by_id_and_parent(), chore_id, account_id)
+    except Exception as exc:
+        abort(500, str(exc))
+
+    return ChoreModel(*(cursor.fetchone())).get_response()
 
 
 # GetChoresParent
@@ -352,7 +382,11 @@ def update_chore_child(chore_id):
         abort(404, "Child Account ID does not exist")
 
     try:
-        cursor.execute(queries.get_chore_by_id(), chore_id)
+        cursor.execute(
+            queries.get_chore_by_id_and_parent(),
+            chore_id,
+            child_acc.ParentGoogleAccountId,
+        )
     except Exception as exc:
         abort(500, str(exc))
 
@@ -378,7 +412,11 @@ def update_chore_child(chore_id):
         abort(500, str(exc))
 
     try:
-        cursor.execute(queries.get_chore_by_id(), chore_id)
+        cursor.execute(
+            queries.get_chore_by_id_and_parent(),
+            chore_id,
+            child_acc.ParentGoogleAccountId,
+        )
     except Exception as exc:
         abort(500, str(exc))
 

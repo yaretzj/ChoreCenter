@@ -133,12 +133,13 @@ def get_chores_by_parent() -> str:
     return query.get_sql()
 
 
-def get_chore_by_id() -> str:
+def get_chore_by_id_and_parent() -> str:
     """Returns query to get the chore for given ChoreId."""
     query = (
         Query.from_(chores_table)
         .select("*")
         .where(chores_table.ChoreId == Parameter("?"))
+        .where(chores_table.ParentGoogleAccountId == Parameter("?"))
     )
     return query.get_sql()
 
