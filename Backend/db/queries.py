@@ -1,4 +1,4 @@
-from pypika import Query, Tables, Parameter
+from pypika import Query, Tables, Parameter, Field
 
 # Setup: run pip install pypika
 # To convert queries into raw SQL strings, use str(q) or q.get_sql()
@@ -133,12 +133,12 @@ def get_chores_by_parent() -> str:
     return query.get_sql()
 
 
-def get_chores_by_child() -> str:
-    """Return the chores for the child requesting (checks chore's child account id)."""
+def get_chore_by_id() -> str:
+    """Returns query to get the chore for given ChoreId."""
     query = (
         Query.from_(chores_table)
         .select("*")
-        .where(chores_table.AssignedTo == Parameter("?"))
+        .where(chores_table.ChoreId == Parameter("?"))
     )
     return query.get_sql()
 
@@ -231,17 +231,16 @@ def update_child_points() -> str:
     return query.get_sql()
 
 
-def update_chore_status() -> str:
+def update_chore(columns: list) -> str:
     """Update the status for a chore (given id) to the given status."""
-    query = (
-        Query.update(chores_table)
-        .set(chores_table.Status, Parameter("?"))
-        .where(chores_table.ChoreId == Parameter("?"))
-    )
+    query = Query.update(chores_table).where(chores_table.ChoreId == Parameter("?"))
+    for column in columns:
+        query = query.set(Field(column), Parameter("?"))
     return query.get_sql()
 
 
 # Test to show example generated SQL string
 # print(get_child_by_account_id(("Name", "Points")))
 # print(get_rewards_by_parent())
-print(get_reward_redemption_by_parent())
+# print(get_reward_redemption_by_parent())
+# print(update_chore_status(["Status", "AssignedTo"]))
