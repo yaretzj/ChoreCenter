@@ -131,7 +131,7 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
             params[0] = "http://10.0.2.2:80/api/children/chores/" + choreId + "/update";
 
             JSONObject jsonObj = new JSONObject();
-            jsonObj.put("GoogleTokenId", UserLogin.ACCOUNT_ID_TOKEN);
+            jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);
             jsonObj.put("Status", "Completed");
             jsonObj.put("AssignedTo", UserLogin.ACCOUNT_ID);
             params[1] = jsonObj.toString();
@@ -140,7 +140,7 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
             // output response
             try {
                 String response = sh.get();
-                if(response != null) {
+                if(response != null && !response.equals("")) {
                     Log.i(TAG, response);
                     return !response.equals("404") && !response.equals("500") && !response.equals("400");
                 }

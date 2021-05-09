@@ -67,7 +67,7 @@ public class KidSignup extends AppCompatActivity {
             // output response
             try {
                 String response = sh.get();
-                if(response != null) {
+                if(response != null && !response.equals("")) {
                     Log.i(TAG, response);
                     return !response.equals("404") && !response.equals("500") && !response.equals("400");
                 } else

@@ -2,6 +2,7 @@ package com.cse403chorecenter.chorecenterapp;
 
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -10,6 +11,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ServiceHandler extends AsyncTask<String, Integer, String> {
+    private static final String TAG = "ServiceHandler";
+
     @Override
     protected String doInBackground(String... params) {
         try {
@@ -44,7 +47,7 @@ public class ServiceHandler extends AsyncTask<String, Integer, String> {
 
             return response.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Exception: " + e.getMessage());
             return "";
         }
     }

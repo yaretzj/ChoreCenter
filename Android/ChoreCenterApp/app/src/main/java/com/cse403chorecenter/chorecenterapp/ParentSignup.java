@@ -62,7 +62,7 @@ public class ParentSignup extends AppCompatActivity {
             // output response
             try {
                 String response = sh.get();
-                if(response != null) {
+                if(response != null && !response.equals("")) {
                     return !response.equals("404") && !response.equals("500") && !response.equals("400");
                 } else
                     return false;

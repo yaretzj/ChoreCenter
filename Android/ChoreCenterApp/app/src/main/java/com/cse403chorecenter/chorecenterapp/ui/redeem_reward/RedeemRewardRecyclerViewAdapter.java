@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cse403chorecenter.chorecenterapp.R;
 import com.cse403chorecenter.chorecenterapp.ServiceHandler;
 import com.cse403chorecenter.chorecenterapp.UserLogin;
+import com.google.android.material.snackbar.Snackbar;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -63,6 +65,7 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
 
     // BEGIN_INCLUDE(recyclerViewOnCreateViewHolder)
     // Create new views (invoked by the layout manager)
+    @NotNull
     @Override
     public RewardViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view.
@@ -114,14 +117,17 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
                     Log.d(TAG, "Clicked reward id: " + RewardId);
 
                     // redeem reward
-                    submitChore(RewardId);
+                    if (submitChore(RewardId, itemView.findViewById(R.id.redeemRewardTV))) {
+                        Snackbar.make(itemView.findViewById(R.id.redeemRewardTV), R.string.redeem_pop_up_success, Snackbar.LENGTH_SHORT)
+                                .show();
+                    }
                 }
             });
         }
     }
 
     /** submit a chore for the kid account */
-    public static boolean submitChore(String rewardId) {
+    public static boolean submitChore(String rewardId, View view) {
         try {
             // checking account status on the server
             ServiceHandler sh = new ServiceHandler();
@@ -138,9 +144,12 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
             // output response
             try {
                 String response = sh.get();
-                if(response != null) {
+                if(response != null && !response.equals("")) {
                     Log.i(TAG, response);
-                    return !response.equals("404") && !response.equals("500") && !response.equals("400");
+                    if (response.equals("405")) {
+                        Snackbar.make(view, R.string.redeem_pop_up_failed, Snackbar.LENGTH_SHORT).show();
+                    }
+                    return !response.equals("404") && !response.equals("405") && !response.equals("500") && !response.equals("400");
                 }
                 return false;
             } catch (ExecutionException e) {

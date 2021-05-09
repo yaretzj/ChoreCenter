@@ -61,7 +61,7 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
                 .requestIdToken("551695683870-tn6t4q27f5qpfe8jb61dt0jbr6qjf1fm.apps.googleusercontent.com")  // set up Google API console project to use here
                 .build();
         ACCOUNT_TYPE = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
-        ACCOUNT_ID = "5";
+        ACCOUNT_ID = "6";
         ACCOUNT_ID_TOKEN = "exp_token";
     }
 
@@ -144,10 +144,10 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
             // output response
             try {
                 String response = sh.get();
-                if(response != null) {
+                if(response != null && !response.equals("")) {
                     return !response.equals("404") && !response.equals("500") && !response.equals("400");
-                } else
-                    return false;
+                }
+                return false;
             } catch (ExecutionException e) {
                 Log.e(TAG, "Async execution error: " + e.getMessage());
             } catch (InterruptedException e) {
