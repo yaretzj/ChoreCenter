@@ -86,7 +86,7 @@ public class CreateChoreFragment extends Fragment {
                 try {
                     String response = networkRequest.get();
                     if(response != null) {
-                        textView.setText(response.toString());
+                        textView.setText(response);
                     } else
                         textView.setText("failed");
                 } catch (ExecutionException e) {
