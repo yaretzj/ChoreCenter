@@ -1,4 +1,43 @@
-# Android User Interface
+## Android
 
-First, clone the top level repository to a local directory. Next, use Android Studio to 'Open an Existing Project' from 'ChoreCenterApp' directory under the 'Android' directory.
-The development team used Android Studio with SDK of version 29. The minimum version of the Android Operating System required to run the app is SDK 21 (Lollipop). After opening the project, Android Studio should allow for building and running the app on an emulator with Android version at least Lollipop.
+### Onboarding Instructions
+Prerequisites: [get latest Java 11 (or 12, 13) with hotspot JVM](https://adoptopenjdk.net/), [JUnit (we are using 4)](https://junit.org/junit4/), [get latest Android Studio](https://developer.android.com/studio/?gclid=CjwKCAjwkN6EBhBNEiwADVfya9HaDQcwUCBRUhf-a6Bhs6oP9Xt77MWjCXfam5GZOxicAAxxY-gylBoCNPYQAvD_BwE&gclsrc=aw.ds)
+1. Clone the top level repository to a local directory.
+2. Use Android Studio to `Open an Existing Project` from `ChoreCenterApp` directory under the `Android` directory.
+3. The development team used Android Studio with Android SDK version 29. We recommend that you use the same Android SDK version. The minimum version of the Android Operating System required to run the app is set to be SDK 21 (Lollipop) which has 94.1% of the market share. However, please use a more recent version at least Android SDK 24 (Nougat) since a few dependencies used in the project are not supported by SDK version before 24.
+4. After opening the project, wait until Android Studio is ready for building and running the app on an Android emulator (with SDK version at least 24, or Nougat). (If there are no availalbe emulators, create one from the `AVD Manager`. You can follow [this guide](https://developer.android.com/studio/run/managing-avds) if you are not sure.
+5. Since the app is not published to `Google Play Store`, we are using the `Android Studio` IDE to run the app and a debug SHA-1 key for authenticating users with `Google OAuth 2.0`. Since debug SHA-1 key is different for machines running the project, the Google Authentication used in the project will not work immediately after you clone the project. To have the Google Authentication working, use command `./gradlew signingReport` in the `ChoreCenterApp` directory to find out about your debug SHA-1 key. Then, visit the Google OAuth 2.0 [Android guide](https://developers.google.com/identity/sign-in/android/start-integrating#configure_a_project) to configure a Google API console project and use `com.cse403chorecenter.chorecenterapp` for the package name and your debug SHA-1 key for the SHA key. When you are done, you will be given your Client-ID (also in the given `credentials.json` file). Lastly, open up Java file `/ChoreCenter/Android/ChoreCenterApp/app/src/main/java/com/cse403chorecenter/chorecenterapp/UserLogin.java` and change the argument to the method `.requestIdToken()` on line 61 to be your Client-ID of the configured Google API console project.
+6. To build the app, either use the Android Studio built-in build-and-run feature (follow [this guide](https://developer.android.com/studio/run) if not sure) or use gradle commands (`./gradlew build` for building and `./gradlew check` for verifying and testing the app) from the `ChoreCenterApp` directory. If you don't have permission to run command `./gradlew`, consider using `chmod +x ./gradlew` to add execution permission.
+
+Directory Structure:
+
+    .
+    ├── ChoreCenterApp 
+    │   ├── app.src
+    │   │   ├── main              # source code
+    │   │   ├── AndroidTest       # Android tests
+    │   │   └── test              # JUnit tests
+    │   ├── gradle
+    │   └── ...  
+    └── ...
+    
+
+### User interface walk-through
+
+1. After clicking "Get Started!", user will be directed to choose their account type to be either a "parent" or a "kid."
+2. If the user has not been registered yet, he or she will be directed to a page for signing up after they log in with their Google account. The kid account sign-up requires input of the parent code during the sign-up step in order to be linked to the specific parent account. Parent code is accessible from the user navigation page drawer of a parent account.
+3. A parent account can access activities to create chores and rewards from user navigation page drawer.
+4. A child account can access submit chore and redeem reward activities from user navigation page drawer.
+5. Chores and rewards created by a parent account are visible to the linked kid account for submit or redeem.
+6. Kids are expected to be honest and only submit a chore after they have finished it but parents can verify that their kids have indeed completed the chores that are submitted {not supported in beta release}.
+7. Points earned by kids from submitted chores can be used to redeem exciting rewards customized by their parents.
+
+### Progress
+
+- [x] Parent can create chores visible to the linked child account(s) {use case 5}
+- [x] Parent can create rewards visible to the linked child account(s) {use case 4}
+- [x] Child can submit a chore to indicate completion of the chore
+- [x] Child can redeem a reward with pop-up message indicating success/failure {use case 2}
+- [x] Child can accumulate points to redeem "costly" rewards by completing chores {use case 3}
+- [ ] A child only receives points after the parent verifies that a chore has actually been completed {use case 6}
+- [ ] Parent can make a chore available only for a specific time period (stretch goal) {use case 1}

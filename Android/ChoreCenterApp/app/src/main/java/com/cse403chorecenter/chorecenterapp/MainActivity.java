@@ -8,19 +8,17 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "com.cse403chorecenter.chorecenterapp.MESSAGE";
+    public static final String DNS = "http://chorecenter.westus2.cloudapp.azure.com/";
+//    public static final String DNS = "http://10.0.2.2:80/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
 
-    /** Called when the user taps the Login button */
+    /** Called when the user taps the Get Start button */
     public void directToChooseAccountType(View view) {
-        // Do something in response to button
         Intent intent = new Intent(this, ChooseAccountType.class);
-        // EditText editText = (EditText) findViewById(R.id.editText);
-        // String message = editText.getText().toString();
-        // intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
 }

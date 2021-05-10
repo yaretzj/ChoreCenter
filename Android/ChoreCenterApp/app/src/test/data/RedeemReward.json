@@ -1,0 +1,25 @@
+{
+  "Chores": [
+    {
+    "RewardId": "103",
+      "ParentGoogleAccountId": "e654",
+    "RewardName": "ice cream",
+    "Description": "a very very hot ice cream",
+    "Points": 2000,
+    "CreatedTime": "2021-4-2",
+    "UpdatedTime": "2021-5-2",
+    "NumberOfRedemptions": 7
+    },
+    {
+      "RewardId": "105",
+      "ParentGoogleAccountId": "e654",
+      "RewardName": "hotpot",
+      "Description": "a very very cold hotpot",
+      "Points": 10000,
+      "CreatedTime": "2021-4-12",
+      "UpdatedTime": "2021-5-11",
+      "NumberOfRedemptions": 2
+    }
+  ]
+}
+
