@@ -2,12 +2,14 @@
     Flask Server
 """
 # from datetime import datetime
+import os
 import pyodbc
-from dotenv import dotenv_values
+from dotenv import dotenv_values, load_dotenv
 from flask import abort, Flask, g, request
 from typing import Tuple
 
 from models.response_models import (
+    ChoreModel,
     CreateParentResponseModel,
     GetChoresResponseModel,
     GetRewardsResponseModel,
@@ -18,9 +20,11 @@ from models.response_models import (
 )
 import db.queries as queries
 
+
 INTIIAL_CHORE_STATUS = "Created"
 
-config = dotenv_values()
+
+load_dotenv()
 app = Flask(__name__)
 
 
@@ -33,13 +37,13 @@ def get_db_conn() -> Tuple[pyodbc.Connection, pyodbc.Cursor]:
     if "db_conn" not in g:
         g.db_conn = pyodbc.connect(
             "DRIVER={ODBC Driver 17 for SQL Server};SERVER="
-            + config["DB_SERVER"]
+            + os.getenv("DB_SERVER")  # config["DB_SERVER"]
             + ";DATABASE="
-            + config["DB_NAME"]
+            + os.getenv("DB_NAME")  # config["DB_NAME"]
             + ";UID="
-            + config["DB_USERNAME"]
+            + os.getenv("DB_USERNAME")  # config["DB_USERNAME"]
             + ";PWD="
-            + config["DB_PASSWORD"]
+            + os.getenv("DB_PASSWORD")  # config["DB_PASSWORD"]
         )
 
     return g.db_conn, g.db_conn.cursor()
@@ -143,8 +147,38 @@ def create_chore_parent():
 
 # UpdateChoreParent
 @app.route("/api/parents/chores/<chore_id>/update", methods=["POST"])
-def update_chore_parent():
-    pass
+def update_chore_parent(chore_id):
+    body = request.json
+    validate_request_body(["GoogleAccountId"], body)
+    db_conn, cursor = get_db_conn()
+
+    account_id = body.pop("GoogleAccountId")
+    columns = body.keys()
+    if len(columns) == 0:
+        abort(400, "No fields to update")
+
+    try:
+        cursor.execute(queries.get_chore_by_id_and_parent(), chore_id, account_id)
+    except Exception as exc:
+        abort(500, str(exc))
+
+    chore = cursor.fetchone()
+    if not chore:
+        abort(404, "ChoreId {} does not exist".format(chore_id))
+
+    update_values = [body[key] for key in columns]
+    try:
+        cursor.execute(queries.update_chore(columns), *update_values, chore_id)
+        cursor.commit()
+    except Exception as exc:
+        abort(500, str(exc))
+
+    try:
+        cursor.execute(queries.get_chore_by_id_and_parent(), chore_id, account_id)
+    except Exception as exc:
+        abort(500, str(exc))
+
+    return ChoreModel(*(cursor.fetchone())).get_response()
 
 
 # GetChoresParent
@@ -329,8 +363,64 @@ def get_chores_child():
 
 # UpdateChoreChild
 @app.route("/api/children/chores/<chore_id>/update", methods=["POST"])
-def update_chore_child():
-    pass
+def update_chore_child(chore_id):
+    body = request.json
+    validate_request_body(["GoogleAccountId"], body)
+    db_conn, cursor = get_db_conn()
+
+    account_id = body.pop("GoogleAccountId")
+    columns = body.keys()
+    if len(columns) == 0:
+        abort(400, "No fields to update")
+
+    try:
+        cursor.execute(queries.get_child_by_account_id(), account_id)
+    except Exception as exc:
+        abort(500, str(exc))
+
+    child_acc = cursor.fetchone()
+    if not child_acc:
+        abort(404, "Child Account ID does not exist")
+
+    try:
+        cursor.execute(
+            queries.get_chore_by_id_and_parent(),
+            chore_id,
+            child_acc.ParentGoogleAccountId,
+        )
+    except Exception as exc:
+        abort(500, str(exc))
+
+    chore = cursor.fetchone()
+    if not chore or chore.ParentGoogleAccountId != child_acc.ParentGoogleAccountId:
+        abort(404, "ChoreId {} does not exist".format(chore_id))
+
+    update_values = [body[key] for key in columns]
+
+    try:
+        db_conn.autocommit = False
+        cursor.execute(queries.update_chore(columns), *update_values, chore_id)
+
+        if chore.Status != "Completed" and body.get("Status") == "Completed":
+            cursor.execute(
+                queries.update_child_points(),
+                int(chore.Points) + int(child_acc.Points),
+                account_id,
+            )
+        cursor.commit()
+    except Exception as exc:
+        abort(500, str(exc))
+
+    try:
+        cursor.execute(
+            queries.get_chore_by_id_and_parent(),
+            chore_id,
+            child_acc.ParentGoogleAccountId,
+        )
+    except Exception as exc:
+        abort(500, str(exc))
+
+    return ChoreModel(*(cursor.fetchone())).get_response()
 
 
 # GetRewardsChild

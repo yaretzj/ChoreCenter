@@ -1,4 +1,4 @@
-from pypika import Query, Tables, Parameter
+from pypika import Query, Tables, Parameter, Field
 
 # Setup: run pip install pypika
 # To convert queries into raw SQL strings, use str(q) or q.get_sql()
@@ -133,12 +133,14 @@ def get_chores_by_parent() -> str:
     return query.get_sql()
 
 
-def get_chores_by_child() -> str:
-    """Return the chores for the child requesting (checks chore's child account id)."""
+
+def get_chore_by_id_and_parent() -> str:
+    """Returns query to get the chore for given ChoreId."""
     query = (
         Query.from_(chores_table)
         .select("*")
-        .where(chores_table.AssignedTo == Parameter("?"))
+        .where(chores_table.ChoreId == Parameter("?"))
+        .where(chores_table.ParentGoogleAccountId == Parameter("?"))
     )
     return query.get_sql()
 
@@ -161,27 +163,40 @@ def get_reward_redemption_by_parent() -> str:
     """Return the reward history for the parent requesting."""
     query = (
         Query.from_(redemption_history_table)
-        .select("*")
+        .from_(rewards_table)
+        .from_(children_table)
+        .select(
+            redemption_history_table.RewardId,
+            redemption_history_table.RedeemedTime,
+            rewards_table.Name,
+            rewards_table.Description,
+            (children_table.Name).as_("ChildName"),
+        )
         .where(redemption_history_table.ParentGoogleAccountId == Parameter("?"))
+        .where(redemption_history_table.RewardId == rewards_table.RewardId)
+        .where(
+            children_table.GoogleAccountId
+            == redemption_history_table.ChildGoogleAccountId
+        )
     )
-    # return query.get_sql()
-    return """select rh.RewardId, r.Name, r.Description, rh.RedeemedTime, c.Name as 'ChildName' \
-            from RewardRedemptionHistory as rh, Rewards as r, Children as c where \
-            rh.ParentGoogleAccountId = ? and rh.RewardId = r.RewardId and \
-            c.GoogleAccountId = rh.ChildGoogleAccountId;"""
+    return query.get_sql()
 
 
 def get_reward_redemption_by_child() -> str:
     """Return the reward history for the child requesting."""
     query = (
         Query.from_(redemption_history_table)
-        .select("*")
+        .from_(rewards_table)
+        .select(
+            redemption_history_table.RewardId,
+            redemption_history_table.RedeemedTime,
+            rewards_table.Name,
+            rewards_table.Description,
+        )
+        .where(redemption_history_table.RewardId == rewards_table.RewardId)
         .where(redemption_history_table.ChildGoogleAccountId == Parameter("?"))
     )
-    # return query.get_sql()
-    return """select rh.RewardId, r.Name, r.Description, rh.RedeemedTime \
-            from RewardRedemptionHistory as rh, Rewards as r where \
-            rh.ChildGoogleAccountId = ? and rh.RewardId = r.RewardId;"""
+    return query.get_sql()
 
 
 def get_reward_redemption_by_reward() -> str:
@@ -218,16 +233,10 @@ def update_child_points() -> str:
     return query.get_sql()
 
 
-def update_chore_status() -> str:
+
+def update_chore(columns: list) -> str:
     """Update the status for a chore (given id) to the given status."""
-    query = (
-        Query.update(chores_table)
-        .set(chores_table.Status, Parameter("?"))
-        .where(chores_table.ChoreId == Parameter("?"))
-    )
+    query = Query.update(chores_table).where(chores_table.ChoreId == Parameter("?"))
+    for column in columns:
+        query = query.set(Field(column), Parameter("?"))
     return query.get_sql()
-
-
-# Test to show example generated SQL string
-# print(get_child_by_account_id(("Name", "Points")))
-# print(get_rewards_by_parent())

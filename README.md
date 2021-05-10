@@ -15,3 +15,23 @@ Chores aren't fun, and parents often struggle to provide incentives for their ch
         * Gradle Scripts: gradle/wrapper, build.gradle, etc.
 * Backend directory: contains the code and onboarding instructions for the backend
 * Reports directory: contains the weekly status reports that will be added throughout the quarter
+
+## Bug Tracking
+
+Project issues are tracked through [Github Issues](https://guides.github.com/features/issues/).
+
+### Creating a new issue:
+- Each issue should have a unique name clearly and quickly stating what it is about.
+- Issues should be labeled for greater clarity and organization.
+- Issues should be assigned to someone responsible for fixing it.
+
+## Build Systems
+
+- Frontend: [Gradle](https://gradle.org/) is used to build our frontend code.
+
+## CI/CD
+
+We are using [Github Actions](https://github.com/features/actions) for our CI/CD.
+
+- Frontend:
+- Backend: Our tests and testing documentation can be found in `Backend/tests`.
