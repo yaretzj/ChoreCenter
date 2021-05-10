@@ -401,7 +401,7 @@ def update_chore_child(chore_id):
         print(queries.update_chore(columns))
         cursor.execute(queries.update_chore(columns), *update_values, chore_id)
 
-        if body.get("Status") == "Completed":
+        if chore.Status != "Completed" and body.get("Status") == "Completed":
             cursor.execute(
                 queries.update_child_points(),
                 int(chore.Points) + int(child_acc.Points),
