@@ -15,7 +15,8 @@
 
         <activity android:name=".KidSignup" />
         <activity android:name=".ParentSignup" />
-        <activity android:name=".SubmitChore" />
+        <activity android:name=".SubmitChore"
+            android:parentActivityName=".KidMain"/>
         <activity
             android:name=".KidMain"
             android:label="@string/title_activity_kid_main"
