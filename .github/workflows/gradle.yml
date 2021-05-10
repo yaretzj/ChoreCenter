@@ -5,9 +5,9 @@ name: Frontend Java CI with Gradle
 
 on:
   push:
-    branches: [ frontend ]
+    branches: [ master | frontend ]
   pull_request:
-    branches: [ frontend ]
+    branches: [ master | frontend ]
 
 jobs:
   build:
