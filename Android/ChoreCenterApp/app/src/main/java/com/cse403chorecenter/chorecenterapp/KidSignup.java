@@ -51,8 +51,7 @@ public class KidSignup extends AppCompatActivity {
             // checking account status on the server
             ServiceHandler sh = new ServiceHandler();
             String[] params = new String[2];
-            // params[0] = "http://chorecenter.westus2.cloudapp.azure.com/api/children/new";
-            params[0] = "http://10.0.2.2:80/api/children/new";
+            params[0] = MainActivity.DNS + "api/children/new";
 
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);

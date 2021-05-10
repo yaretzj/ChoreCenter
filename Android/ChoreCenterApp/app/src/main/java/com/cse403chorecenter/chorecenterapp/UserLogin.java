@@ -61,7 +61,7 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
                 .requestIdToken("551695683870-tn6t4q27f5qpfe8jb61dt0jbr6qjf1fm.apps.googleusercontent.com")  // set up Google API console project to use here
                 .build();
         ACCOUNT_TYPE = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
-        ACCOUNT_ID = "6";
+        ACCOUNT_ID = "186";
         ACCOUNT_ID_TOKEN = "exp_token";
     }
 
@@ -128,11 +128,9 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
             ServiceHandler sh = new ServiceHandler();
             String[] params = new String[2];
             if (ACCOUNT_TYPE.equals("parents")) {
-                // params[0] = "http://chorecenter.westus2.cloudapp.azure.com/api/parents/info";
-                params[0] = "http://10.0.2.2:80/api/parents/info";
+                params[0] = MainActivity.DNS + "api/parents/info";
             } else {
-                // params[0] = "http://chorecenter.westus2.cloudapp.azure.com/api/children/info";
-                params[0] = "http://10.0.2.2:80/api/children/info";
+                params[0] = MainActivity.DNS + "api/children/info";
             }
 
             JSONObject jsonObj = new JSONObject();

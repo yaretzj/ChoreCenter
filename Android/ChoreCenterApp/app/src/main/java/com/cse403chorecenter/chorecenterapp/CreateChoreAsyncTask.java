@@ -10,8 +10,7 @@ public class CreateChoreAsyncTask extends AsyncTask<String, Integer, String> {
     @Override
     protected String doInBackground(String... params) {
         try {
-            //URL url = new URL("http://chorecenter.westus2.cloudapp.azure.com/api/parents/chores/new");
-            URL url = new URL("http://10.0.2.2:80/api/parents/chores/new");
+            URL url = new URL(MainActivity.DNS + "api/parents/chores/new");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json");

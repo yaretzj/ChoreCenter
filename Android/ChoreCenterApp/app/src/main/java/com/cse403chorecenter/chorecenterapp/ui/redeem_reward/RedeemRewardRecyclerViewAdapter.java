@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cse403chorecenter.chorecenterapp.MainActivity;
 import com.cse403chorecenter.chorecenterapp.R;
 import com.cse403chorecenter.chorecenterapp.ServiceHandler;
 import com.cse403chorecenter.chorecenterapp.UserLogin;
@@ -132,8 +133,7 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
             // checking account status on the server
             ServiceHandler sh = new ServiceHandler();
             String[] params = new String[2];
-            // params[0] = "http://chorecenter.westus2.cloudapp.azure.com/api/children/rewards/redeem";
-            params[0] = "http://10.0.2.2:80/api/children/rewards/redeem";
+            params[0] = MainActivity.DNS + "api/children/rewards/redeem";
 
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);

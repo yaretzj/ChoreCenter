@@ -48,8 +48,7 @@ public class ParentSignup extends AppCompatActivity {
             // checking account status on the server
             ServiceHandler sh = new ServiceHandler();
             String[] params = new String[2];
-            // params[0] = "http://chorecenter.westus2.cloudapp.azure.com/api/parents/new";
-            params[0] = "http://10.0.2.2:80/api/parents/new";
+            params[0] = MainActivity.DNS + "api/parents/new";
 
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);

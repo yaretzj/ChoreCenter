@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cse403chorecenter.chorecenterapp.MainActivity;
 import com.cse403chorecenter.chorecenterapp.R;
 import com.cse403chorecenter.chorecenterapp.ServiceHandler;
 import com.cse403chorecenter.chorecenterapp.SubmitChore;
@@ -191,8 +192,7 @@ public class SubmitChoreFragment extends Fragment {
             // checking account status on the server
             ServiceHandler sh = new ServiceHandler();
             String[] params = new String[2];
-            // params[0] = "http://chorecenter.westus2.cloudapp.azure.com/api/children/chores";
-            params[0] = "http://10.0.2.2:80/api/children/chores";
+            params[0] = MainActivity.DNS + "api/children/chores";
 
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("GoogleAccountId", com.cse403chorecenter.chorecenterapp.UserLogin.ACCOUNT_ID);
