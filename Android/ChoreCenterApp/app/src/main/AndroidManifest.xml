@@ -2,30 +2,49 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cse403chorecenter.chorecenterapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ChoreCenterApp">
-        <activity android:name=".UserSignout"></activity>
+        android:theme="@style/Theme.ChoreCenterApp"
+        android:networkSecurityConfig="@xml/network_security_config">
+
+        <activity android:name=".KidSignup" />
+        <activity android:name=".ParentSignup" />
+        <activity android:name=".SubmitChore" />
+        <activity
+            android:name=".KidMain"
+            android:label="@string/title_activity_kid_main"
+            android:theme="@style/Theme.ChoreCenterApp.NoActionBar" />
+        <activity android:name=".UserSignout" />
         <activity
             android:name=".ChooseAccountType"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.ChoreCenterApp.NoActionBar" />
         <activity
-            android:name=".UserNavigation"
+            android:name=".ParentNavigation"
+            android:label="@string/title_activity_user_navigation"
+            android:parentActivityName=".UserLogin"
+            android:theme="@style/Theme.ChoreCenterApp.NoActionBar" />
+        <activity
+            android:name=".KidNavigation"
             android:label="@string/title_activity_user_navigation"
             android:parentActivityName=".UserLogin"
             android:theme="@style/Theme.ChoreCenterApp.NoActionBar" />
         <activity
             android:name=".UserLogin"
             android:parentActivityName=".ChooseAccountType" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:theme="@style/Theme.ChoreCenterApp.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
         </activity>
     </application>
