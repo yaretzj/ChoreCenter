@@ -9,10 +9,10 @@ DELETE FROM Children WHERE ParentGoogleAccountId = 'TestParent';
 DELETE FROM Parents WHERE GoogleAccountId = 'TestParent';
 
 -- Creates Parent with Account and Token ID of "TestParent"
-INSERT INTO Parents("Name", "Email", "GoogleTokenId", "GoogleAccountId") VALUES ('Test Parent', 'test@gmail.com', 'TestParent', 'TestParent');
+INSERT INTO Parents("Name", "Email", "GoogleTokenId", "GoogleAccountId") VALUES ('Test Parent', 'chorecenter@gmail.com', 'TestParent', 'TestParent');
 
 -- Creates Child connected to test parent with Account ID "TestChild"
-INSERT INTO Children("Name", "Email", "ParentGoogleAccountId", "GoogleTokenId", "GoogleAccountId", "Points") VALUES ('Test Child', 'test2@gmail.com', 'TestParent', 'TestChild', 'TestChild', 9999999)
+INSERT INTO Children("Name", "Email", "ParentGoogleAccountId", "GoogleTokenId", "GoogleAccountId", "Points") VALUES ('Test Child', 'chorecenter@gmail.com', 'TestParent', 'TestChild', 'TestChild', 9999999)
 
 /*
 Creates 3 standard, unassigned, incomplete chores for test parent
