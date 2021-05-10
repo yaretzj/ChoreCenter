@@ -9,17 +9,9 @@ from app import app
 
 @pytest.fixture
 def client():
-    # db_fd, flaskr.app.config['DATABASE'] = tempfile.mkstemp()
-    # BASEDIR = os.path.abspath(os.path.dirname(".."))
-    # app = Flask(BASEDIR)
-    # print(BASEDIR)
-    # app = Flask('../app.')
     app.config["TESTING"] = True
     with app.test_client() as client:
         yield client
-
-    # os.close(db_fd)
-    # os.unlink(flaskr.app.config['DATABASE'])
 
 
 def test_hello_world(client):
