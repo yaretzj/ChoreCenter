@@ -61,7 +61,7 @@ Chore Center uses [Pytest](https://docs.pytest.org/en/6.2.x/#). To run the backe
 
 We are using [Github Actions](https://github.com/features/actions) for our CI/CD. Currently, on a push request `pytest` will be automatically run to check the unit tests.
 
-## How do I add a new test?
+### How do I add a new test?
 
 1. Make sure your system is properly configured to run the existing tests (`Backend/README.md`), as you'll need them to run the Flask tests.
 2. Locate and open the `Backend/tests` directory.
@@ -69,7 +69,7 @@ We are using [Github Actions](https://github.com/features/actions) for our CI/CD
 4. Write the necessary test(s) for the new or revised functionality.
 5. Run `pytest` to see the results of your newly-added test(s).
 
-## What should a unit test look like?
+### What should a unit test look like?
 
 - Each test should have a unique name clearly stating what unit is being tested.
 - Each test should test only one unit per test, although one test can include several assertions. Create multiple tests for multiple units of functionality.
