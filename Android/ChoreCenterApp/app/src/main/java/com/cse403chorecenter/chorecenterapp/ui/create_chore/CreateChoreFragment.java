@@ -2,6 +2,7 @@ package com.cse403chorecenter.chorecenterapp.ui.create_chore;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,23 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.cse403chorecenter.chorecenterapp.CreateChoreAsyncTask;
 import com.cse403chorecenter.chorecenterapp.R;
+import com.cse403chorecenter.chorecenterapp.UserLogin;
 import com.cse403chorecenter.chorecenterapp.UserSignout;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 public class CreateChoreFragment extends Fragment {
     private CreateChoreViewModel createChoreViewModel;
@@ -29,6 +45,9 @@ public class CreateChoreFragment extends Fragment {
 
         EditText editChoreName = (EditText) view.findViewById(R.id.editCreateChoreName);
         EditText editChorePoints = (EditText) view.findViewById(R.id.editCreateChorePoints);
+        // Chore description can be null or empty
+        EditText editChoreDesc = (EditText) view.findViewById(R.id.editChoreDescription);
+
 
         Button button = (Button) view.findViewById(R.id.button_create_chore);
         button.setOnClickListener(new View.OnClickListener()
@@ -36,26 +55,60 @@ public class CreateChoreFragment extends Fragment {
             @Override
             public void onClick(View view)
             {
-                if(editChoreName == null || editChoreName.getText().toString().isEmpty()
+                if (editChoreName == null || editChoreName.getText().toString().isEmpty()
                                 || editChorePoints == null || editChorePoints.getText().toString().isEmpty()) {
-                    textView.setText("please input both fields");
+                    textView.setText("please input the chore name and chore points");
                     return;
+                }
+
+                // Null description is represented by an empty string
+                if (editChoreDesc == null) {
+                    editChoreDesc.setText("");
                 }
 
                 String choreName = editChoreName.getText().toString();
                 String chorePointsStr = editChorePoints.getText().toString();
+                String choreDesc = editChoreDesc.getText().toString();
+                int chorePointsInt;
 
                 // Check chorePoints is an integer
                 try {
-                    int chorePointsInt = Integer.parseInt(chorePointsStr);
+                    chorePointsInt = Integer.parseInt(chorePointsStr);
                     editChoreName.setText("");
                     editChorePoints.setText("");
+                    editChoreDesc.setText("");
                 } catch (NumberFormatException e) {
                     textView.setText("please input a number for the chore points");
                     return;
                 }
+                // input checks passed
+                //send to server
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("GoogleAccountId", UserLogin.ACCOUNT_ID);
+                    jsonObject.put("Name", choreName);
+                    jsonObject.put("Description", choreDesc);
+                    jsonObject.put("Points", chorePointsInt);
 
-                textView.setText("Chore " + choreName + " created");
+                } catch (JSONException e) {
+                    Log.e("CreateChore", "json parsing " + e.getMessage());
+                }
+
+                CreateChoreAsyncTask networkRequest = new CreateChoreAsyncTask();
+                networkRequest = (CreateChoreAsyncTask) networkRequest.execute(jsonObject.toString());
+
+                // output response
+                try {
+                    String response = networkRequest.get();
+                    if(response != null) {
+                        textView.setText(response);
+                    } else
+                        textView.setText("failed");
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

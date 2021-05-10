@@ -20,10 +20,11 @@ from models.response_models import (
 )
 import db.queries as queries
 
+
 INTIIAL_CHORE_STATUS = "Created"
 
+
 load_dotenv()
-# config = dotenv_values()
 app = Flask(__name__)
 
 
@@ -398,7 +399,6 @@ def update_chore_child(chore_id):
 
     try:
         db_conn.autocommit = False
-        print(queries.update_chore(columns))
         cursor.execute(queries.update_chore(columns), *update_values, chore_id)
 
         if chore.Status != "Completed" and body.get("Status") == "Completed":

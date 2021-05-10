@@ -16,21 +16,18 @@ public class ChooseAccountType extends AppCompatActivity {
 
     /** Called when the user taps the Parent button */
     public void directToParentLogin(View view) {
-        // Do something in response to button
         Intent intent = new Intent(this, UserLogin.class);
-        // EditText editText = (EditText) findViewById(R.id.editText);
-        // String message = editText.getText().toString();
-        String chosenType = "parent";
-        intent.putExtra(MainActivity.EXTRA_MESSAGE, chosenType);
+        intent.putExtra(MainActivity.EXTRA_MESSAGE, "parents");
         startActivity(intent);
     }
 
     /** Called when the user taps the Kid button */
     public void directToKidLogin(View view) {
-        // Do something in response to button
         Intent intent = new Intent(this, UserLogin.class);
-        String chosenType = "kid";
-        intent.putExtra(MainActivity.EXTRA_MESSAGE, chosenType);
+        intent.putExtra(MainActivity.EXTRA_MESSAGE, "children");
+//        Intent intent = new Intent(this, KidMain.class);
+//        String chosenType = "kid";
+//        intent.putExtra(MainActivity.EXTRA_MESSAGE, chosenType);
         startActivity(intent);
     }
 }

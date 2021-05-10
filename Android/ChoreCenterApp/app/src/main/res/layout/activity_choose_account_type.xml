@@ -4,10 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/orange"
     tools:context=".ChooseAccountType">
 
+    <ImageView
+        android:contentDescription="logo"
+        android:layout_width="262dp"
+        android:layout_height="114dp"
+        android:src="@drawable/logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.094" />
+
     <Button
-        android:id="@+id/button"
+        android:id="@+id/redeemRewardBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="directToParentLogin"
@@ -26,5 +39,5 @@
         android:text="@string/button_choose_kid"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/redeemRewardBtn" />
 </androidx.constraintlayout.widget.ConstraintLayout>
