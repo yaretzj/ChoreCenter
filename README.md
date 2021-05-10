@@ -36,5 +36,12 @@ Project issues are tracked through [Github Issues](https://guides.github.com/fea
 
 We are using [Github Actions](https://github.com/features/actions) for our CI/CD.
 
-- Frontend:
-- Backend: Our tests and testing documentation can be found in `Backend/tests`.
+- Frontend: Tests and testing documentation can be found in the `Frontend` directory.
+- Backend: Tests and testing documentation can be found in the `Backend` directory.
+
+## Operational Use Cases
+- Parents and children can Sign Up/Sign In with their Google account, and child accounts are linked to parent accounts with the Parent Code
+- Parents can create chores and rewards and assign points to them
+- Children can view the chores and rewards created by the parents
+- Children can complete chores by submitting them
+- Children can redeem rewards once they have earned sufficient points by completing chores
