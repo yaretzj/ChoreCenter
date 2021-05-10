@@ -58,8 +58,8 @@ public class KidSignup extends AppCompatActivity {
             jsonObj.put("GoogleTokenId", UserLogin.ACCOUNT_ID_TOKEN);
             jsonObj.put("ParentCode", parentCode);
             Log.i(TAG, parentCode);
-            jsonObj.put("Name", "Debugger");
-            jsonObj.put("Email", "deb@gmail.com");
+            jsonObj.put("Name", account.getDisplayName());
+            jsonObj.put("Email", account.getEmail());
             params[1] = jsonObj.toString();
             sh = (ServiceHandler) sh.execute(params);
 

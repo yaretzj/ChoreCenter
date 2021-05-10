@@ -53,8 +53,8 @@ public class ParentSignup extends AppCompatActivity {
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);
             jsonObj.put("GoogleTokenId", UserLogin.ACCOUNT_ID_TOKEN);
-            jsonObj.put("Name", "Debugger");
-            jsonObj.put("Email", "deb@gmail.com");
+            jsonObj.put("Name", account.getDisplayName());
+            jsonObj.put("Email", account.getEmail());
             params[1] = jsonObj.toString();
             sh = (ServiceHandler) sh.execute(params);
 

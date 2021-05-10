@@ -61,7 +61,7 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
                 .requestIdToken("551695683870-tn6t4q27f5qpfe8jb61dt0jbr6qjf1fm.apps.googleusercontent.com")  // set up Google API console project to use here
                 .build();
         ACCOUNT_TYPE = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
-        ACCOUNT_ID = "186";
+        ACCOUNT_ID = "1";
         ACCOUNT_ID_TOKEN = "exp_token";
     }
 
@@ -92,7 +92,8 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
             if (account != null) {
                 // Signed in successfully
 
-                //ACCOUNT_ID = account.getId();
+                ACCOUNT_ID = account.getId();
+                ACCOUNT_ID_TOKEN = account.getIdToken();
                 // check if the account exists on server before proceeding
                 if (accountExists(account)) {
                     if (ACCOUNT_TYPE.equals("parents")) {
