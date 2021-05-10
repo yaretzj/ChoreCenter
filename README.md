@@ -16,6 +16,9 @@ Chores aren't fun, and parents often struggle to provide incentives for their ch
 * Backend directory: contains the code and onboarding instructions for the backend
 * Reports directory: contains the weekly status reports that will be added throughout the quarter
 
+## Instructions to Build, Run, and Test the Application
+Instructions to build, run, and test the mobile application and backend server can be found in the Android and Backend directories respectively.
+
 ## Bug Tracking
 
 Project issues are tracked through [Github Issues](https://guides.github.com/features/issues/).
