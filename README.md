@@ -36,7 +36,7 @@ Project issues are tracked through [Github Issues](https://guides.github.com/fea
 
 We are using [Github Actions](https://github.com/features/actions) for our CI/CD.
 
-- Frontend: Tests and testing documentation can be found in the `Frontend` directory.
+- Frontend: Tests and testing documentation can be found in the `Android` directory.
 - Backend: Tests and testing documentation can be found in the `Backend` directory.
 
 ## Operational Use Cases
