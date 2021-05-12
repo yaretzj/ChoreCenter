@@ -18,6 +18,7 @@ Chores aren't fun, and parents often struggle to provide incentives for their ch
 
 ## Instructions to Build, Run, and Test the Application
 Instructions to build, run, and test the mobile application and backend server can be found in the Android and Backend directories respectively.
+We are running an existing backend on a VM already that you can interact with using this url: http://chorecenter.westus2.cloudapp.azure.com
 
 ## Bug Tracking
 
