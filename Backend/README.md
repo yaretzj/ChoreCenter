@@ -1,3 +1,19 @@
+# Backend Overview
+### API Specification:
+https://docs.google.com/document/d/1tn0H75jkZW10amI4bwc_tJ53w9WVDflUd25YEO0T5ks/edit?usp=sharing
+### Database Schema ER Diagram
+https://drive.google.com/file/d/1szlRbngpRR0erHz1WED1otbmevpOqY_I/view
+
+### Directory Structure:
+    .
+    ├── app.py          # main script that starts the server
+    │   ├── db          # .sql files to create database tables, triggers, and insert test data, and migration script
+    │   ├── test        # pytest unit tests
+    │   └── models      # HTTP response models  
+    └── ...
+    
+
+
 ## Onboarding Instructions
 
 ### Running the Flask Server Locally
@@ -51,7 +67,6 @@ Cheapest tier (B1s) is good enough for testing project.
 - Set the `FLASK_RUN_PORT` to 80 to connect via HTTP.
 - Run flask using the `flask run --host=0.0.0.0 --with-threads` to then make the server visible to the external network.
 
-_Based off of Bootstrap's great testing documentation [here](https://github.com/twbs/bootstrap/tree/main/js/tests)._
 
 ## Testing Instructions
 
