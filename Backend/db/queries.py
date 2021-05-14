@@ -133,7 +133,6 @@ def get_chores_by_parent() -> str:
     return query.get_sql()
 
 
-
 def get_chore_by_id_and_parent() -> str:
     """Returns query to get the chore for given ChoreId."""
     query = (
@@ -231,7 +230,6 @@ def update_child_points() -> str:
         .where(children_table.GoogleAccountId == Parameter("?"))
     )
     return query.get_sql()
-
 
 
 def update_chore(columns: list) -> str:
