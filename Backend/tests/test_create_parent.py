@@ -27,31 +27,29 @@ def test_create_parent(client, cursor):
     delete_test_parent(cursor)
 
 
-# def test_create_duplicate_parent(client, cursor):
-#     delete_test_parent(cursor)
+def test_create_duplicate_parent(client, cursor):
+    delete_test_parent(cursor)
 
-#     req_json = {
-#         "Name": "CreateParentTest",
-#         "Email": "CreateParentTest",
-#         "GoogleAccountId": "CreateParentTest",
-#         "GoogleTokenId": "CreateParentTest",
-#     }
-#     rv1 = client.post("/api/parents/new", json=req_json)
-#     assert rv1.status_code == 201
+    req_json = {
+        "Name": "CreateParentTest",
+        "Email": "CreateParentTest",
+        "GoogleAccountId": "CreateParentTest",
+        "GoogleTokenId": "CreateParentTest",
+    }
+    rv1 = client.post("/api/parents/new", json=req_json)
+    assert rv1.status_code == 201
 
-#     rv2 = client.post("/api/parents/new", json=req_json)
-#     assert rv2.status_code == 400
+    rv2 = client.post("/api/parents/new", json=req_json)
+    assert rv2.status_code == 400
 
-#     delete_test_parent(cursor)
+    """ Need to figure out why this line is causing tests to stall. """
+    # delete_test_parent(cursor)
 
 
 def delete_test_parent(cursor):
     try:
         cursor.execute(
-            """DELETE FROM Parents WHERE GoogleAccountId = 'CreateParentTest';"""
+            """DELETE FROM Parents WHERE Parents.GoogleAccountId = 'CreateParentTest';"""
         )
-        # cursor.commit()
-        # cursor.close()
     except pyodbc.Error as err:
         print(err)
-    # cursor.commit()
