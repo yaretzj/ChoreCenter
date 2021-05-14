@@ -1,9 +1,5 @@
 import pyodbc
-# from db.connection import setup_db_conn
 
-# conn = setup_db_conn()
-# # conn.autocommit = True
-# cursor = conn.cursor()
 
 def test_create_parent_bad_request(client):
     rv = client.post("/api/parents/new", json=dict())
@@ -59,4 +55,3 @@ def delete_test_parent(cursor):
     except pyodbc.Error as err:
         print(err)
     # cursor.commit()
-
