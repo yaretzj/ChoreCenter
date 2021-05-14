@@ -8,22 +8,15 @@ def test_create_parent_bad_request(client):
 
 
 def test_create_duplicate_parent(client, cursor):
-    delete_test_parent(cursor)
-
     req_json = {
-        "Name": "CreateParentTest",
-        "Email": "CreateParentTest",
-        "GoogleAccountId": "CreateParentTest",
-        "GoogleTokenId": "CreateParentTest",
+        "Name": "TestParent",
+        "Email": "TestParent",
+        "GoogleAccountId": "TestParent",
+        "GoogleTokenId": "TestParent",
     }
-    rv1 = client.post("/api/parents/new", json=req_json)
-    assert rv1.status_code == 201
 
-    rv2 = client.post("/api/parents/new", json=req_json)
-    assert rv2.status_code == 400
-
-    """ Need to figure out why this line is causing tests to stall. """
-    # delete_test_parent(cursor)
+    rv = client.post("/api/parents/new", json=req_json)
+    assert rv.status_code == 400
 
 
 def test_create_parent(client, cursor):

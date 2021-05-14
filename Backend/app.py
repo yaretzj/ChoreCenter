@@ -230,8 +230,8 @@ def get_rewards_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
     """Gets the rewards for a given parent account id."""
     try:
         cursor.execute(queries.get_rewards_by_parent(), account_id)
-    except Exception:
-        abort(404, "Parent Account ID {} does not exist".format(account_id))
+    except Exception as exc:
+        abort(500, str(exc))
 
     return GetRewardsResponseModel(cursor.fetchall()).get_response()
 
