@@ -23,7 +23,7 @@ def test_hello_world(client):
 
 
 def test_get_parent(client):
-    # req = {"GoogleAccountId": "lel@gmail.com", "GoogleTokenId": "foo"}
-    req = dict(GoogleAccountId="lel@gmail.com", GoogleTokenId="foo")
+    # req = {"GoogleAccountId": "TestParent", "GoogleTokenId": "TestParent"}
+    req = dict(GoogleAccountId="TestParent", GoogleTokenId="TestParent")
     res = client.post("/api/parents/info", json=req)
     assert res.status_code == 200
