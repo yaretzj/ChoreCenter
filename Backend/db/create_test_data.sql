@@ -18,22 +18,22 @@ INSERT INTO Children("Name", "Email", "ParentGoogleAccountId", "GoogleTokenId", 
 Creates 3 standard, unassigned, incomplete chores for test parent
 */
 -- Name: "Sweep the Floor", Description: "Location: Kitchen", Status: "Created", AssignedTo: null, Points: 500
-INSERT INTO Chores("ParentGoogleAccountId", "Name", "Description", "Status", "AssignedTo", "Points") VALUES ('TestParent', 'Sweep the Floor', 'Location: Kitchen', 'Created', null, 500);
+INSERT INTO Chores("ChoreId", "ParentGoogleAccountId", "Name", "Description", "Status", "AssignedTo", "Points") VALUES ('42CA0914-2A14-4096-8931-A64494719FB6', 'TestParent', 'Sweep the Floor', 'Location: Kitchen', 'Created', null, 500);
 
 -- Name: "Wash Dishes", Description: "", Status: "Created", AssignedTo: null, Points: 100
-INSERT INTO Chores("ParentGoogleAccountId", "Name", "Description", "Status", "AssignedTo", "Points") VALUES ('TestParent', 'Wash Dishes', '', 'Created', null, 100);
+INSERT INTO Chores("ChoreId", "ParentGoogleAccountId", "Name", "Description", "Status", "AssignedTo", "Points") VALUES ('D8342704-AF59-4034-B923-B22B4C98650F', 'TestParent', 'Wash Dishes', '', 'Created', null, 100);
 
 -- Name: "Walk the Dog", Description: "Minimum 15 minutes", Status: "Created", AssignedTo: null, Points: 200
-INSERT INTO Chores("ParentGoogleAccountId", "Name", "Description", "Status", "AssignedTo", "Points") VALUES ('TestParent', 'Walk the Dog', 'Minimum 15 minutes', 'Created', null, 200);
+INSERT INTO Chores("ChoreId", "ParentGoogleAccountId", "Name", "Description", "Status", "AssignedTo", "Points") VALUES ('BB9DA6E5-5C2A-44B5-AC83-5BDA5CA95FA8', 'TestParent', 'Walk the Dog', 'Minimum 15 minutes', 'Created', null, 200);
 
 /*
 Creates 2 completed chores for test parent
 */
 -- Name: "Clean Bedroom", Description: "Full clean of your room", Status: "Completed", AssignedTo: "TestChild", Points: 300
-INSERT INTO Chores("ParentGoogleAccountId", "Name", "Description", "Status", "AssignedTo", "Points") VALUES ('TestParent', 'Clean Bedroom', 'Full clean of your room', 'Completed', 'TestChild', 300);
+INSERT INTO Chores("ChoreId", "ParentGoogleAccountId", "Name", "Description", "Status", "AssignedTo", "Points") VALUES ('4697217C-B0FE-4CA5-ACC2-10C5FC342C06', 'TestParent', 'Clean Bedroom', 'Full clean of your room', 'Completed', 'TestChild', 300);
 
 -- Name: "Do Homework", Description: "Finish your homework early", Status: "Completed", AssignedTo: "TestChild", Points: 50
-INSERT INTO Chores("ParentGoogleAccountId", "Name", "Description", "Status", "AssignedTo", "Points") VALUES ('TestParent', 'Do Homework', 'Finish your homework early', 'Completed', 'TestChild', 50);
+INSERT INTO Chores("ChoreId", "ParentGoogleAccountId", "Name", "Description", "Status", "AssignedTo", "Points") VALUES ('FFE61C9A-C1C9-45CA-B6F0-8F850A936E38', 'TestParent', 'Do Homework', 'Finish your homework early', 'Completed', 'TestChild', 50);
 
 
 /*
