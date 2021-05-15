@@ -52,10 +52,10 @@ INSERT INTO Rewards("ParentGoogleAccountId", "Name", "Description", "Points") VA
 Creates Redemption History Entry for "Test Childs Redemption History"
 */
 -- Name: "Ice Cream"
-INSERT INTO RewardRedemptionHistory("RewardId", "ParentGoogleAccountId", "ChildGoogleAccountId") VALUES ((SELECT RewardId FROM Rewards WHERE 'Name' = 'Ice Cream'),'TestParent', 'TestChild');
+INSERT INTO RewardRedemptionHistory("RewardId", "ParentGoogleAccountId", "ChildGoogleAccountId") VALUES ((SELECT RewardId FROM Rewards WHERE Name = 'Ice Cream'),'TestParent', 'TestChild');
 
 -- Name: "Cash Exchange"
-INSERT INTO RewardRedemptionHistory("RewardId", "ParentGoogleAccountId", "ChildGoogleAccountId") VALUES ((SELECT RewardId FROM Rewards WHERE 'Name' = 'CashExchange'),'TestParent', 'TestChild');
+INSERT INTO RewardRedemptionHistory("RewardId", "ParentGoogleAccountId", "ChildGoogleAccountId") VALUES ((SELECT RewardId FROM Rewards WHERE Name = 'Cash Exchange'),'TestParent', 'TestChild');
 
 -- Name: "Cash Exchange" for a second
-INSERT INTO RewardRedemptionHistory("RewardId", "ParentGoogleAccountId", "ChildGoogleAccountId") VALUES ((SELECT RewardId FROM Rewards WHERE 'Name' = 'CashExchange'),'TestParent', 'TestChild');
+INSERT INTO RewardRedemptionHistory("RewardId", "ParentGoogleAccountId", "ChildGoogleAccountId") VALUES ((SELECT RewardId FROM Rewards WHERE Name = 'Cash Exchange'),'TestParent', 'TestChild');
