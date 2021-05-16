@@ -25,7 +25,7 @@ https://drive.google.com/file/d/1szlRbngpRR0erHz1WED1otbmevpOqY_I/view
 - Create a virtual environment in the Backend directory with the command `python3 -m venv venv`.
 - Use the command `. venv/bin/activate` on Mac or `. venv/Scripts/activate` on Windows to activate the virtual environment. You can deactivate the virtual environment with the command `deactivate` when you are done using the application.
 - You will need to install the packages for the project using pip with the command `pip install -r requirements.txt`. The packages can be viewed in `requirements.txt`.
-- Create a local copy of the `.env.example` file using the command `cp .env.example .env`. Replace the placeholders after the `=` sign with the corresponding config values. Reach out to a member of the backend team if you need the env variable strings. You will need these to connect to the Azure server.
+- Create a local copy of the `.env.example` file using the command `cp .env.example .env`. Replace the placeholders after the `=` sign with the corresponding config values and credentials. You will need these to connect to the Azure database server. Follow the instructions below to set up an Azure SQL Server Database and generate your own credentials or reach out to a member of the backend team for the env variable strings.
 - Before you can run the server you will need to export the `FLASK_APP` environment variable to tell your terminal the application to work with with the command `export FLASK_APP=app.py`.
 - Run the flask server with the command `flask run`. The server runs on port 5000 by default. If you want to run the server on a different port, export an environment variable named `FLASK_RUN_PORT` and set it to the desired port number. If set, `flask run` will run the server on the port number defined in `FLASK_RUN_PORT`.
 
@@ -56,7 +56,7 @@ Based off of tutorial from CSE 344
 - Once it's created, select your new database. Select the pushpin icon to "Pin to dashboard" so you can easily find it in the future.
 - Finally, click "Set server firewall" at the top of the page. You may need to change the settings before you can upload data. The easiest option is to add a rule that allows connections from any client, which you can do from below. Be sure to click "Save" once you have added this rule.
 
-#### Virtual Machine
+#### Virtual Machine for Deployment
 - Follow this tutorial for the Virtual Machine and set up according to suitable pricing: https://docs.microsoft.com/en-us/azure/virtual-machines/windows/quick-create-portal 
 Cheapest tier (B1s) is good enough for testing project.
 - Connect to the VM and now download the most recent version of Python3
@@ -79,10 +79,12 @@ We are using [Github Actions](https://github.com/features/actions) for our CI/CD
 ### How do I add a new test?
 
 1. Make sure your system is properly configured to run the existing tests (`Backend/README.md`), as you'll need them to run the Flask tests.
-2. Locate and open the `Backend/tests` directory.
-3. Review the [Pytest Documentation](https://docs.pytest.org/en/6.2.x/contents.html#toc) and use the existing tests as references for how to structure your new tests.
-4. Write the necessary test(s) for the new or revised functionality.
-5. Run `pytest` to see the results of your newly-added test(s).
+2. Review the [Pytest Documentation](https://docs.pytest.org/en/6.2.x/contents.html#toc) and use the existing tests as references for how to structure your new tests.
+3. Locate and open the `Backend/tests` directory.
+4. The `conftest.py` file contains all the test fixtures used by the tests.
+5. Tests are separated into files by endpoint. Add new tests for an endpoint to the corresponding file (eg: add tests for the `CreateChild` endpoint to the `test_create_child.py` file). If adding a new endpoint, create a new test file with tests for the endpoint. 
+6. Write the necessary test(s) for the new or revised functionality.
+7. The `pytest`command runs the tests in the test suite and prints the results to the console.
 
 ### What should a unit test look like?
 
