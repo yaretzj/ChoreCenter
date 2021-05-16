@@ -1,9 +1,10 @@
-package com.cse403chorecenter.chorecenterapp.ui.submit_chore;
+package com.cse403chorecenter.chorecenterapp.ui.verify_chore;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import com.cse403chorecenter.chorecenterapp.MainActivity;
 import com.cse403chorecenter.chorecenterapp.R;
 import com.cse403chorecenter.chorecenterapp.ServiceHandler;
 import com.cse403chorecenter.chorecenterapp.UserLogin;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,10 +25,10 @@ import java.util.concurrent.ExecutionException;
 /**
  * Provide views to RecyclerView with data from mDataSet.
  */
-public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitChoreRecyclerViewAdapter.ChoreViewHolder> {
-    private static final String TAG = "CustomAdapter";
+public class VerifyChoreRecyclerViewAdapter extends RecyclerView.Adapter<VerifyChoreRecyclerViewAdapter.ChoreViewHolder> {
+    private static final String TAG = "VerifyChoreAdapter";
 
-    private List<SubmitChoreFragment.ChoreModel> mDataSet;
+    private List<VerifyChoreFragment.ChoreModel> mDataSet;
 
     // BEGIN_INCLUDE(recyclerViewSampleViewHolder)
     /**
@@ -44,7 +46,7 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
                     Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
                 }
             });
-            textView = (TextView) v.findViewById(R.id.submitChoreTV);
+            textView = (TextView) v.findViewById(R.id.verifyChoreTV);
         }
 
         public TextView getTextView() {
@@ -58,36 +60,39 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
      *
      * @param dataSet String[] containing the data to populate views to be used by RecyclerView.
      */
-    public SubmitChoreRecyclerViewAdapter(List<SubmitChoreFragment.ChoreModel> dataSet) {
+    public VerifyChoreRecyclerViewAdapter(List<VerifyChoreFragment.ChoreModel> dataSet) {
         mDataSet = dataSet;
     }
 
     // BEGIN_INCLUDE(recyclerViewOnCreateViewHolder)
     // Create new views (invoked by the layout manager)
     @Override
-    public SubmitChoreRecyclerViewAdapter.ChoreViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public VerifyChoreRecyclerViewAdapter.ChoreViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view.
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.text_row_chore_item, viewGroup, false);
+                .inflate(R.layout.text_row_verify_chore_item, viewGroup, false);
 
-        return new SubmitChoreRecyclerViewAdapter.ChoreViewHolder(v);
+        return new VerifyChoreRecyclerViewAdapter.ChoreViewHolder(v);
     }
     // END_INCLUDE(recyclerViewOnCreateViewHolder)
 
     // BEGIN_INCLUDE(recyclerViewOnBindViewHolder)
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(@NonNull SubmitChoreRecyclerViewAdapter.ChoreViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull VerifyChoreRecyclerViewAdapter.ChoreViewHolder viewHolder, final int position) {
         Log.d(TAG, "Element " + position + " set.");
 
         // Get element from your dataset at this position and replace the contents of the view
         // with that element
-        SubmitChoreFragment.ChoreModel chore = mDataSet.get(position);
+        VerifyChoreFragment.ChoreModel chore = mDataSet.get(position);
         String nameAndPoints = chore.getName() + ": " + chore.getPoints();
         viewHolder.textViewName.setText(nameAndPoints);
         viewHolder.textViewDescription.setText(chore.getDescription());
+        String status = "Status: " + chore.getStatus();
+        viewHolder.textViewStatus.setText(status);
         viewHolder.position = position;
         viewHolder.ChoreId = chore.getId();
+        viewHolder.verifyChoreBtn.setVisibility((chore.getStatus().equals("Completed")) ? View.VISIBLE : View.INVISIBLE);
     }
     // END_INCLUDE(recyclerViewOnBindViewHolder)
 
@@ -100,6 +105,8 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
     public static class ChoreViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName;
         TextView textViewDescription;
+        TextView textViewStatus;
+        Button verifyChoreBtn;
         View rootView;
         int position;
         String ChoreId;
@@ -107,32 +114,43 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
         public ChoreViewHolder(@NonNull View itemView) {
             super(itemView);
             rootView = itemView;
-            textViewName = itemView.findViewById(R.id.submitChoreTV);
-            textViewDescription = itemView.findViewById(R.id.submitChoreTV2);
-            itemView.findViewById(R.id.submitChoreBtn).setOnClickListener(new View.OnClickListener() {
+            textViewName = itemView.findViewById(R.id.verifyChoreTV);
+            textViewDescription = itemView.findViewById(R.id.verifyChoreTV2);
+            textViewStatus = itemView.findViewById(R.id.verifyChoreTV3);
+            verifyChoreBtn = itemView.findViewById(R.id.verifyChoreBtn);
+            verifyChoreBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "Clicked chore id: " + ChoreId);
                     // Send the http request
 
                     // submit chore
-                    submitChore(ChoreId);
+                    if (verifyChore(ChoreId)) {
+                        verifyChoreBtn.setVisibility(View.INVISIBLE);
+                        String status = "Status: Verified";
+                        textViewStatus.setText(status);
+                        Snackbar.make(itemView.findViewById(R.id.verifyChoreTV), R.string.verify_pop_up_success, Snackbar.LENGTH_SHORT)
+                                .show();
+                    } else {
+                        Snackbar.make(itemView.findViewById(R.id.verifyChoreTV), R.string.verify_pop_up_failed, Snackbar.LENGTH_SHORT)
+                                .show();
+                    }
                 }
             });
         }
     }
 
     /** submit a chore for the kid account */
-    public static boolean submitChore(String choreId) {
+    public static boolean verifyChore(String choreId) {
         try {
             // checking account status on the server
             ServiceHandler sh = new ServiceHandler();
             String[] params = new String[2];
-            params[0] = MainActivity.DNS + "api/children/chores/" + choreId + "/update";
+            params[0] = MainActivity.DNS + "api/parents/chores/" + choreId + "/update";
 
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);
-            jsonObj.put("Status", "Completed");
+            jsonObj.put("Status", "Verified");
             jsonObj.put("AssignedTo", UserLogin.ACCOUNT_ID);
             params[1] = jsonObj.toString();
             sh = (ServiceHandler) sh.execute(params);
