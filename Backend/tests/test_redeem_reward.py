@@ -3,6 +3,7 @@ def test_bad_request(client):
     assert rv.status_code == 400
     assert b"Incomplete request body" in rv.data
 
+
 def test_redeem_reward(client, cursor):
     # create chore
     # mark chore as completed
@@ -12,3 +13,4 @@ def test_redeem_reward(client, cursor):
     # verify points were dedcuted
     # delete reward redemption history
     # delete chore
+    pass
