@@ -13,6 +13,7 @@ import com.cse403chorecenter.chorecenterapp.MainActivity;
 import com.cse403chorecenter.chorecenterapp.R;
 import com.cse403chorecenter.chorecenterapp.ServiceHandler;
 import com.cse403chorecenter.chorecenterapp.UserLogin;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +30,8 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
     private static final String TAG = "CustomAdapter";
 
     private List<RedeemRewardFragment.RewardModel> mDataSet;
+
+    public RedeemRewardFragment mFragment;
 
     // BEGIN_INCLUDE(recyclerViewSampleViewHolder)
     /**
@@ -60,8 +63,9 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
      *
      * @param dataSet String[] containing the data to populate views to be used by RecyclerView.
      */
-    public RedeemRewardRecyclerViewAdapter(List<RedeemRewardFragment.RewardModel> dataSet) {
+    public RedeemRewardRecyclerViewAdapter(List<RedeemRewardFragment.RewardModel> dataSet, RedeemRewardFragment fragment) {
         mDataSet = dataSet;
+        mFragment = fragment;
     }
 
     // BEGIN_INCLUDE(recyclerViewOnCreateViewHolder)
@@ -121,6 +125,12 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
                     if (submitChore(RewardId, itemView.findViewById(R.id.redeemRewardTV))) {
                         Snackbar.make(itemView.findViewById(R.id.redeemRewardTV), R.string.redeem_pop_up_success, Snackbar.LENGTH_SHORT)
                                 .show();
+                        Log.i(TAG, v.getRootView().getRootView().toString());
+                        NavigationView navigationView = (NavigationView) v.getRootView().findViewById(R.id.kid_nav_view);
+                        View headerView = navigationView.getHeaderView(0);
+                        TextView pointsTV = headerView.findViewById(R.id.accountPointsTV);
+                        String accountPoints = "Points: " + UserLogin.ACCOUNT_POINTS;
+                        pointsTV.setText(accountPoints);
                     }
                 }
             });
@@ -149,7 +159,12 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
                     if (response.equals("405")) {
                         Snackbar.make(view, R.string.redeem_pop_up_failed, Snackbar.LENGTH_SHORT).show();
                     }
-                    return !response.equals("404") && !response.equals("405") && !response.equals("500") && !response.equals("400");
+                    if (!response.equals("404") && !response.equals("405") && !response.equals("500") && !response.equals("400")) {
+                        JSONObject jsonObject = new JSONObject(response);
+                        UserLogin.ACCOUNT_POINTS = String.valueOf(jsonObject.getInt("RemainingPoints"));
+                        return true;
+                    }
+                    return false;
                 }
                 return false;
             } catch (ExecutionException e) {

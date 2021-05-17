@@ -90,7 +90,7 @@ public class RedeemRewardFragment extends Fragment {
         }
         setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
 
-        mAdapter = new RedeemRewardRecyclerViewAdapter(mDataset);
+        mAdapter = new RedeemRewardRecyclerViewAdapter(mDataset, this);
         // Set CustomAdapter as the adapter for RecyclerView.
         mRecyclerView.setAdapter(mAdapter);
         // END_INCLUDE(initializeRecyclerView)
