@@ -12,6 +12,12 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/nav_home_kid"
+        android:name="com.cse403chorecenter.chorecenterapp.ui.home_kid.HomeKidFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home_kid" />
+
+    <fragment
         android:id="@+id/nav_gallery"
         android:name="com.cse403chorecenter.chorecenterapp.ui.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
