@@ -58,7 +58,7 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
         Intent intent = getIntent();
         GSO = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
-                .requestIdToken("551695683870-tn6t4q27f5qpfe8jb61dt0jbr6qjf1fm.apps.googleusercontent.com")  // set up Google API console project to use here
+                .requestIdToken("779106056531-mq0ef424ck8brpi4vuk4ncqog07m186g.apps.googleusercontent.com")  // set up Google API console project to use here
                 .build();
         ACCOUNT_TYPE = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
         ACCOUNT_ID = "186";
@@ -98,7 +98,7 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
                     if (ACCOUNT_TYPE.equals("parents")) {
                         startActivity(new Intent(this, ParentNavigation.class));
                     } else {
-                        startActivity(new Intent(this, KidNavigation.class));
+                        startActivity(new Intent(this, KidMain.class));
                     }
                 } else {
                     if (ACCOUNT_TYPE.equals("parents")) {

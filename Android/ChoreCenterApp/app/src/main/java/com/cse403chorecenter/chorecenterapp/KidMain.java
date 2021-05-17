@@ -3,9 +3,6 @@ package com.cse403chorecenter.chorecenterapp;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.cse403chorecenter.chorecenterapp.ui.redeem_reward.RedeemRewardFragment;
-import com.cse403chorecenter.chorecenterapp.ui.submit_chore.SubmitChoreFragment;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -33,9 +30,11 @@ public class KidMain extends AppCompatActivity implements View.OnClickListener {
             case R.id.c1 :
                 i = new Intent(this, SubmitChore.class);
                 startActivity(i);
+                break;
             case R.id.c2 :
-                i = new Intent(this, RedeemRewardFragment.class);
+                i = new Intent(this, KidNavigation.class);
                 startActivity(i);
+                break;
         }
     }
 }
