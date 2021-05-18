@@ -16,7 +16,7 @@ Our app is currently unavailable to the public, but will be on the Google Play s
 Check out our user setup and guide on the [wiki](https://github.com/yaretzj/ChoreCenter/wiki)!
 
 ## Repository Structure
-
+More detailed repository structure can be found in the `Android` and `Backend` directories respectively
 * Android directory: contains the code and onboarding instructions for the mobile application
     * ChoreCenterApp: top-level directory of Anroid app
         * app.java.com.cse403chorecenter.chorecenterapp: source code for the activities
