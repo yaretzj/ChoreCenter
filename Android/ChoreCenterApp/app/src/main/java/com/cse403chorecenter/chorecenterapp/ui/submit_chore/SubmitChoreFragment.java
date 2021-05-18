@@ -161,12 +161,14 @@ public class SubmitChoreFragment extends Fragment {
         private final long points;
         private final String description;
         private final String id;
+        private final String status;
 
-        public ChoreModel(String name, long points, String description, String id) {
+        public ChoreModel(String name, long points, String description, String id, String status) {
             this.name = name;
             this.points = points;
             this.description = description;
             this.id = id;
+            this.status = status;
         }
 
         public String getName() {
@@ -183,6 +185,10 @@ public class SubmitChoreFragment extends Fragment {
 
         public String getId() {
             return id;
+        }
+
+        public String getStatus() {
+            return status;
         }
     }
 
@@ -215,7 +221,7 @@ public class SubmitChoreFragment extends Fragment {
                         for (int i = 0; i < chores.length(); i++) {
                             JSONObject c = chores.getJSONObject(i);
                             mDataset.add(new SubmitChoreFragment.ChoreModel(c.getString("Name"), c.getLong("Points"),
-                                    c.getString("Description"), c.getString("ChoreId")));
+                                    c.getString("Description"), c.getString("ChoreId"), c.getString("Status")));
                         }
                     } catch (final JSONException e) {
                         Log.e(TAG, "Json parsing error: " + e.getMessage());

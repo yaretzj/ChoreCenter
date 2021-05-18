@@ -88,6 +88,7 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
         viewHolder.textViewDescription.setText(chore.getDescription());
         viewHolder.position = position;
         viewHolder.ChoreId = chore.getId();
+        viewHolder.textViewStatus.setText("Status: " + chore.getStatus());
     }
     // END_INCLUDE(recyclerViewOnBindViewHolder)
 
@@ -100,6 +101,7 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
     public static class ChoreViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName;
         TextView textViewDescription;
+        TextView textViewStatus;
         View rootView;
         int position;
         String ChoreId;
@@ -109,6 +111,7 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
             rootView = itemView;
             textViewName = itemView.findViewById(R.id.submitChoreTV);
             textViewDescription = itemView.findViewById(R.id.submitChoreTV2);
+            textViewStatus = itemView.findViewById(R.id.submitChoreTV3);
             itemView.findViewById(R.id.submitChoreBtn).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -116,7 +119,10 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
                     // Send the http request
 
                     // submit chore
-                    submitChore(ChoreId);
+                    if (textViewStatus.getText().equals("Status: Created")) {
+                        submitChore(ChoreId);
+                        textViewStatus.setText("Status: Completed");
+                    }
                 }
             });
         }
