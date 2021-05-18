@@ -1,13 +1,11 @@
-package com.cse403chorecenter.chorecenterapp.ui.redeem_reward;
+package com.cse403chorecenter.chorecenterapp.ui.verify_chore;
 
 import android.os.Bundle;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -17,24 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cse403chorecenter.chorecenterapp.MainActivity;
 import com.cse403chorecenter.chorecenterapp.R;
 import com.cse403chorecenter.chorecenterapp.ServiceHandler;
-import com.cse403chorecenter.chorecenterapp.ui.submit_chore.SubmitChoreFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class RedeemRewardFragment extends Fragment {
+public class VerifyChoreFragment extends Fragment {
     private static final String TAG = "RecyclerViewFragment";
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
     private static final int SPAN_COUNT = 2;
@@ -44,15 +35,15 @@ public class RedeemRewardFragment extends Fragment {
         LINEAR_LAYOUT_MANAGER
     }
 
-    protected LayoutManagerType mCurrentLayoutManagerType;
+    protected VerifyChoreFragment.LayoutManagerType mCurrentLayoutManagerType;
 
     protected RadioButton mLinearLayoutRadioButton;
     protected RadioButton mGridLayoutRadioButton;
 
     protected RecyclerView mRecyclerView;
-    protected RedeemRewardRecyclerViewAdapter mAdapter;
+    protected VerifyChoreRecyclerViewAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
-    protected List<RewardModel> mDataset;
+    protected List<VerifyChoreFragment.ChoreModel> mDataset;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +61,7 @@ public class RedeemRewardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_redeem_reward, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_verify_chore, container, false);
         rootView.setTag(TAG);
 
         // BEGIN_INCLUDE(initializeRecyclerView)
@@ -81,16 +72,16 @@ public class RedeemRewardFragment extends Fragment {
         // elements are laid out.
         mLayoutManager = new LinearLayoutManager(getActivity());
 
-        mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+        mCurrentLayoutManagerType = VerifyChoreFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
 
         if (savedInstanceState != null) {
             // Restore saved layout manager type.
-            mCurrentLayoutManagerType = (LayoutManagerType) savedInstanceState
+            mCurrentLayoutManagerType = (VerifyChoreFragment.LayoutManagerType) savedInstanceState
                     .getSerializable(KEY_LAYOUT_MANAGER);
         }
         setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
 
-        mAdapter = new RedeemRewardRecyclerViewAdapter(mDataset, this);
+        mAdapter = new VerifyChoreRecyclerViewAdapter(mDataset);
         // Set CustomAdapter as the adapter for RecyclerView.
         mRecyclerView.setAdapter(mAdapter);
         // END_INCLUDE(initializeRecyclerView)
@@ -99,7 +90,7 @@ public class RedeemRewardFragment extends Fragment {
         mLinearLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER);
+                setRecyclerViewLayoutManager(VerifyChoreFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER);
             }
         });
 
@@ -107,7 +98,7 @@ public class RedeemRewardFragment extends Fragment {
         mGridLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setRecyclerViewLayoutManager(LayoutManagerType.GRID_LAYOUT_MANAGER);
+                setRecyclerViewLayoutManager(VerifyChoreFragment.LayoutManagerType.GRID_LAYOUT_MANAGER);
             }
         });
 
@@ -119,7 +110,7 @@ public class RedeemRewardFragment extends Fragment {
      *
      * @param layoutManagerType Type of layout manager to switch to.
      */
-    public void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
+    public void setRecyclerViewLayoutManager(VerifyChoreFragment.LayoutManagerType layoutManagerType) {
         int scrollPosition = 0;
 
         // If a layout manager has already been set, get current scroll position.
@@ -128,12 +119,12 @@ public class RedeemRewardFragment extends Fragment {
                     .findFirstCompletelyVisibleItemPosition();
         }
 
-        if (layoutManagerType == LayoutManagerType.GRID_LAYOUT_MANAGER) {
+        if (layoutManagerType == VerifyChoreFragment.LayoutManagerType.GRID_LAYOUT_MANAGER) {
             mLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
-            mCurrentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
+            mCurrentLayoutManagerType = VerifyChoreFragment.LayoutManagerType.GRID_LAYOUT_MANAGER;
         } else {
             mLayoutManager = new LinearLayoutManager(getActivity());
-            mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+            mCurrentLayoutManagerType = VerifyChoreFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
         }
 
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -154,24 +145,26 @@ public class RedeemRewardFragment extends Fragment {
     private void initDataset() throws FileNotFoundException {
         mDataset = new ArrayList<>();
 
-        // use http request to get rewards
-        getRewards();
+        // use http request to get chores
+        getChores();
     }
 
     /**
      * RewardModel helps handling store and retrieve information about rewards
      */
-    public static class RewardModel {
+    public static class ChoreModel {
         private final String name;
         private final long points;
         private final String description;
         private final String id;
+        private final String status;
 
-        public RewardModel(String name, long points, String description, String id) {
+        public ChoreModel(String name, long points, String description, String id, String status) {
             this.name = name;
             this.points = points;
             this.description = description;
             this.id = id;
+            this.status = status;
         }
 
         public String getName() {
@@ -189,15 +182,19 @@ public class RedeemRewardFragment extends Fragment {
         public String getId() {
             return id;
         }
+
+        public String getStatus() {
+            return status;
+        }
     }
 
-    /** Get all the rewards created by the parent */
-    public boolean getRewards() {
+    /** Gets all the chores created by the parent */
+    public boolean getChores() {
         try {
             // checking account status on the server
             ServiceHandler sh = new ServiceHandler();
             String[] params = new String[2];
-            params[0] = MainActivity.DNS + "api/children/rewards";
+            params[0] = MainActivity.DNS + "api/parents/chores";
 
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("GoogleAccountId", com.cse403chorecenter.chorecenterapp.UserLogin.ACCOUNT_ID);
@@ -214,13 +211,13 @@ public class RedeemRewardFragment extends Fragment {
 
                     try {
                         // Getting JSON Array node
-                        JSONArray chores = jsonResponseObject.getJSONArray("Rewards");
+                        JSONArray chores = jsonResponseObject.getJSONArray("Chores");
 
                         // looping through All Rewards
                         for (int i = 0; i < chores.length(); i++) {
                             JSONObject c = chores.getJSONObject(i);
-                            mDataset.add(new RedeemRewardFragment.RewardModel(c.getString("Name"), c.getLong("Points"),
-                                    c.getString("Description"), c.getString("RewardId")));
+                            mDataset.add(new VerifyChoreFragment.ChoreModel(c.getString("Name"), c.getLong("Points"),
+                                    c.getString("Description"), c.getString("ChoreId"), c.getString("Status")));
                         }
                     } catch (final JSONException e) {
                         Log.e(TAG, "Json parsing error: " + e.getMessage());

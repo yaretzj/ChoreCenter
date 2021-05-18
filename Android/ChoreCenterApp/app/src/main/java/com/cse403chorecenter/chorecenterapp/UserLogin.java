@@ -26,6 +26,8 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
     public static final int RC_SIGN_IN = 403;
     public static GoogleSignInOptions GSO;
     public static String ACCOUNT_TYPE;
+    public static String ACCOUNT_DISPLAY_NAME;
+    public static String ACCOUNT_POINTS;
     public static String ACCOUNT_ID;
     public static String ACCOUNT_ID_TOKEN;
 
@@ -61,6 +63,8 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
                 .requestIdToken("551695683870-tn6t4q27f5qpfe8jb61dt0jbr6qjf1fm.apps.googleusercontent.com")  // set up Google API console project to use here
                 .build();
         ACCOUNT_TYPE = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        ACCOUNT_DISPLAY_NAME = "Android";
+        ACCOUNT_POINTS = "";
         ACCOUNT_ID = "1";
         ACCOUNT_ID_TOKEN = "exp_token";
     }
@@ -92,6 +96,7 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
             if (account != null) {
                 // Signed in successfully
 
+                ACCOUNT_DISPLAY_NAME = account.getDisplayName();
                 ACCOUNT_ID = account.getId();
                 ACCOUNT_ID_TOKEN = account.getIdToken();
                 // check if the account exists on server before proceeding
@@ -144,7 +149,13 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
             try {
                 String response = sh.get();
                 if(response != null && !response.equals("")) {
-                    return !response.equals("404") && !response.equals("500") && !response.equals("400");
+                    if (!response.equals("404") && !response.equals("500") && !response.equals("400")) {
+                        if (ACCOUNT_TYPE.equals("children")) {
+                            JSONObject jsonObject = new JSONObject(response);
+                            ACCOUNT_POINTS = "Points: " + String.valueOf(jsonObject.getInt("Points"));
+                        }
+                        return true;
+                    }
                 }
                 return false;
             } catch (ExecutionException e) {

@@ -41,5 +41,9 @@
     <string name="menu_create_reward">Create Reward</string>
     <string name="redeem_pop_up_failed">Redeem failed: not enough points</string>
     <string name="redeem_pop_up_success">Redeem successful</string>
+    <string name="button_verify">Verify</string>
+    <string name="menu_verify_chore">Verify Chore</string>
+    <string name="verify_pop_up_failed">Verify failed</string>
+    <string name="verify_pop_up_success">Verify successful</string>
 
 </resources>
