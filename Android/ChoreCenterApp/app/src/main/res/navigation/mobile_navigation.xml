@@ -33,6 +33,11 @@
         android:label="@string/menu_redeem_reward"
         tools:layout="@layout/fragment_redeem_reward" />
     <fragment
+        android:id="@+id/nav_reward_history"
+        android:name="com.cse403chorecenter.chorecenterapp.ui.reward_history.RewardHistoryFragment"
+        android:label="@string/menu_reward_history"
+        tools:layout="@layout/fragment_reward_history" />
+    <fragment
         android:id="@+id/nav_sign_out"
         android:name="com.cse403chorecenter.chorecenterapp.ui.signout.SignoutFragment"
         android:label="@string/button_signout"
