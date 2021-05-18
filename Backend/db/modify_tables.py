@@ -63,11 +63,26 @@ if args.create:
     [cursor.execute(stmt) for stmt in create_statements]
     cursor.commit()
 elif args.populate:
+    # Note: this may not work yet until create_test_data format gets revamped
     print("Clearing and adding test data!")
+
+    with open(
+        os.path.join(os.path.abspath(os.path.dirname(__file__)), "create_test_data.sql")
+    ) as f:
+        create_statements = f.read().split("\n\n")
+    [cursor.execute(stmt) for stmt in create_statements]
+    cursor.commit()
 elif args.drop:
     print("Dropping tables!")
+
+    with open(
+        os.path.join(os.path.abspath(os.path.dirname(__file__)), "drop-tables.sql")
+    ) as f:
+        drop_statements = f.read().split("\n")
+    [cursor.execute(stmt) for stmt in drop_statements]
+    cursor.commit()
 else:
-    print("No argument provided. Try -h or --help for options.")
+    print("No option specified. Try -h or --help to see options.")
 
 # cursor.execute("drop table RewardRedemptionHistory")
 # cursor.execute("drop table Rewards")
