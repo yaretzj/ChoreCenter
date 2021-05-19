@@ -1,6 +1,6 @@
 package com.cse403chorecenter.chorecenterapp;
 
-import com.cse403chorecenter.chorecenterapp.ui.submit_chore.SubmitChoreFragment;
+import com.cse403chorecenter.chorecenterapp.ui.verify_chore.VerifyChoreFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,7 +46,7 @@ public class VerifyChoreTest {
 
     @Test
     public void parseJSONTest() {
-        ArrayList<SubmitChoreFragment.ChoreModel> mDataset = new ArrayList<>();
+        ArrayList<VerifyChoreFragment.ChoreModel> mDataset = new ArrayList<>();
 
         try {
             JSONObject jsonObj = new JSONObject(jsonStr);
@@ -57,12 +57,13 @@ public class VerifyChoreTest {
             // looping through All Chores
             for (int i = 0; i < chores.length(); i++) {
                 JSONObject c = chores.getJSONObject(i);
-                mDataset.add(new SubmitChoreFragment.ChoreModel(c.getString("Name"), c.getLong("Points"),
-                        c.getString("Description"), c.getString("ChoreId")));
+                mDataset.add(new VerifyChoreFragment.ChoreModel(c.getString("Name"), c.getLong("Points"),
+                        c.getString("Description"), c.getString("ChoreId"), c.getString("Status")));
             }
 
             assertEquals(mDataset.get(0).getName(), "Doing the dishes");
             assertEquals(mDataset.get(0).getDescription(), "Doing all the dishes from yesturday");
+            assertEquals(mDataset.get(0).getStatus(), "Created");
             assertEquals(mDataset.get(1).getPoints(), 2000);
             assertEquals(mDataset.get(1).getId(), "A854430D-8025-4BB1-93A4-9630FDFAEC73");
         } catch (final JSONException e) {
