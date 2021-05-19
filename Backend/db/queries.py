@@ -166,9 +166,9 @@ def get_reward_redemption_by_parent() -> str:
         .from_(children_table)
         .select(
             redemption_history_table.RewardId,
-            redemption_history_table.RedeemedTime,
             rewards_table.Name,
             rewards_table.Description,
+            redemption_history_table.RedeemedTime,
             (children_table.Name).as_("ChildName"),
         )
         .where(redemption_history_table.ParentGoogleAccountId == Parameter("?"))
@@ -188,9 +188,9 @@ def get_reward_redemption_by_child() -> str:
         .from_(rewards_table)
         .select(
             redemption_history_table.RewardId,
-            redemption_history_table.RedeemedTime,
             rewards_table.Name,
             rewards_table.Description,
+            redemption_history_table.RedeemedTime,
         )
         .where(redemption_history_table.RewardId == rewards_table.RewardId)
         .where(redemption_history_table.ChildGoogleAccountId == Parameter("?"))

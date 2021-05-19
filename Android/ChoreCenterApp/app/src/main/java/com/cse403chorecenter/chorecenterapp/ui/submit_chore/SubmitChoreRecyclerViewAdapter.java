@@ -44,7 +44,7 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
                     Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
                 }
             });
-            textView = (TextView) v.findViewById(R.id.redeemRewardTV);
+            textView = (TextView) v.findViewById(R.id.submitChoreTV);
         }
 
         public TextView getTextView() {

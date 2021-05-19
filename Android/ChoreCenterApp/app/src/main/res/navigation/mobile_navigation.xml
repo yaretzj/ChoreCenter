@@ -12,6 +12,12 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/nav_home_kid"
+        android:name="com.cse403chorecenter.chorecenterapp.ui.home_kid.HomeKidFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home_kid" />
+
+    <fragment
         android:id="@+id/nav_gallery"
         android:name="com.cse403chorecenter.chorecenterapp.ui.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
@@ -33,6 +39,11 @@
         android:label="@string/menu_redeem_reward"
         tools:layout="@layout/fragment_redeem_reward" />
     <fragment
+        android:id="@+id/nav_reward_history"
+        android:name="com.cse403chorecenter.chorecenterapp.ui.reward_history.RewardHistoryFragment"
+        android:label="@string/menu_reward_history"
+        tools:layout="@layout/fragment_reward_history" />
+    <fragment
         android:id="@+id/nav_sign_out"
         android:name="com.cse403chorecenter.chorecenterapp.ui.signout.SignoutFragment"
         android:label="@string/button_signout"
@@ -47,4 +58,9 @@
         android:name="com.cse403chorecenter.chorecenterapp.ui.submit_chore.SubmitChoreFragment"
         android:label="@string/menu_submit_chore"
         tools:layout="@layout/fragment_submit_chore" />
+    <fragment
+        android:id="@+id/nav_verify_chore"
+        android:name="com.cse403chorecenter.chorecenterapp.ui.verify_chore.VerifyChoreFragment"
+        android:label="@string/menu_verify_chore"
+        tools:layout="@layout/fragment_verify_chore" />
 </navigation>

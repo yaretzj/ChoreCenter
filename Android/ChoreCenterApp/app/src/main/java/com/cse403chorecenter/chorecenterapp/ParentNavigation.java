@@ -3,6 +3,7 @@ package com.cse403chorecenter.chorecenterapp;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -35,11 +36,17 @@ public class ParentNavigation extends AppCompatActivity {
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.parent_nav_view);
+        View headerLayout = navigationView.getHeaderView(0);
+        TextView nameTV = headerLayout.findViewById(R.id.accountNameTV);
+        nameTV.setText(UserLogin.ACCOUNT_DISPLAY_NAME);
+        TextView pointsTV = headerLayout.findViewById(R.id.accountPointsTV);
+        pointsTV.setText(UserLogin.ACCOUNT_POINTS);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_create_chore, R.id.nav_create_reward, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_sign_out)
+                R.id.nav_home, R.id.nav_create_chore, R.id.nav_create_reward, R.id.nav_verify_chore, R.id.nav_reward_history, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_sign_out)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);

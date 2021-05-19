@@ -1,9 +1,10 @@
-package com.cse403chorecenter.chorecenterapp.ui.redeem_reward;
+package com.cse403chorecenter.chorecenterapp.ui.verify_chore;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,10 +14,8 @@ import com.cse403chorecenter.chorecenterapp.MainActivity;
 import com.cse403chorecenter.chorecenterapp.R;
 import com.cse403chorecenter.chorecenterapp.ServiceHandler;
 import com.cse403chorecenter.chorecenterapp.UserLogin;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,12 +25,10 @@ import java.util.concurrent.ExecutionException;
 /**
  * Provide views to RecyclerView with data from mDataSet.
  */
-public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<RedeemRewardRecyclerViewAdapter.RewardViewHolder> {
-    private static final String TAG = "CustomAdapter";
+public class VerifyChoreRecyclerViewAdapter extends RecyclerView.Adapter<VerifyChoreRecyclerViewAdapter.ChoreViewHolder> {
+    private static final String TAG = "VerifyChoreAdapter";
 
-    private List<RedeemRewardFragment.RewardModel> mDataSet;
-
-    public RedeemRewardFragment mFragment;
+    private List<VerifyChoreFragment.ChoreModel> mDataSet;
 
     // BEGIN_INCLUDE(recyclerViewSampleViewHolder)
     /**
@@ -49,7 +46,7 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
                     Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
                 }
             });
-            textView = (TextView) v.findViewById(R.id.redeemRewardTV);
+            textView = (TextView) v.findViewById(R.id.verifyChoreTV);
         }
 
         public TextView getTextView() {
@@ -63,38 +60,39 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
      *
      * @param dataSet String[] containing the data to populate views to be used by RecyclerView.
      */
-    public RedeemRewardRecyclerViewAdapter(List<RedeemRewardFragment.RewardModel> dataSet, RedeemRewardFragment fragment) {
+    public VerifyChoreRecyclerViewAdapter(List<VerifyChoreFragment.ChoreModel> dataSet) {
         mDataSet = dataSet;
-        mFragment = fragment;
     }
 
     // BEGIN_INCLUDE(recyclerViewOnCreateViewHolder)
     // Create new views (invoked by the layout manager)
-    @NotNull
     @Override
-    public RewardViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public VerifyChoreRecyclerViewAdapter.ChoreViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view.
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.text_row_reward_item, viewGroup, false);
+                .inflate(R.layout.text_row_verify_chore_item, viewGroup, false);
 
-        return new RewardViewHolder(v);
+        return new VerifyChoreRecyclerViewAdapter.ChoreViewHolder(v);
     }
     // END_INCLUDE(recyclerViewOnCreateViewHolder)
 
     // BEGIN_INCLUDE(recyclerViewOnBindViewHolder)
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(@NonNull RewardViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull VerifyChoreRecyclerViewAdapter.ChoreViewHolder viewHolder, final int position) {
         Log.d(TAG, "Element " + position + " set.");
 
         // Get element from your dataset at this position and replace the contents of the view
         // with that element
-        RedeemRewardFragment.RewardModel reward = mDataSet.get(position);
-        String nameAndPoints = reward.getName() + ": " + reward.getPoints();
+        VerifyChoreFragment.ChoreModel chore = mDataSet.get(position);
+        String nameAndPoints = chore.getName() + ": " + chore.getPoints();
         viewHolder.textViewName.setText(nameAndPoints);
-        viewHolder.textViewDescription.setText(reward.getDescription());
+        viewHolder.textViewDescription.setText(chore.getDescription());
+        String status = "Status: " + chore.getStatus();
+        viewHolder.textViewStatus.setText(status);
         viewHolder.position = position;
-        viewHolder.RewardId = reward.getId();
+        viewHolder.ChoreId = chore.getId();
+        viewHolder.verifyChoreBtn.setVisibility((chore.getStatus().equals("Completed")) ? View.VISIBLE : View.INVISIBLE);
     }
     // END_INCLUDE(recyclerViewOnBindViewHolder)
 
@@ -104,33 +102,38 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
         return mDataSet.size();
     }
 
-    public static class RewardViewHolder extends RecyclerView.ViewHolder {
+    public static class ChoreViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName;
         TextView textViewDescription;
+        TextView textViewStatus;
+        Button verifyChoreBtn;
         View rootView;
         int position;
-        String RewardId;
+        String ChoreId;
 
-        public RewardViewHolder(@NonNull View itemView) {
+        public ChoreViewHolder(@NonNull View itemView) {
             super(itemView);
             rootView = itemView;
-            textViewName = itemView.findViewById(R.id.redeemRewardTV);
-            textViewDescription = itemView.findViewById(R.id.redeemRewardTV2);
-            itemView.findViewById(R.id.redeemRewardBtn).setOnClickListener(new View.OnClickListener() {
+            textViewName = itemView.findViewById(R.id.verifyChoreTV);
+            textViewDescription = itemView.findViewById(R.id.verifyChoreTV2);
+            textViewStatus = itemView.findViewById(R.id.verifyChoreTV3);
+            verifyChoreBtn = itemView.findViewById(R.id.verifyChoreBtn);
+            verifyChoreBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG, "Clicked reward id: " + RewardId);
+                    Log.d(TAG, "Clicked chore id: " + ChoreId);
+                    // Send the http request
 
-                    // redeem reward
-                    if (submitChore(RewardId, itemView.findViewById(R.id.redeemRewardTV))) {
-                        Snackbar.make(itemView.findViewById(R.id.redeemRewardTV), R.string.redeem_pop_up_success, Snackbar.LENGTH_SHORT)
+                    // submit chore
+                    if (verifyChore(ChoreId)) {
+                        verifyChoreBtn.setVisibility(View.INVISIBLE);
+                        String status = "Status: Verified";
+                        textViewStatus.setText(status);
+                        Snackbar.make(itemView.findViewById(R.id.verifyChoreTV), R.string.verify_pop_up_success, Snackbar.LENGTH_SHORT)
                                 .show();
-                        Log.i(TAG, v.getRootView().getRootView().toString());
-                        NavigationView navigationView = (NavigationView) v.getRootView().findViewById(R.id.kid_nav_view);
-                        View headerView = navigationView.getHeaderView(0);
-                        TextView pointsTV = headerView.findViewById(R.id.accountPointsTV);
-                        String accountPoints = "Points: " + UserLogin.ACCOUNT_POINTS;
-                        pointsTV.setText(accountPoints);
+                    } else {
+                        Snackbar.make(itemView.findViewById(R.id.verifyChoreTV), R.string.verify_pop_up_failed, Snackbar.LENGTH_SHORT)
+                                .show();
                     }
                 }
             });
@@ -138,16 +141,17 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
     }
 
     /** submit a chore for the kid account */
-    public static boolean submitChore(String rewardId, View view) {
+    public static boolean verifyChore(String choreId) {
         try {
             // checking account status on the server
             ServiceHandler sh = new ServiceHandler();
             String[] params = new String[2];
-            params[0] = MainActivity.DNS + "api/children/rewards/redeem";
+            params[0] = MainActivity.DNS + "api/parents/chores/" + choreId + "/update";
 
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);
-            jsonObj.put("RewardId", rewardId);
+            jsonObj.put("Status", "Verified");
+            jsonObj.put("AssignedTo", UserLogin.ACCOUNT_ID);
             params[1] = jsonObj.toString();
             sh = (ServiceHandler) sh.execute(params);
 
@@ -156,15 +160,7 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
                 String response = sh.get();
                 if(response != null && !response.equals("")) {
                     Log.i(TAG, response);
-                    if (response.equals("405")) {
-                        Snackbar.make(view, R.string.redeem_pop_up_failed, Snackbar.LENGTH_SHORT).show();
-                    }
-                    if (!response.equals("404") && !response.equals("405") && !response.equals("500") && !response.equals("400")) {
-                        JSONObject jsonObject = new JSONObject(response);
-                        UserLogin.ACCOUNT_POINTS = String.valueOf(jsonObject.getInt("RemainingPoints"));
-                        return true;
-                    }
-                    return false;
+                    return !response.equals("404") && !response.equals("500") && !response.equals("400");
                 }
                 return false;
             } catch (ExecutionException e) {
