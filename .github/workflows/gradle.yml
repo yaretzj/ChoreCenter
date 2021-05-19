@@ -49,4 +49,5 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
+          working-directory: Android/ChoreCenterApp
           script: ./gradlew connectedCheck
