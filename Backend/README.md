@@ -64,6 +64,7 @@ Cheapest tier (B1s) is good enough for testing project.
 
 ### Deploying Instructions
 - Do all the above instructions to set up the server.
+- Go into the Backend directory in your command prompt
 - Set the `FLASK_RUN_PORT` to 80 to connect via HTTP.
 - Run flask using the `flask run --host=0.0.0.0 --with-threads` to then make the server visible to the external network.
 - Other release deployment options can be found in the [Flask Deployment documentation](https://flask.palletsprojects.com/en/2.0.x/deploying/index.html)
