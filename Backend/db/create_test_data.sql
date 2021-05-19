@@ -40,13 +40,13 @@ INSERT INTO Chores("ChoreId", "ParentGoogleAccountId", "Name", "Description", "S
 Creates 3 standard rewards for test parent
 */
 -- Name: "Ice Cream", Description: "Get an icecream cone after dinner", Points: 500
-INSERT INTO Rewards("ParentGoogleAccountId", "Name", "Description", "Points") VALUES ('TestParent', 'Ice Cream', 'Get an icecream cone after dinner', 1500);
+INSERT INTO Rewards("RewardId", "ParentGoogleAccountId", "Name", "Description", "Points") VALUES ('81301234-93A1-4D59-9E2F-7F13D837A37E', 'TestParent', 'Ice Cream', 'Get an icecream cone after dinner', 1500);
 
 -- Name: "Cash Exchange", Description: "$10 per 10000 pts", Points: 10000
-INSERT INTO Rewards("ParentGoogleAccountId", "Name", "Description", "Points") VALUES ('TestParent', 'Cash Exchange', '$10 per 10000 pts', 10000);
+INSERT INTO Rewards("RewardId", "ParentGoogleAccountId", "Name", "Description", "Points") VALUES ('11A2EDDE-9FDD-4CB2-AC05-CA84D3A0B03C', 'TestParent', 'Cash Exchange', '$10 per 10000 pts', 10000);
 
 -- Name: "Pizza Party", Description: "Pizza for dinner on Friday", Points: 12000
-INSERT INTO Rewards("ParentGoogleAccountId", "Name", "Description", "Points") VALUES ('TestParent', 'Pizza Party', 'Pizza for dinner on Friday', 12000);
+INSERT INTO Rewards("RewardId", "ParentGoogleAccountId", "Name", "Description", "Points") VALUES ('24191524-2ccb-46e3-973a-b9f3c6c8da40', 'TestParent', 'Pizza Party', 'Pizza for dinner on Friday', 12000);
 
 /*
 Creates Redemption History Entry for "Test Childs Redemption History"
