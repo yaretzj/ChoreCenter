@@ -5,21 +5,18 @@ get_redeemed_rewards_parent_exp_json = {
             "Name": "Ice Cream",
             "Description": "Get an icecream cone after dinner",
             "ChildName": "Test Child",
-            "RedeemedTime": "Sat, 15 May 2021 00:18:01 GMT",
         },
         {
             "RewardId": "11A2EDDE-9FDD-4CB2-AC05-CA84D3A0B03C",
             "Name": "Cash Exchange",
             "Description": "$10 per 10000 pts",
             "ChildName": "Test Child",
-            "RedeemedTime": "Sat, 15 May 2021 00:18:01 GMT",
         },
         {
             "RewardId": "11A2EDDE-9FDD-4CB2-AC05-CA84D3A0B03C",
             "Name": "Cash Exchange",
             "Description": "$10 per 10000 pts",
             "ChildName": "Test Child",
-            "RedeemedTime": "Sat, 15 May 2021 00:18:01 GMT",
         },
     ]
 }
@@ -30,19 +27,16 @@ get_redeemed_rewards_child_exp_json = {
             "RewardId": "81301234-93A1-4D59-9E2F-7F13D837A37E",
             "Name": "Ice Cream",
             "Description": "Get an icecream cone after dinner",
-            "RedeemedTime": "Sat, 15 May 2021 00:18:01 GMT",
         },
         {
             "RewardId": "11A2EDDE-9FDD-4CB2-AC05-CA84D3A0B03C",
             "Name": "Cash Exchange",
             "Description": "$10 per 10000 pts",
-            "RedeemedTime": "Sat, 15 May 2021 00:18:01 GMT",
         },
         {
             "RewardId": "11A2EDDE-9FDD-4CB2-AC05-CA84D3A0B03C",
             "Name": "Cash Exchange",
             "Description": "$10 per 10000 pts",
-            "RedeemedTime": "Sat, 15 May 2021 00:18:01 GMT",
         },
     ]
 }
@@ -61,10 +55,7 @@ def test_get_parent_history_valid(client):
 
     assert rv.status_code == 200
     assert rv.is_json
-    assert (
-        get_redeemed_rewards_parent_exp_json["RedeemedRewards"]
-        == rv.get_json()["RedeemedRewards"]
-    )
+    check_response_equality(get_redeemed_rewards_parent_exp_json, rv.get_json())
 
 
 def test_get_parent_history_invalid(client):
@@ -92,10 +83,7 @@ def test_get_child_history_valid(client):
 
     assert rv.status_code == 200
     assert rv.is_json
-    assert (
-        get_redeemed_rewards_child_exp_json["RedeemedRewards"]
-        == rv.get_json()["RedeemedRewards"]
-    )
+    check_response_equality(get_redeemed_rewards_child_exp_json, rv.get_json())
 
 
 def test_get_child_history_invalid(client):
@@ -108,3 +96,15 @@ def test_get_child_history_invalid(client):
     res_json = rv.get_json()
     exp_json = {"RedeemedRewards": []}
     assert res_json == exp_json
+
+
+def check_response_equality(exp_json, res_json):
+    exp_list, res_list = (
+        exp_json["RedeemedRewards"],
+        res_json["RedeemedRewards"],
+    )
+    exp_list.sort(key=lambda rr: rr["Name"])
+    res_list.sort(key=lambda rr: rr["Name"])
+    for exp_rr, res_rr in zip(exp_list, res_list):
+        for field in exp_rr:
+            assert exp_rr[field] == res_rr[field]
