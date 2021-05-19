@@ -4,7 +4,7 @@
 # from datetime import datetime
 import os
 import pyodbc
-from dotenv import dotenv_values, load_dotenv
+from dotenv import load_dotenv
 from flask import abort, Flask, g, request
 from typing import Tuple
 
@@ -173,7 +173,7 @@ def update_chore_parent(chore_id):
 
 
 # GetChoresParent
-@app.route("/api//parents/chores", methods=["POST"])
+@app.route("/api/parents/chores", methods=["POST"])
 def get_chores_parent():
     body = request.json
     validate_request_body(["GoogleAccountId"], body)
@@ -185,8 +185,8 @@ def get_chores_parent():
 def get_chores_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
     try:
         cursor.execute(queries.get_chores_by_parent(), account_id)
-    except Exception:
-        abort(404, "Parent Account ID {} does not exist".format(account_id))
+    except Exception as exc:
+        abort(500, str(exc))
 
     return GetChoresResponseModel(cursor.fetchall()).get_response()
 
@@ -230,8 +230,8 @@ def get_rewards_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
     """Gets the rewards for a given parent account id."""
     try:
         cursor.execute(queries.get_rewards_by_parent(), account_id)
-    except Exception:
-        abort(404, "Parent Account ID {} does not exist".format(account_id))
+    except Exception as exc:
+        abort(500, str(exc))
 
     return GetRewardsResponseModel(cursor.fetchall()).get_response()
 
