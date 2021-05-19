@@ -37,12 +37,10 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew connectedCheck
-        run: ./gradlew build
+          script: ./gradlew build
       - name: Test with Gradle
         working-directory: Android/ChoreCenterApp
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew connectedCheck
-        run: ./gradlew check
+          script: ./gradlew check
