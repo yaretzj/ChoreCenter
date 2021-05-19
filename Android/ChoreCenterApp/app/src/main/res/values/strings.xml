@@ -36,8 +36,8 @@
 
     <string name="title_activity_kid_main">ScrollingActivity</string>
     <string name="logo">logo</string>
-    <string name="button_submit">Submit</string>
-    <string name="menu_submit_chore">Submit Chore</string>
+    <string name="button_submit">Complete</string>
+    <string name="menu_complete_chore">Complete Chore</string>
     <string name="menu_create_reward">Create Reward</string>
     <string name="redeem_pop_up_failed">Redeem failed: not enough points</string>
     <string name="redeem_pop_up_success">Redeem successful</string>

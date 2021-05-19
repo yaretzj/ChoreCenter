@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -88,6 +89,11 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
         viewHolder.textViewDescription.setText(chore.getDescription());
         viewHolder.position = position;
         viewHolder.ChoreId = chore.getId();
+        if (chore.getStatus().equals("Completed")) {
+            viewHolder.completeChoreBtn.setEnabled(false);
+            viewHolder.completeChoreBtn.setText("Completed");
+        }
+
     }
     // END_INCLUDE(recyclerViewOnBindViewHolder)
 
@@ -103,20 +109,25 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
         View rootView;
         int position;
         String ChoreId;
+        Button completeChoreBtn;
 
         public ChoreViewHolder(@NonNull View itemView) {
             super(itemView);
             rootView = itemView;
             textViewName = itemView.findViewById(R.id.submitChoreTV);
             textViewDescription = itemView.findViewById(R.id.submitChoreTV2);
-            itemView.findViewById(R.id.submitChoreBtn).setOnClickListener(new View.OnClickListener() {
+            completeChoreBtn = itemView.findViewById(R.id.submitChoreBtn);
+            completeChoreBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "Clicked chore id: " + ChoreId);
                     // Send the http request
 
                     // submit chore
-                    submitChore(ChoreId);
+                    if (submitChore(ChoreId)) {
+                        completeChoreBtn.setEnabled(false);
+                        completeChoreBtn.setText("Completed");
+                    }
                 }
             });
         }
