@@ -29,9 +29,9 @@ Directory Structure:
 2. If the user has not been registered yet, he or she will be directed to a page for signing up after they log in with their Google account. The kid account sign-up requires input of the parent code during the sign-up step in order to be linked to the specific parent account. Parent code is accessible from the user navigation page drawer of a parent account.
 3. A parent account can access activities to create chores and rewards from user navigation page drawer.
 4. A child account can access submit chore and redeem reward activities from user navigation page drawer.
-5. Chores and rewards created by a parent account are visible to the linked kid account for submit or redeem.
-6. Kids are expected to be honest and only submit a chore after they have finished it but parents can verify that their kids have indeed completed the chores that are submitted {not supported in beta release}.
-7. Points earned by kids from submitted chores can be used to redeem exciting rewards customized by their parents.
+5. Chores and rewards created by a parent account are visible to the linked kid account for completion or redemption.
+6. Kids are expected to be honest and only mark a chore as completed after they have finished it but parents can verify that their kids have indeed completed the chores.
+7. Kids will only receive points after the parent marks a completed chore as verified. The points earned by a kid can be used to redeem exciting rewards customized by their parents.
 
 ### Progress
 
@@ -40,7 +40,7 @@ Directory Structure:
 - [x] Child can submit a chore to indicate completion of the chore
 - [x] Child can redeem a reward with pop-up message indicating success/failure {use case 2}
 - [x] Child can accumulate points to redeem "costly" rewards by completing chores {use case 3}
-- [ ] A child only receives points after the parent verifies that a chore has actually been completed {use case 6}
+- [x] A child only receives points after the parent verifies that a chore has actually been completed {use case 6}
 - [ ] Parent can make a chore available only for a specific time period (stretch goal) {use case 1}
 
 ### Testing Instructions
