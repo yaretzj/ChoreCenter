@@ -4,7 +4,7 @@
 # from datetime import datetime
 import os
 import pyodbc
-from dotenv import dotenv_values, load_dotenv
+from dotenv import load_dotenv
 from flask import abort, Flask, g, request
 from typing import Tuple
 
@@ -19,6 +19,7 @@ from models.response_models import (
     GetChildAccountResponseModel,
 )
 import db.queries as queries
+from db.connection import setup_db_conn
 
 
 INTIIAL_CHORE_STATUS = "Created"
@@ -35,16 +36,8 @@ def get_db_conn() -> Tuple[pyodbc.Connection, pyodbc.Cursor]:
     """
 
     if "db_conn" not in g:
-        g.db_conn = pyodbc.connect(
-            "DRIVER={ODBC Driver 17 for SQL Server};SERVER="
-            + os.getenv("DB_SERVER")  # config["DB_SERVER"]
-            + ";DATABASE="
-            + os.getenv("DB_NAME")  # config["DB_NAME"]
-            + ";UID="
-            + os.getenv("DB_USERNAME")  # config["DB_USERNAME"]
-            + ";PWD="
-            + os.getenv("DB_PASSWORD")  # config["DB_PASSWORD"]
-        )
+        g.db_conn = setup_db_conn()
+        g.db_conn.autocommit = False
 
     return g.db_conn, g.db_conn.cursor()
 
@@ -56,7 +49,6 @@ def close_db_conn(_):
     db_conn = g.pop("db_conn", None)
     if db_conn is not None:
         db_conn.close()
-    print("Closed db connection")
 
 
 @app.route("/")
@@ -137,7 +129,6 @@ def create_chore_parent():
         )
         cursor.commit()
     except Exception as ex:
-        print(ex)
         abort(
             404, "Parent Account ID {} does not exist".format(body["GoogleAccountId"])
         )
@@ -182,7 +173,7 @@ def update_chore_parent(chore_id):
 
 
 # GetChoresParent
-@app.route("/api//parents/chores", methods=["POST"])
+@app.route("/api/parents/chores", methods=["POST"])
 def get_chores_parent():
     body = request.json
     validate_request_body(["GoogleAccountId"], body)
@@ -194,8 +185,8 @@ def get_chores_parent():
 def get_chores_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
     try:
         cursor.execute(queries.get_chores_by_parent(), account_id)
-    except Exception:
-        abort(404, "Parent Account ID {} does not exist".format(account_id))
+    except Exception as exc:
+        abort(500, str(exc))
 
     return GetChoresResponseModel(cursor.fetchall()).get_response()
 
@@ -239,8 +230,8 @@ def get_rewards_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
     """Gets the rewards for a given parent account id."""
     try:
         cursor.execute(queries.get_rewards_by_parent(), account_id)
-    except Exception:
-        abort(404, "Parent Account ID {} does not exist".format(account_id))
+    except Exception as exc:
+        abort(500, str(exc))
 
     return GetRewardsResponseModel(cursor.fetchall()).get_response()
 

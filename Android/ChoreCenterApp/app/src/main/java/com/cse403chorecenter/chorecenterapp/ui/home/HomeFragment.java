@@ -67,6 +67,17 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // Reward History
+        Button bRewardHistory = (Button) view.findViewById(R.id.button_home_reward_history);
+        bRewardHistory.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view) {
+                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                navController.navigate(R.id.nav_reward_history);
+            }
+        });
+
         return view;
     }
 }

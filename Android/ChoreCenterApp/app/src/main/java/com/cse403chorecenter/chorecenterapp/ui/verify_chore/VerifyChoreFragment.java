@@ -1,4 +1,4 @@
-package com.cse403chorecenter.chorecenterapp.ui.submit_chore;
+package com.cse403chorecenter.chorecenterapp.ui.verify_chore;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -15,9 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cse403chorecenter.chorecenterapp.MainActivity;
 import com.cse403chorecenter.chorecenterapp.R;
 import com.cse403chorecenter.chorecenterapp.ServiceHandler;
-import com.cse403chorecenter.chorecenterapp.SubmitChore;
-import com.cse403chorecenter.chorecenterapp.ui.redeem_reward.RedeemRewardRecyclerViewAdapter;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,10 +23,9 @@ import org.json.JSONObject;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
-public class SubmitChoreFragment extends Fragment {
+public class VerifyChoreFragment extends Fragment {
     private static final String TAG = "RecyclerViewFragment";
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
     private static final int SPAN_COUNT = 2;
@@ -39,15 +35,15 @@ public class SubmitChoreFragment extends Fragment {
         LINEAR_LAYOUT_MANAGER
     }
 
-    protected com.cse403chorecenter.chorecenterapp.ui.submit_chore.SubmitChoreFragment.LayoutManagerType mCurrentLayoutManagerType;
+    protected VerifyChoreFragment.LayoutManagerType mCurrentLayoutManagerType;
 
     protected RadioButton mLinearLayoutRadioButton;
     protected RadioButton mGridLayoutRadioButton;
 
     protected RecyclerView mRecyclerView;
-    protected SubmitChoreRecyclerViewAdapter mAdapter;
+    protected VerifyChoreRecyclerViewAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
-    protected List<SubmitChoreFragment.ChoreModel> mDataset;
+    protected List<VerifyChoreFragment.ChoreModel> mDataset;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +61,7 @@ public class SubmitChoreFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_submit_chore, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_verify_chore, container, false);
         rootView.setTag(TAG);
 
         // BEGIN_INCLUDE(initializeRecyclerView)
@@ -76,16 +72,16 @@ public class SubmitChoreFragment extends Fragment {
         // elements are laid out.
         mLayoutManager = new LinearLayoutManager(getActivity());
 
-        mCurrentLayoutManagerType = SubmitChoreFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+        mCurrentLayoutManagerType = VerifyChoreFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
 
         if (savedInstanceState != null) {
             // Restore saved layout manager type.
-            mCurrentLayoutManagerType = (SubmitChoreFragment.LayoutManagerType) savedInstanceState
+            mCurrentLayoutManagerType = (VerifyChoreFragment.LayoutManagerType) savedInstanceState
                     .getSerializable(KEY_LAYOUT_MANAGER);
         }
         setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
 
-        mAdapter = new SubmitChoreRecyclerViewAdapter(mDataset);
+        mAdapter = new VerifyChoreRecyclerViewAdapter(mDataset);
         // Set CustomAdapter as the adapter for RecyclerView.
         mRecyclerView.setAdapter(mAdapter);
         // END_INCLUDE(initializeRecyclerView)
@@ -94,7 +90,7 @@ public class SubmitChoreFragment extends Fragment {
         mLinearLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setRecyclerViewLayoutManager(SubmitChoreFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER);
+                setRecyclerViewLayoutManager(VerifyChoreFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER);
             }
         });
 
@@ -102,7 +98,7 @@ public class SubmitChoreFragment extends Fragment {
         mGridLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setRecyclerViewLayoutManager(SubmitChoreFragment.LayoutManagerType.GRID_LAYOUT_MANAGER);
+                setRecyclerViewLayoutManager(VerifyChoreFragment.LayoutManagerType.GRID_LAYOUT_MANAGER);
             }
         });
 
@@ -114,7 +110,7 @@ public class SubmitChoreFragment extends Fragment {
      *
      * @param layoutManagerType Type of layout manager to switch to.
      */
-    public void setRecyclerViewLayoutManager(SubmitChoreFragment.LayoutManagerType layoutManagerType) {
+    public void setRecyclerViewLayoutManager(VerifyChoreFragment.LayoutManagerType layoutManagerType) {
         int scrollPosition = 0;
 
         // If a layout manager has already been set, get current scroll position.
@@ -123,12 +119,12 @@ public class SubmitChoreFragment extends Fragment {
                     .findFirstCompletelyVisibleItemPosition();
         }
 
-        if (layoutManagerType == SubmitChoreFragment.LayoutManagerType.GRID_LAYOUT_MANAGER) {
+        if (layoutManagerType == VerifyChoreFragment.LayoutManagerType.GRID_LAYOUT_MANAGER) {
             mLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
-            mCurrentLayoutManagerType = SubmitChoreFragment.LayoutManagerType.GRID_LAYOUT_MANAGER;
+            mCurrentLayoutManagerType = VerifyChoreFragment.LayoutManagerType.GRID_LAYOUT_MANAGER;
         } else {
             mLayoutManager = new LinearLayoutManager(getActivity());
-            mCurrentLayoutManagerType = SubmitChoreFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+            mCurrentLayoutManagerType = VerifyChoreFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER;
         }
 
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -187,7 +183,9 @@ public class SubmitChoreFragment extends Fragment {
             return id;
         }
 
-        public String getStatus() { return status; }
+        public String getStatus() {
+            return status;
+        }
     }
 
     /** Gets all the chores created by the parent */
@@ -196,7 +194,7 @@ public class SubmitChoreFragment extends Fragment {
             // checking account status on the server
             ServiceHandler sh = new ServiceHandler();
             String[] params = new String[2];
-            params[0] = MainActivity.DNS + "api/children/chores";
+            params[0] = MainActivity.DNS + "api/parents/chores";
 
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("GoogleAccountId", com.cse403chorecenter.chorecenterapp.UserLogin.ACCOUNT_ID);
@@ -218,7 +216,7 @@ public class SubmitChoreFragment extends Fragment {
                         // looping through All Rewards
                         for (int i = 0; i < chores.length(); i++) {
                             JSONObject c = chores.getJSONObject(i);
-                            mDataset.add(new SubmitChoreFragment.ChoreModel(c.getString("Name"), c.getLong("Points"),
+                            mDataset.add(new VerifyChoreFragment.ChoreModel(c.getString("Name"), c.getLong("Points"),
                                     c.getString("Description"), c.getString("ChoreId"), c.getString("Status")));
                         }
                     } catch (final JSONException e) {

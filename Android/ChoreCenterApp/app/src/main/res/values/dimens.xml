@@ -6,7 +6,7 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="list_item_height">72dp</dimen>
+    <dimen name="list_item_height">100dp</dimen>
     <!-- Define standard dimensions to comply with Holo-style grids and rhythm. -->
 
     <dimen name="margin_tiny">4dp</dimen>

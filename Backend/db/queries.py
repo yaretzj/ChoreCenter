@@ -133,7 +133,6 @@ def get_chores_by_parent() -> str:
     return query.get_sql()
 
 
-
 def get_chore_by_id_and_parent() -> str:
     """Returns query to get the chore for given ChoreId."""
     query = (
@@ -167,9 +166,9 @@ def get_reward_redemption_by_parent() -> str:
         .from_(children_table)
         .select(
             redemption_history_table.RewardId,
-            redemption_history_table.RedeemedTime,
             rewards_table.Name,
             rewards_table.Description,
+            redemption_history_table.RedeemedTime,
             (children_table.Name).as_("ChildName"),
         )
         .where(redemption_history_table.ParentGoogleAccountId == Parameter("?"))
@@ -189,9 +188,9 @@ def get_reward_redemption_by_child() -> str:
         .from_(rewards_table)
         .select(
             redemption_history_table.RewardId,
-            redemption_history_table.RedeemedTime,
             rewards_table.Name,
             rewards_table.Description,
+            redemption_history_table.RedeemedTime,
         )
         .where(redemption_history_table.RewardId == rewards_table.RewardId)
         .where(redemption_history_table.ChildGoogleAccountId == Parameter("?"))
@@ -231,7 +230,6 @@ def update_child_points() -> str:
         .where(children_table.GoogleAccountId == Parameter("?"))
     )
     return query.get_sql()
-
 
 
 def update_chore(columns: list) -> str:
