@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -45,12 +46,17 @@ public class KidNavigation extends AppCompatActivity  {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_submit_chore, R.id.nav_redeem_reward, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_sign_out)
+                R.id.nav_home_kid, R.id.nav_submit_chore, R.id.nav_redeem_reward, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_sign_out)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        // Set starting page to Kid Home Page
+        NavGraph navGraph = navController.getGraph();
+        navGraph.setStartDestination(R.id.nav_home_kid);
+        navController.setGraph(navGraph);
     }
 
     @Override

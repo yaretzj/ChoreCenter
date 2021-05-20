@@ -160,7 +160,7 @@ class RewardRedemptionHistoryParentResponseModel:
 
     def get_response(self) -> dict:
         return {
-            "‘RedeemedRewards": [rh.get_response() for rh in self.redemption_history]
+            "RedeemedRewards": [rh.get_response() for rh in self.redemption_history]
         }
 
 
@@ -190,7 +190,7 @@ class RewardRedemptionHistoryChildResponseModel:
 
     def get_response(self) -> dict:
         return {
-            "‘RedeemedRewards": [rh.get_response() for rh in self.redemption_history]
+            "RedeemedRewards": [rh.get_response() for rh in self.redemption_history]
         }
 
 

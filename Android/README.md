@@ -53,3 +53,9 @@ Our testing plan is to have JUnit tests to test individual components of the UI.
 1. Add a Java class to the `/ChoreCenter/Android/ChoreCenterApp/app/src/test/java/com/cse403chorecenter/chorecenterapp/` directory.
 2. Add JUnit unit tests to your test class.
 3. Make sure your unit tests have reasonable names. Use the [JUnit 4 cookbook](https://junit.org/junit4/cookbook.html) to learn about how to create a JUnit 4 unit test.
+
+### Build a release of the software
+
+#### Build release APK
+Follow the Android [Prepare for release guide](https://developer.android.com/studio/publish/preparing) to build the release package.
+Follow the Android [Authenticating your client guide](https://developers.google.com/android/guides/client-auth) to generate production SHA-1 key and provide it for your signing certificate before releasing the product on Google Play store.
