@@ -25,14 +25,16 @@ https://drive.google.com/file/d/1szlRbngpRR0erHz1WED1otbmevpOqY_I/view
 - Create a virtual environment in the Backend directory with the command `python3 -m venv venv`.
 - Use the command `. venv/bin/activate` on Mac or `. venv/Scripts/activate` on Windows to activate the virtual environment. You can deactivate the virtual environment with the command `deactivate` when you are done using the application.
 - You will need to install the packages for the project using pip with the command `pip install -r requirements.txt`. The packages can be viewed in `requirements.txt`.
-- Create a local copy of the `.env.example` file using the command `cp .env.example .env`. Replace the placeholders after the `=` sign with the corresponding config values and credentials. You will need these to connect to the Azure database server. Follow the instructions below to set up an Azure SQL Server Database and generate your own credentials or reach out to a member of the backend team for the env variable strings.
+- Create a local copy of the `.env.example` file using the command `cp .env.example .env`. Replace the placeholders after the `=` sign with the corresponding config values and credentials. You will need these to connect to the Azure database server. 
+- __Follow the instructions below to set up an Azure SQL Server Database and generate your own credentials or reach out to a member of the backend team for the env variable strings.__
 - Before you can run the server you will need to export the `FLASK_APP` environment variable to tell your terminal the application to work with with the command `export FLASK_APP=app.py`.
 - Run the flask server with the command `flask run`. The server runs on port 5000 by default. If you want to run the server on a different port, export an environment variable named `FLASK_RUN_PORT` and set it to the desired port number. If set, `flask run` will run the server on the port number defined in `FLASK_RUN_PORT`.
 
 ### Setting Up Azure
-- Login to Azure and select you payment plan
-- Create a Resouce Group
-- Make sure to use this resource group throughout your set up
+#### Recommended Method: Setting up your own database is complicated. Reach out to us on Slack for the env database credentials to use ours.
+- Login to Azure and select your payment plan.
+- Create a Resouce Group.
+- Make sure to use this resource group throughout your set up.
 
 #### Setting up SQL Server Database
 Based off of tutorial from CSE 344
