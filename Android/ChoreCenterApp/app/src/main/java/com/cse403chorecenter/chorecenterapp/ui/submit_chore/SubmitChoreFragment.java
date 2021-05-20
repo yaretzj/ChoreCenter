@@ -90,21 +90,21 @@ public class SubmitChoreFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         // END_INCLUDE(initializeRecyclerView)
 
-        mLinearLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.linear_layout_rb);
-        mLinearLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setRecyclerViewLayoutManager(SubmitChoreFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER);
-            }
-        });
+//        mLinearLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.linear_layout_rb);
+//        mLinearLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                setRecyclerViewLayoutManager(SubmitChoreFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER);
+//            }
+//        });
 
-        mGridLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.grid_layout_rb);
-        mGridLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setRecyclerViewLayoutManager(SubmitChoreFragment.LayoutManagerType.GRID_LAYOUT_MANAGER);
-            }
-        });
+//        mGridLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.grid_layout_rb);
+//        mGridLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                setRecyclerViewLayoutManager(SubmitChoreFragment.LayoutManagerType.GRID_LAYOUT_MANAGER);
+//            }
+//        });
 
         return rootView;
     }

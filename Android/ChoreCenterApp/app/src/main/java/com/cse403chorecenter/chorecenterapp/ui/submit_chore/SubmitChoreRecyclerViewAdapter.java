@@ -84,9 +84,10 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
         // Get element from your dataset at this position and replace the contents of the view
         // with that element
         SubmitChoreFragment.ChoreModel chore = mDataSet.get(position);
-        String nameAndPoints = chore.getName() + ": " + chore.getPoints();
+        String nameAndPoints = chore.getName() + ": " + chore.getPoints() + " points";
         viewHolder.textViewName.setText(nameAndPoints);
-        viewHolder.textViewDescription.setText(chore.getDescription());
+        String description = "Description: " + chore.getDescription();
+        viewHolder.textViewDescription.setText(description);
         viewHolder.position = position;
         viewHolder.ChoreId = chore.getId();
         if (chore.getStatus().equals("Completed")) {
