@@ -1,48 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/list_item_height"
+    android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/margin_medium"
     android:layout_marginRight="@dimen/margin_medium"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginTop="10dp"
+    app:cardCornerRadius="10dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.submit_chore.SubmitChoreFragment">
+        tools:context=".ui.submit_chore.SubmitChoreFragment"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        >
 
         <TextView
             android:id="@+id/submitChoreTV"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/element_text"
             android:textAlignment="center"
             android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:padding="8dp"
+            />
 
         <TextView
             android:id="@+id/submitChoreTV2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/element_text"
             android:textAlignment="center"
             android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/submitChoreTV" />
+            app:layout_constraintTop_toBottomOf="@+id/submitChoreTV"
+            android:padding="8dp"/>
 
         <Button
             android:id="@+id/submitChoreBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="@string/button_submit"
             android:textAlignment="center"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+            android:textSize="14sp" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -90,9 +90,9 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
         // Get element from your dataset at this position and replace the contents of the view
         // with that element
         RedeemRewardFragment.RewardModel reward = mDataSet.get(position);
-        String nameAndPoints = reward.getName() + ": " + reward.getPoints();
+        String nameAndPoints = reward.getName() + ": " + reward.getPoints() + " points";
         viewHolder.textViewName.setText(nameAndPoints);
-        viewHolder.textViewDescription.setText(reward.getDescription());
+        viewHolder.textViewDescription.setText("Description: "+reward.getDescription());
         viewHolder.position = position;
         viewHolder.RewardId = reward.getId();
     }
