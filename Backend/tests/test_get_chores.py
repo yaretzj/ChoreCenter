@@ -15,7 +15,7 @@ get_chores_exp_json = {
         {
             "AcceptedTime": None,
             "AccountId": "TestParent",
-            "AssignedTo": None,
+            "AssignedTo": "TestChild",
             "ChoreId": "BB9DA6E5-5C2A-44B5-AC83-5BDA5CA95FA8",
             "CompletedTime": None,
             "Description": "Minimum 15 minutes",
@@ -67,7 +67,7 @@ get_chores_exp_json = {
             "ChoreId": "B0168E35-31AA-4049-8821-6AD0CCA2F12E",
             "CompletedTime": None,
             "Description": "Memorize Fur Elise",
-            "Name": "Practice Piano",
+            "Name": "Practice the Piano",
             "Points": 750,
             "Status": "Created",
             "VerifiedTime": None,

@@ -3,6 +3,9 @@ import pyodbc
 import argparse
 from dotenv import dotenv_values
 
+# Drop tables action currently disabled - want to avoid dropping tables accidentally. You can
+# enable it by removing the commented out parts if you want to.
+
 # Command line arguments handling
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
@@ -18,12 +21,14 @@ group.add_argument(
     help="Populates the database tables with the test data specified in create_test_data.sql.",
     action="store_true"
 )
+"""
 group.add_argument(
     "-d",
     "--drop",
     help="Drops the database tables using the commands in drop-tables.sql.",
     action="store_true"
 )
+"""
 args = parser.parse_args()
 
 BASEDIR = os.path.abspath(os.path.dirname(".."))
@@ -72,6 +77,7 @@ elif args.populate:
         create_statements = f.read().split("\n\n")
     [cursor.execute(stmt) for stmt in create_statements]
     cursor.commit()
+    """
 elif args.drop:
     print("Dropping tables!")
 
@@ -81,18 +87,27 @@ elif args.drop:
         drop_statements = f.read().split("\n")
     [cursor.execute(stmt) for stmt in drop_statements]
     cursor.commit()
+    """
 else:
-    print("No option specified. Try -h or --help to see options.")
+    print("Default, no args: create tables and populate with data.")
 
-# cursor.execute("drop table RewardRedemptionHistory")
-# cursor.execute("drop table Rewards")
-# cursor.execute("drop table Chores")
-# cursor.execute("drop table Children")
-# cursor.execute("drop table Parents")
-# cursor.commit()
-
-# cursor.execute("select * from Parents")
-# res = cursor.fetchall()
-# print(res)
+    with open(
+        os.path.join(os.path.abspath(os.path.dirname(__file__)), "create-tables.sql")
+    ) as f:
+        create_statements = f.read().split("\n\n")
+    [cursor.execute(stmt) for stmt in create_statements]
+    cursor.commit()
+    with open(
+        os.path.join(os.path.abspath(os.path.dirname(__file__)), "create-triggers.sql")
+    ) as f:
+        create_statements = f.read().split("\n\n")
+    [cursor.execute(stmt) for stmt in create_statements]
+    cursor.commit()
+    with open(
+        os.path.join(os.path.abspath(os.path.dirname(__file__)), "create_test_data.sql")
+    ) as f:
+        create_statements = f.read().split("\n\n")
+    [cursor.execute(stmt) for stmt in create_statements]
+    cursor.commit()
 
 conn.close()
