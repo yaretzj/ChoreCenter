@@ -32,7 +32,7 @@ Creates 2 assigned incomplete chores for test parent
 -- Name: "Walk the Dog", Description: "Minimum 15 minutes", Status: "Created", AssignedTo: "TestChild", Points: 200
 INSERT INTO Chores("ChoreId", "ParentGoogleAccountId", "Name", "Description", "Status", "AssignedTo", "Points") VALUES ('BB9DA6E5-5C2A-44B5-AC83-5BDA5CA95FA8', 'TestParent', 'Walk the Dog', 'Minimum 15 minutes', 'Created', 'TestChild', 200);
 
--- Name: "Play the piano", Description: "Memorize Fur Elise", Status: "Created", AssignedTo: "TestChild", Points: 750
+-- Name: "Practice the Piano", Description: "Memorize Fur Elise", Status: "Created", AssignedTo: "TestChild", Points: 750
 INSERT INTO Chores("ChoreId", "ParentGoogleAccountId", "Name", "Description", "Status", "AssignedTo", "Points") VALUES ('B0168E35-31AA-4049-8821-6AD0CCA2F12E', 'TestParent', 'Practice the Piano', 'Memorize Fur Elise', 'Created', 'TestChild', 750);
 
 /*
