@@ -53,6 +53,7 @@ def close_db_conn(_):
 
 @app.route("/")
 def hello_world():
+    """Dummy default path that returns "Hello World" when sent a GET request"""
     # con, cur = get_db_conn()
     # cur.execute("Select * from parents")
     # print(cur.fetchall())
@@ -61,7 +62,17 @@ def hello_world():
 
 @app.route("/api/parents/new", methods=["POST"])
 def create_parent():
-    """CreateParentAccount"""
+    """CreateParentAccount, Recieves a POST request from the client
+    that uses the url path "/api/parents/new" and verifies all the 
+    parent information is valid JSON. Using the data recieved, an
+    Insert statement is made to the database and the information
+    is added to the SQL table. 
+    
+    If the insertion was successful,
+    returns a response back with a 201 code saying the Parent 
+    was created.
+    If Parent account already exists, return 400.
+    """
 
     body = request.json
     validate_request_body(["Name", "Email", "GoogleTokenId", "GoogleAccountId"], body)
@@ -93,7 +104,15 @@ def create_parent():
 
 @app.route("/api/parents/info", methods=["POST"])
 def get_parent():
-    """GetParentInfo"""
+    """GetParentInfo, Recieves a POST request from the client
+    that uses the url path "/api/parents/info" and verifies all the 
+    Google account information is valid JSON. Using the data recieved, 
+    a Select statement is made to the database and the Parent information
+    is recieved from the SQL table. If the Parent exists and the query was successful,
+    returns a response back with parent infomation as JSON object. 
+    If server error, return 500
+    If Parent account not found, return 404.
+    """
 
     body = request.json
     validate_request_body(["GoogleAccountId", "GoogleTokenId"], body)
@@ -111,9 +130,19 @@ def get_parent():
     return GetParentAccountResponseModel(parent_acc).get_response()
 
 
-# CreateChore
 @app.route("/api/parents/chores/new", methods=["POST"])
 def create_chore_parent():
+    """CreateChoreParent, Recieves a POST request from the client
+    that uses the url path "/api/parents/chores/new" and verifies all the 
+    Google account information, name of chore, description of chore, and point value of
+    the chore is valid JSON. Using the data recieved, 
+    a Insert statement is made to the database and the Chore information
+    is entered into the Chore SQL table as a new row signifiying a new chore. 
+    
+    If the insert was successful,
+    returns "Chore Created" with a code of 201. 
+    If Parent account not found, return 404.
+    """
     body = request.json
     validate_request_body(["GoogleAccountId", "Name", "Description", "Points"], body)
     _, cursor = get_db_conn()
@@ -136,9 +165,20 @@ def create_chore_parent():
     return "Created chore", 201
 
 
-# UpdateChoreParent
 @app.route("/api/parents/chores/<chore_id>/update", methods=["POST"])
 def update_chore_parent(chore_id):
+    """UpdateChoreParent, Recieves a POST request from the client
+    that uses the url path "/api/parents/chores/<chore_id>/update" and verifies the 
+    Google account information and any other additional other fields are valid JSON. 
+    Using the data recieved, an Update statement is made to the database and the 
+    new Chore information is updated in the Chore SQL table to the existing chore. 
+    
+    If the update was successful,
+    returns the updated chore.
+    If no additional fields are providied to update the chore, returns 400.
+    If server error, returns 500.
+    If Chore Id not found, return 404.
+    """
     body = request.json
     validate_request_body(["GoogleAccountId"], body)
     db_conn, cursor = get_db_conn()
