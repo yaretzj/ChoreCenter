@@ -21,10 +21,27 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
+/**
+ * This activity prompts the user to sign in his or her Google account
+ * and automatically authenticates the user's Google Account with the backend server.
+ *
+ * <p>If the user is successfully authenticated, start the main user navigation page of
+ * the selected account type.
+ * If the user does not yet have a Chore Center account linked to the signed-in
+ * Google account, start the user sign up activity with the appropriate account type
+ * using the Signed-in Google account.
+ * If the authentication fails, return to the ChooseAccountType activity.
+ */
 public class UserLogin extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "UserLogin";
+
+    // Used for the request code of getting result from Google SignIn activity
     public static final int RC_SIGN_IN = 403;
+
+    // Options object for the Google SignIn
     public static GoogleSignInOptions GSO;
+
+    // User account info to be populated
     public static String ACCOUNT_TYPE;
     public static String ACCOUNT_DISPLAY_NAME;
     public static String ACCOUNT_POINTS;
@@ -55,27 +72,33 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
     protected void onStart() {
         super.onStart();
 
-        // Get the Intent that started this activity "ChooseAccountType" and
-        // extract the string passed through MainActivity.EXTRA_MESSAGE
+        // Get the Intent that started current activity and
+        // extract the string passed through MainActivity.EXTRA_MESSAGE.
+        // This is used to determine the type of account the user tries to sign in.
         Intent intent = getIntent();
+        ACCOUNT_TYPE = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+
+        // Populate Google SignIn Options
         GSO = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestIdToken("551695683870-tn6t4q27f5qpfe8jb61dt0jbr6qjf1fm.apps.googleusercontent.com")  // set up Google API console project to use here
                 .build();
-        ACCOUNT_TYPE = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+
+        // Default values without user signed in
         ACCOUNT_DISPLAY_NAME = "Android";
         ACCOUNT_POINTS = "";
         ACCOUNT_ID = "1";
         ACCOUNT_ID_TOKEN = "exp_token";
     }
 
-    /** Called when the user taps the Login button */
+    /** When {@code Login} button is clicked, start GoogleSignIn activity. */
     public void signIn() {
         // Build a GoogleSignInClient with the options specified by gso.
         GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, GSO);
         startActivityForResult(mGoogleSignInClient.getSignInIntent(), RC_SIGN_IN);
     }
 
+    /** When an activity is finished, handle the result according to {@code requestCode}.*/
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -89,17 +112,24 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
         }
     }
 
+    /**
+     * Handles the Google SignIn activity result by querying the backend server to authenticate
+     * the user's Google account. If the Google account is not linked to a Chore Center account,
+     * start the appropriate user sign up activity. If the {@code completedTask} result is null,
+     * the Google SignIn has failed, so start the ChooseAccountType activity.
+     * @param completedTask A task with the Google SignIn result
+     */
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             if (account != null) {
-                // Signed in successfully
-
+                // Signed in successfully. Populate user account information.
                 ACCOUNT_DISPLAY_NAME = account.getDisplayName();
                 ACCOUNT_ID = account.getId();
                 ACCOUNT_ID_TOKEN = account.getIdToken();
-                // check if the account exists on server before proceeding
+
+                // Check if the account exists on server before proceeding
                 if (accountExists(account)) {
                     if (ACCOUNT_TYPE.equals("parents")) {
                         startActivity(new Intent(this, ParentNavigation.class));
@@ -107,6 +137,7 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
                         startActivity(new Intent(this, KidNavigation.class));
                     }
                 } else {
+                    // The account does not exist, direct to user sign up
                     if (ACCOUNT_TYPE.equals("parents")) {
                         startActivity(new Intent(this, ParentSignup.class));
                     } else {
@@ -128,24 +159,28 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
         }
     }
 
+    /**
+     * Queries the backend server whether there is an existing Chore Center account
+     * signed up using {@code account}.
+     * @param account the user's signed-in Google account
+     * @return true if the user account exists and false otherwise.
+     */
     public boolean accountExists(GoogleSignInAccount account) {
         try {
-            // checking account status on the server
+            // Instantiate a service handler and populate the argument appropriately
             ServiceHandler sh = new ServiceHandler();
             String[] params = new String[2];
-            if (ACCOUNT_TYPE.equals("parents")) {
-                params[0] = MainActivity.DNS + "api/parents/info";
-            } else {
-                params[0] = MainActivity.DNS + "api/children/info";
-            }
+            params[0] = MainActivity.DNS + "api/" + ACCOUNT_TYPE + "/info";
 
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("GoogleAccountId", ACCOUNT_ID);
             jsonObj.put("GoogleTokenId", ACCOUNT_ID_TOKEN);
             params[1] = jsonObj.toString();
+
+            // Execute service handler async task
             sh = (ServiceHandler) sh.execute(params);
 
-            // output response
+            // Handle the response
             try {
                 String response = sh.get();
                 if(response != null && !response.equals("")) {
@@ -169,6 +204,7 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
         return false;
     }
 
+    /** Revokes Google accounts Signed in on the device in the past. */
     private void revokeAccess() {
         GoogleSignIn.getClient(this, GSO).revokeAccess()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {

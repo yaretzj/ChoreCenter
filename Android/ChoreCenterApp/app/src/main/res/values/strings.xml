@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Chore Center</string>
     <string name="edit_message">Description</string>
-    <string name="button_send">send</string>
+    <string name="logo">logo</string>
+
+    <!-- Literals from user navigation. -->
     <string name="title_activity_user_navigation">UserNavigation</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -10,40 +12,64 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Literals from user menu. -->
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_reward_history">Reward History</string>
+    <string name="menu_redeem_reward">Redeem Reward</string>
+    <string name="menu_complete_chore">Complete Chore</string>
+    <string name="menu_create_reward">Create Reward</string>
+    <string name="menu_verify_chore">Verify Chore</string>
+
+    <!-- Literals from create chore. -->
     <string name="create_chore">Create Chore</string>
+
+    <!-- Literals from create reward. -->
     <string name="create_reward">Create Reward</string>
+
+    <!-- Literals from user login. -->
     <string name="button_login">Login</string>
+    <string name="button_delete_account">Revoke</string>
+
+    <!-- Literals from choose account type. -->
     <string name="button_choose_parent">Parent</string>
     <string name="button_choose_kid">Kid</string>
+
+    <!-- Literals from main activity. -->
     <string name="button_get_started">Get Started!</string>
+
+    <!-- Literals from user sign out. -->
     <string name="button_signout">Sign out</string>
 
-    <string name="menu_redeem_reward">Redeem Reward</string>
+    <!-- Literals from redeem reward. -->
     <string name="button_redeem_reward">Redeem</string>
+    <string name="reward_name_and_points">%1$s: %2$d</string>
+    <string name="redeem_pop_up_failed">Redeem failed: not enough points</string>
+    <string name="redeem_pop_up_success">Redeem successful</string>
+
+    <!-- Literals from parent signup. -->
+    <string name="text_sign_up_parent">You are not a registered user. Please click sign up.</string>
+    <string name="button_sign_up">Sign up</string>
+
+    <!-- Literals from kid signup. -->
+    <string name="text_sign_up_kid">You are not a registered user. Please enter your parent code and click sign up.</string>
+    <string name="hint_parent_code">parent code</string>
+
+    <!-- Literals from kid main. -->
+    <string name="title_activity_kid_main">ScrollingActivity</string>
+
+    <!-- Literals from complete chore. -->
+    <string name="button_submit">Complete</string>
+
+    <!-- Literals from verify chore. -->
+    <string name="button_verify">Verify</string>
+    <string name="verify_pop_up_failed">Verify failed</string>
+    <string name="verify_pop_up_success">Verify successful</string>
+
+    <!-- Literals from miscellaneous. -->
     <string name="grid_layout_manager">Grid Layout Manager</string>
     <string name="linear_layout_manager">Linear Layout Manager</string>
     <string name="element_text">Element</string>
-    <string name="reward_name_and_points">%1$s: %2$d</string>
-    <string name="text_sign_up_parent">You are not a registered user. Please click sign up.</string>
-    <string name="text_sign_up_kid">You are not a registered user. Please enter your parent code and click sign up.</string>
-    <string name="button_sign_up">Sign up</string>
-    <string name="button_delete_account">Revoke</string>
-    <string name="hint_parent_code">parent code</string>
-
-    <string name="title_activity_kid_main">ScrollingActivity</string>
-    <string name="logo">logo</string>
-    <string name="button_submit">Complete</string>
-    <string name="menu_complete_chore">Complete Chore</string>
-    <string name="menu_create_reward">Create Reward</string>
-    <string name="redeem_pop_up_failed">Redeem failed: not enough points</string>
-    <string name="redeem_pop_up_success">Redeem successful</string>
-    <string name="button_verify">Verify</string>
-    <string name="menu_verify_chore">Verify Chore</string>
-    <string name="verify_pop_up_failed">Verify failed</string>
-    <string name="verify_pop_up_success">Verify successful</string>
 
 </resources>

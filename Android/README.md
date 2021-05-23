@@ -23,17 +23,24 @@ Directory Structure:
     └── ...
     
 
-### User interface walk-through
+### User guideline
 
 1. After clicking "Get Started!", user will be directed to choose their account type to be either a "parent" or a "kid."
 2. If the user has not been registered yet, he or she will be directed to a page for signing up after they log in with their Google account. The kid account sign-up requires input of the parent code during the sign-up step in order to be linked to the specific parent account. Parent code is accessible from the user navigation page drawer of a parent account.
 3. A parent account can access activities to create chores and rewards from user navigation page drawer.
 4. A child account can access submit chore and redeem reward activities from user navigation page drawer.
-5. Chores and rewards created by a parent account are visible to the linked kid account for completion or redemption.
-6. Kids are expected to be honest and only mark a chore as completed after they have finished it but parents can verify that their kids have indeed completed the chores.
-7. Kids will only receive points after the parent marks a completed chore as verified. The points earned by a kid can be used to redeem exciting rewards customized by their parents.
+5. Chores and rewards created by a parent account are visible to the linked kid account for submit or redeem.
+6. Kids are expected to be honest and only submit a chore after they have finished it but parents can verify that their kids have indeed completed the chores that are submitted {not supported in beta release}.
+7. Points earned by kids from submitted chores can be used to redeem exciting rewards customized by their parents.
 
-### Progress
+### Developer guideline
+
+1. The source code is in the `main` directory illustrated in the Directory Structure diagram. In `main.java.com.cse403chorecenter.chorecenterapp` directory, `MainActivity.java` is the entry activity when the application starts up.
+2. Directory `main.java.com.cse403chorecenter.chorecenterapp.ui` contains all the fragment activities which are functionalities accessible from the main user navigation page of a parent accout or kid account. These functionalities are expected to be only accessible once a user account is successfully logged in and without signing out.
+3. Classes defined outside of the `ui` directory are general purpose activities implementing functionalities accessible regardless of whether a user account is successfully logged in.
+4. For developers contributing to extend the current project: fork the current git repository, write code following standard [Android Java coding style guide](https://source.android.com/setup/contribute/code-style) and best programming practice including clear documentation, high cohesion and low coupling, and write high quality tests for your code. Create a pull request from your forked repository to the `master` branch of our project repository. Once the changes are sufficiently reviewed by our code reviewers, we will squash and merge the changes into the `master` branch of the latest project repository.
+
+### Current Progress
 
 - [x] Parent can create chores visible to the linked child account(s) {use case 5}
 - [x] Parent can create rewards visible to the linked child account(s) {use case 4}
