@@ -191,6 +191,33 @@ def get_chores_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
     return GetChoresResponseModel(cursor.fetchall()).get_response()
 
 
+# DeleteChore
+@app.route("/api/parents/chores/<chore_id>", methods=["DELETE"])
+def delete_chore(chore_id):
+    body = request.json
+    validate_request_body(["GoogleAccountId"], body)
+    _, cursor = get_db_conn()
+
+    try:
+        cursor.execute(
+            queries.get_chore_by_id_and_parent(), chore_id, body["GoogleAccountId"]
+        )
+        chore = cursor.fetchone()
+    except Exception as exc:
+        abort(500, str(exc))
+
+    if not chore:
+        abort(404, "Chore not found")
+
+    try:
+        cursor.execute(queries.delete_chore(), chore_id, body["GoogleAccountId"])
+        cursor.commit()
+    except Exception as exc:
+        abort(500, str(exc))
+
+    return "Deleted chore"
+
+
 # CreateReward
 @app.route("/api/parents/rewards/new", methods=["POST"])
 def create_reward():
@@ -234,6 +261,33 @@ def get_rewards_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
         abort(500, str(exc))
 
     return GetRewardsResponseModel(cursor.fetchall()).get_response()
+
+
+# DeleteReward
+@app.route("/api/parents/rewards/<reward_id>", methods=["DELETE"])
+def delete_reward(reward_id):
+    body = request.json
+    validate_request_body(["GoogleAccountId"], body)
+    _, cursor = get_db_conn()
+
+    try:
+        cursor.execute(
+            queries.get_reward_by_id_and_parent(), reward_id, body["GoogleAccountId"]
+        )
+        reward = cursor.fetchone()
+    except Exception as exc:
+        abort(500, str(exc))
+
+    if not reward:
+        abort(404, "Reward not found")
+
+    try:
+        cursor.execute(queries.delete_reward(), reward_id, body["GoogleAccountId"])
+        cursor.commit()
+    except Exception as exc:
+        abort(500, str(exc))
+
+    return "Deleted reward"
 
 
 # GetRedeemedRewards
