@@ -1,5 +1,8 @@
 package com.cse403chorecenter.chorecenterapp.ui.verify_chore;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,6 +47,7 @@ public class VerifyChoreFragment extends Fragment {
     protected VerifyChoreRecyclerViewAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected List<VerifyChoreFragment.ChoreModel> mDataset;
+    protected AlertDialog alert;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
