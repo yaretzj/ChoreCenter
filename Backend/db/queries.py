@@ -240,9 +240,21 @@ def update_chore(columns: list) -> str:
 ##########################
 
 
-def delete_chore():
-    return """DELETE FROM Chores WHERE ChoreId = ? and ParentGoogleAccountId = ?"""
+def delete_chore() -> str:
+    query = (
+        Query.from_(chores_table)
+        .delete()
+        .where(chores_table.ChoreId == Parameter("?"))
+        .where(chores_table.ParentGoogleAccountId == Parameter("?"))
+    )
+    return query.get_sql()
 
 
-def delete_reward():
-    return """DELETE FROM Rewards WHERE RewardId = ? and ParentGoogleAccountId = ?"""
+def delete_reward() -> str:
+    query = (
+        Query.from_(rewards_table)
+        .delete()
+        .where(rewards_table.RewardId == Parameter("?"))
+        .where(rewards_table.ParentGoogleAccountId == Parameter("?"))
+    )
+    return query.get_sql()
