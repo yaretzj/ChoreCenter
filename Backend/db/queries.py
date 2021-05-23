@@ -44,26 +44,8 @@ def create_child() -> str:
 
 def create_chore() -> str:
     """Insert a new chore with the listed fields."""
-    query = (
-        Query.into(chores_table)
-        .columns(
-            "ParentGoogleAccountId",
-            "Name",
-            "Description",
-            "Status",
-            # "AssignedTo",
-            "Points",
-        )
-        .insert(
-            Parameter("?"),
-            Parameter("?"),
-            Parameter("?"),
-            Parameter("?"),
-            Parameter("?"),
-            # Parameter("?"),
-        )
-    )
-    return query.get_sql()
+    return """INSERT INTO Chores(ParentGoogleAccountId, Name, Description, Status, Points) \
+        OUTPUT INSERTED.ChoreId VALUES(?, ?, ?, ?, ?);"""
 
 
 def create_reward() -> str:
@@ -73,6 +55,8 @@ def create_reward() -> str:
         .columns("ParentGoogleAccountId", "Name", "Description", "Points")
         .insert(Parameter("?"), Parameter("?"), Parameter("?"), Parameter("?"))
     )
+    return """INSERT INTO Rewards (ParentGoogleAccountId, Name, Description, Points) \
+        OUTPUT INSERTED.RewardId VALUES(?, ?, ?, ?);"""
     return query.get_sql()
 
 
@@ -149,6 +133,17 @@ def get_rewards_by_parent() -> str:
     query = (
         Query.from_(rewards_table)
         .select("*")
+        .where(rewards_table.ParentGoogleAccountId == Parameter("?"))
+    )
+    return query.get_sql()
+
+
+def get_reward_by_id_and_parent() -> str:
+    """Return the rewards for the parent requesting."""
+    query = (
+        Query.from_(rewards_table)
+        .select("*")
+        .where(rewards_table.RewardId == Parameter("?"))
         .where(rewards_table.ParentGoogleAccountId == Parameter("?"))
     )
     return query.get_sql()
@@ -238,3 +233,16 @@ def update_chore(columns: list) -> str:
     for column in columns:
         query = query.set(Field(column), Parameter("?"))
     return query.get_sql()
+
+
+##########################
+#  SQL DELETE statements #
+##########################
+
+
+def delete_chore():
+    return """DELETE FROM Chores WHERE ChoreId = ? and ParentGoogleAccountId = ?"""
+
+
+def delete_reward():
+    return """DELETE FROM Rewards WHERE RewardId = ? and ParentGoogleAccountId = ?"""
