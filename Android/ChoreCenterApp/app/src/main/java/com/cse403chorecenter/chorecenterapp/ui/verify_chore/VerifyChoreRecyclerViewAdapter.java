@@ -1,5 +1,9 @@
 package com.cse403chorecenter.chorecenterapp.ui.verify_chore;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -123,18 +127,26 @@ public class VerifyChoreRecyclerViewAdapter extends RecyclerView.Adapter<VerifyC
                 public void onClick(View v) {
                     Log.d(TAG, "Clicked chore id: " + ChoreId);
                     // Send the http request
-
-                    // submit chore
-                    if (verifyChore(ChoreId)) {
-                        verifyChoreBtn.setVisibility(View.INVISIBLE);
-                        String status = "Status: Verified";
-                        textViewStatus.setText(status);
-                        Snackbar.make(itemView.findViewById(R.id.verifyChoreTV), R.string.verify_pop_up_success, Snackbar.LENGTH_SHORT)
-                                .show();
-                    } else {
-                        Snackbar.make(itemView.findViewById(R.id.verifyChoreTV), R.string.verify_pop_up_failed, Snackbar.LENGTH_SHORT)
-                                .show();
-                    }
+                    new AlertDialog.Builder(v.getContext())
+                            .setTitle("Verify Chore")
+                            .setMessage("Are you sure you want to verify " + textViewName.getText())
+                            .setPositiveButton("Verify", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // submit chore
+                                    if (verifyChore(ChoreId)) {
+                                        verifyChoreBtn.setVisibility(View.INVISIBLE);
+                                        String status = "Status: Verified";
+                                        textViewStatus.setText(status);
+                                        Snackbar.make(itemView.findViewById(R.id.verifyChoreTV), R.string.verify_pop_up_success, Snackbar.LENGTH_SHORT)
+                                                .show();
+                                    } else {
+                                        Snackbar.make(itemView.findViewById(R.id.verifyChoreTV), R.string.verify_pop_up_failed, Snackbar.LENGTH_SHORT)
+                                                .show();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Cancel", null).show();
                 }
             });
         }
