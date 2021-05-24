@@ -3,7 +3,6 @@ package com.cse403chorecenter.chorecenterapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -39,15 +37,22 @@ public class KidSignup extends AppCompatActivity {
     public void onClickSignUp(View view) {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        // parent code text box
-        EditText editParentCode = (EditText) findViewById(R.id.kidSignupEditText1);
-
         // kid account creation
         if (account != null) {
-            Log.i(TAG, Objects.requireNonNull(account.getEmail()));
-            if (!accountSignup(account, editParentCode.getText().toString())) {
-                Intent intent = new Intent(this, ChooseAccountType.class);
-                startActivity(intent);
+            if (!accountSignup(account, ((EditText) findViewById(R.id.kidSignupEditText1)).getText().toString())) {
+                new AlertDialog.Builder(KidSignup.this)
+                        .setTitle("Sign up failure")
+                        .setMessage("Sign up failed due to wrong parent code, network connection or server issue.")
+                        .setCancelable(false)
+                        .setNeutralButton("Back to Choose Account", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                Intent intent = new Intent(KidSignup.this, ChooseAccountType.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .create().show();
             }
         }
     }
@@ -70,7 +75,6 @@ public class KidSignup extends AppCompatActivity {
             jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);
             jsonObj.put("GoogleTokenId", UserLogin.ACCOUNT_ID_TOKEN);
             jsonObj.put("ParentCode", parentCode);
-            Log.i(TAG, parentCode);
             jsonObj.put("Name", account.getDisplayName());
             jsonObj.put("Email", account.getEmail());
             params[1] = jsonObj.toString();
@@ -81,17 +85,16 @@ public class KidSignup extends AppCompatActivity {
             // Handle the response
             try {
                 String response = sh.get();
-                Context ctx = this;
                 if(response != null && !response.equals("")) {
                     if (!response.equals("404") && !response.equals("500") && !response.equals("400")) {
-                        new AlertDialog.Builder(ctx)
+                        new AlertDialog.Builder(KidSignup.this)
                                 .setTitle("Sign up success")
                                 .setCancelable(false)
                                 .setPositiveButton("Navigation", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
-                                        Intent intent = new Intent(ctx, KidNavigation.class);
+                                        Intent intent = new Intent(KidSignup.this, KidNavigation.class);
                                         startActivity(intent);
                                     }
                                 })
@@ -99,12 +102,12 @@ public class KidSignup extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
-                                        Intent intent = new Intent(ctx, ChooseAccountType.class);
+                                        Intent intent = new Intent(KidSignup.this, ChooseAccountType.class);
                                         startActivity(intent);
                                     }
                                 }).create().show();
+                        return true;
                     }
-                    return true;
                 } else
                     return false;
             } catch (ExecutionException e) {
