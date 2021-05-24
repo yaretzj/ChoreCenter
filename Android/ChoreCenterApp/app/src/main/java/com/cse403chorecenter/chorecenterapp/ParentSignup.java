@@ -2,10 +2,14 @@ package com.cse403chorecenter.chorecenterapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -13,9 +17,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
@@ -41,11 +42,11 @@ public class ParentSignup extends AppCompatActivity {
         // parent account creation
         if (account != null) {
             Log.i(TAG, Objects.requireNonNull(account.getEmail()));
-            accountSignup(account);
+            if (!accountSignup(account)) {
+                Intent intent = new Intent(this, ChooseAccountType.class);
+                startActivity(intent);
+            }
         }
-
-        Intent intent = new Intent(this, ChooseAccountType.class);
-        startActivity(intent);
     }
 
     /**
@@ -74,10 +75,41 @@ public class ParentSignup extends AppCompatActivity {
             // Handle the response
             try {
                 String response = sh.get();
+                Context ctx = this;
+
+                // Initialize showText
+                TextView showText = new TextView(this);
+                showText.setHint("Parent Code");
+                showText.setTextIsSelectable(true);
+
+                // Check response content
                 if(response != null && !response.equals("")) {
-                    return !response.equals("404") && !response.equals("500") && !response.equals("400");
-                } else
-                    return false;
+                    if (!response.equals("404") && !response.equals("500") && !response.equals("400")) {
+                        showText.setText(new JSONObject(response).getString("ParentCode"));
+                        new AlertDialog.Builder(ctx)
+                                .setTitle("Parent Code")
+                                .setView(showText)
+                                .setCancelable(false)
+                                .setPositiveButton("Navigation", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        Intent intent = new Intent(ctx, ParentNavigation.class);
+                                        startActivity(intent);
+                                    }
+                                })
+                                .setNegativeButton("Choose Account", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        Intent intent = new Intent(ctx, ChooseAccountType.class);
+                                        startActivity(intent);
+                                    }
+                                }).create().show();
+                        return true;
+                    }
+                }
+                return false;
             } catch (ExecutionException e) {
                 Log.e(TAG, "Async execution error: " + e.getMessage());
             } catch (InterruptedException e) {
