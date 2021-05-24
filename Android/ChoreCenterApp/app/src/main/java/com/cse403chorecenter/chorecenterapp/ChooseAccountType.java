@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+/**
+ * This is the activity for users to choose their account type.
+ */
 public class ChooseAccountType extends AppCompatActivity {
 
     @Override
@@ -14,20 +17,17 @@ public class ChooseAccountType extends AppCompatActivity {
         setContentView(R.layout.activity_choose_account_type);
     }
 
-    /** Called when the user taps the Parent button */
+    /** When {@code Parent} button is clicked, start UserLogin activity with EXTRA_MESSAGE = "parents" */
     public void directToParentLogin(View view) {
         Intent intent = new Intent(this, UserLogin.class);
         intent.putExtra(MainActivity.EXTRA_MESSAGE, "parents");
         startActivity(intent);
     }
 
-    /** Called when the user taps the Kid button */
+    /** When {@code Kid} button is clicked, start UserLogin activity with EXTRA_MESSAGE = "children" */
     public void directToKidLogin(View view) {
         Intent intent = new Intent(this, UserLogin.class);
         intent.putExtra(MainActivity.EXTRA_MESSAGE, "children");
-//        Intent intent = new Intent(this, KidMain.class);
-//        String chosenType = "kid";
-//        intent.putExtra(MainActivity.EXTRA_MESSAGE, chosenType);
         startActivity(intent);
     }
 }
