@@ -48,5 +48,4 @@ jobs:
         with:
           api-level: 29
           working-directory: Android/ChoreCenterApp
-          disable-animations: false
-          script: ./gradlew connectedCheck
+          script: ./gradlew connectedCheck --stacktrace
