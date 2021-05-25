@@ -168,8 +168,6 @@ public class VerifyChoreRecyclerViewAdapter extends RecyclerView.Adapter<VerifyC
                         listener.onDeleteClick(position);
                     }
                 }
-
-
             });
         }
     }
