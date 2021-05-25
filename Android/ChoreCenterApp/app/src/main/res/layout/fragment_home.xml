@@ -50,7 +50,7 @@
         android:layout_marginTop="60dp"
         android:text="@string/menu_verify_chore"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_home_verify_chore" />
+        app:layout_constraintTop_toBottomOf="@+id/button_home_create_chore" />
 
     <Button
         android:id="@+id/button_home_reward_history"
