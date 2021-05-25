@@ -91,17 +91,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // Parent Code
-        Button bParentCode = (Button) view.findViewById(R.id.button_home_parent_code);
-        bParentCode.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view) {
-                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-                navController.navigate(R.id.nav_gallery);
-            }
-        });
-
         return view;
     }
 }
