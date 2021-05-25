@@ -43,14 +43,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button_home_signout"
+        android:id="@+id/button_home_chore_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="56dp"
-        android:layout_marginTop="64dp"
-        android:text="@string/button_signout"
-        app:layout_constraintEnd_toStartOf="@+id/button_home_parent_code"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="60dp"
+        android:text="@string/menu_verify_chore"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_home_verify_chore" />
 
@@ -58,31 +56,20 @@
         android:id="@+id/button_home_reward_history"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="24dp"
         android:text="@string/menu_reward_history"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_home_create_reward" />
 
     <Button
-        android:id="@+id/button_home_verify_chore"
+        android:id="@+id/button_home_signout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="52dp"
-        android:text="@string/menu_verify_chore"
-        app:layout_constraintEnd_toStartOf="@+id/button_home_reward_history"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="200dp"
+        android:text="@string/button_signout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_home_create_chore" />
-
-    <Button
-        android:id="@+id/button_home_parent_code"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="40dp"
-        android:text="@string/hint_parent_code"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_home_reward_history" />
+        app:layout_constraintTop_toBottomOf="@+id/button_home_chore_list" />
 </androidx.constraintlayout.widget.ConstraintLayout>

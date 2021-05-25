@@ -1,10 +1,15 @@
 package com.cse403chorecenter.chorecenterapp.ui.verify_chore;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cse403chorecenter.chorecenterapp.MainActivity;
 import com.cse403chorecenter.chorecenterapp.R;
 import com.cse403chorecenter.chorecenterapp.ServiceHandler;
+import com.cse403chorecenter.chorecenterapp.ServiceHandlerDelete;
 import com.cse403chorecenter.chorecenterapp.UserLogin;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -29,6 +35,12 @@ public class VerifyChoreRecyclerViewAdapter extends RecyclerView.Adapter<VerifyC
     private static final String TAG = "VerifyChoreAdapter";
 
     private List<VerifyChoreFragment.ChoreModel> mDataSet;
+    private OnItemClickListener mListener;
+    public interface OnItemClickListener {
+        void onDeleteClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) { mListener = listener; }
 
     // BEGIN_INCLUDE(recyclerViewSampleViewHolder)
     /**
@@ -72,7 +84,7 @@ public class VerifyChoreRecyclerViewAdapter extends RecyclerView.Adapter<VerifyC
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.text_row_verify_chore_item, viewGroup, false);
 
-        return new VerifyChoreRecyclerViewAdapter.ChoreViewHolder(v);
+        return new VerifyChoreRecyclerViewAdapter.ChoreViewHolder(v, mListener);
     }
     // END_INCLUDE(recyclerViewOnCreateViewHolder)
 
@@ -85,9 +97,9 @@ public class VerifyChoreRecyclerViewAdapter extends RecyclerView.Adapter<VerifyC
         // Get element from your dataset at this position and replace the contents of the view
         // with that element
         VerifyChoreFragment.ChoreModel chore = mDataSet.get(position);
-        String nameAndPoints = chore.getName() + ": " + chore.getPoints();
+        String nameAndPoints = chore.getName() + ": " + chore.getPoints() + " points";
         viewHolder.textViewName.setText(nameAndPoints);
-        viewHolder.textViewDescription.setText(chore.getDescription());
+        viewHolder.textViewDescription.setText("Description: " + chore.getDescription());
         String status = "Status: " + chore.getStatus();
         viewHolder.textViewStatus.setText(status);
         viewHolder.position = position;
@@ -110,30 +122,50 @@ public class VerifyChoreRecyclerViewAdapter extends RecyclerView.Adapter<VerifyC
         View rootView;
         int position;
         String ChoreId;
+        ImageView deleteIcon;
 
-        public ChoreViewHolder(@NonNull View itemView) {
+        public ChoreViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             rootView = itemView;
             textViewName = itemView.findViewById(R.id.verifyChoreTV);
             textViewDescription = itemView.findViewById(R.id.verifyChoreTV2);
             textViewStatus = itemView.findViewById(R.id.verifyChoreTV3);
             verifyChoreBtn = itemView.findViewById(R.id.verifyChoreBtn);
+            deleteIcon = itemView.findViewById(R.id.delete_icon);
             verifyChoreBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "Clicked chore id: " + ChoreId);
                     // Send the http request
-
-                    // submit chore
-                    if (verifyChore(ChoreId)) {
-                        verifyChoreBtn.setVisibility(View.INVISIBLE);
-                        String status = "Status: Verified";
-                        textViewStatus.setText(status);
-                        Snackbar.make(itemView.findViewById(R.id.verifyChoreTV), R.string.verify_pop_up_success, Snackbar.LENGTH_SHORT)
-                                .show();
-                    } else {
-                        Snackbar.make(itemView.findViewById(R.id.verifyChoreTV), R.string.verify_pop_up_failed, Snackbar.LENGTH_SHORT)
-                                .show();
+                    new AlertDialog.Builder(v.getContext())
+                            .setTitle("Verify Chore")
+                            .setMessage("Are you sure you want to verify " + textViewName.getText())
+                            .setPositiveButton("Verify", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // submit chore
+                                    if (verifyChore(ChoreId)) {
+                                        verifyChoreBtn.setVisibility(View.INVISIBLE);
+                                        String status = "Status: Verified";
+                                        textViewStatus.setText(status);
+                                        Snackbar.make(itemView.findViewById(R.id.verifyChoreTV), R.string.verify_pop_up_success, Snackbar.LENGTH_SHORT)
+                                                .show();
+                                    } else {
+                                        Snackbar.make(itemView.findViewById(R.id.verifyChoreTV), R.string.verify_pop_up_failed, Snackbar.LENGTH_SHORT)
+                                                .show();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Cancel", null).show();
+                }
+            });
+            deleteIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "Clicked delete chore: " + ChoreId);
+                    if (listener != null && deleteChore(ChoreId)) {
+                        int position = getAdapterPosition();
+                        listener.onDeleteClick(position);
                     }
                 }
             });
@@ -154,6 +186,38 @@ public class VerifyChoreRecyclerViewAdapter extends RecyclerView.Adapter<VerifyC
             jsonObj.put("AssignedTo", UserLogin.ACCOUNT_ID);
             params[1] = jsonObj.toString();
             sh = (ServiceHandler) sh.execute(params);
+
+            // output response
+            try {
+                String response = sh.get();
+                if(response != null && !response.equals("")) {
+                    Log.i(TAG, response);
+                    return !response.equals("404") && !response.equals("500") && !response.equals("400");
+                }
+                return false;
+            } catch (ExecutionException e) {
+                Log.e(TAG, "Async execution error: " + e.getMessage());
+            } catch (InterruptedException e) {
+                Log.e(TAG, "Async interrupted error: " + e.getMessage());
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Json parsing error: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public static boolean deleteChore(String choreId) {
+        try {
+            // checking account status on the server
+            ServiceHandlerDelete sh = new ServiceHandlerDelete();
+            String[] params = new String[2];
+            params[0] = MainActivity.DNS + "api/parents/chores/" + choreId;
+
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);
+
+            params[1] = jsonObj.toString();
+            sh = (ServiceHandlerDelete) sh.execute(params);
 
             // output response
             try {

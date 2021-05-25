@@ -20,7 +20,9 @@ public class ChooseAccountTypeTest {
         // press the button.
         onView(withId(R.id.parentAccountBtn))
                 .perform(ViewActions.click());
-    }@Test
+    }
+
+    @Test
     public void chooseKidAccount() {
         // press the button.
         onView(withId(R.id.kidAccountBtn))

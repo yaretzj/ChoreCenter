@@ -90,7 +90,7 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
         viewHolder.textViewDescription.setText(description);
         viewHolder.position = position;
         viewHolder.ChoreId = chore.getId();
-        if (chore.getStatus().equals("Completed")) {
+        if (!chore.getStatus().equals("Created")) {
             viewHolder.completeChoreBtn.setEnabled(false);
             viewHolder.completeChoreBtn.setText("Completed");
         }

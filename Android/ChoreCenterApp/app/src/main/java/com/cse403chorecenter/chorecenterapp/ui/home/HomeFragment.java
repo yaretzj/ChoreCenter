@@ -79,9 +79,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // Verify Chore
-        Button bVerifyChore = (Button) view.findViewById(R.id.button_home_verify_chore);
-        bVerifyChore.setOnClickListener(new View.OnClickListener()
+
+        // Chore List
+        Button bChoreList = (Button) view.findViewById(R.id.button_home_chore_list);
+        bChoreList.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view) {

@@ -1,5 +1,8 @@
 package com.cse403chorecenter.chorecenterapp.ui.verify_chore;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,6 +47,7 @@ public class VerifyChoreFragment extends Fragment {
     protected VerifyChoreRecyclerViewAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected List<VerifyChoreFragment.ChoreModel> mDataset;
+    protected AlertDialog alert;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,19 +90,11 @@ public class VerifyChoreFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         // END_INCLUDE(initializeRecyclerView)
 
-        mLinearLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.linear_layout_rb);
-        mLinearLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setRecyclerViewLayoutManager(VerifyChoreFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER);
-            }
-        });
+        mAdapter.setOnItemClickListener(new VerifyChoreRecyclerViewAdapter.OnItemClickListener() {
 
-        mGridLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.grid_layout_rb);
-        mGridLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                setRecyclerViewLayoutManager(VerifyChoreFragment.LayoutManagerType.GRID_LAYOUT_MANAGER);
+            public void onDeleteClick(int position) {
+                deleteClicked(position);
             }
         });
 
@@ -147,6 +143,13 @@ public class VerifyChoreFragment extends Fragment {
 
         // use http request to get chores
         getChores();
+    }
+    /**
+     * Update the list when delete is clicked and update view adapter
+     */
+    public void deleteClicked(int position) {
+        mDataset.remove(position);
+        mAdapter.notifyItemRemoved(position);
     }
 
     /**

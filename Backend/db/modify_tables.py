@@ -1,7 +1,7 @@
 import os
 import argparse
 from dotenv import dotenv_values, load_dotenv
-from db.connection import setup_db_conn
+from connection import setup_db_conn
 
 # Drop tables action currently disabled - want to avoid dropping tables accidentally. You can
 # enable it by removing the commented out parts if you want to.
@@ -13,19 +13,19 @@ group.add_argument(
     "-c",
     "--create",
     help="Creates the database tables specified in create-tables.sql with the triggers in create-triggers.sql.",
-    action="store_true"
+    action="store_true",
 )
 group.add_argument(
     "-p",
     "--populate",
     help="Populates the database tables with the test data specified in create_test_data.sql.",
-    action="store_true"
+    action="store_true",
 )
 group.add_argument(
     "-d",
     "--drop",
     help="Drops the database tables using the commands in drop-tables.sql.",
-    action="store_true"
+    action="store_true",
 )
 args = parser.parse_args()
 

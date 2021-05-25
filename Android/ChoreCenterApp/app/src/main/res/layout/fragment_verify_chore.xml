@@ -4,31 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/orange">
 
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:checkedButton="@+id/linear_layout_rb">
-        <RadioButton android:id="@+id/linear_layout_rb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/linear_layout_manager"/>
-        <RadioButton android:id="@+id/grid_layout_rb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/grid_layout_manager"/>
-    </RadioGroup>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:padding="10dp"
+        android:scrollbars="vertical"
+        android:divider="@android:color/transparent"
+        tools:listitem="@layout/text_row_verify_chore_item"/>
 </LinearLayout>

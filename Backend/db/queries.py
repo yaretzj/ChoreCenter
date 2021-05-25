@@ -44,26 +44,8 @@ def create_child() -> str:
 
 def create_chore() -> str:
     """Insert a new chore with the listed fields."""
-    query = (
-        Query.into(chores_table)
-        .columns(
-            "ParentGoogleAccountId",
-            "Name",
-            "Description",
-            "Status",
-            # "AssignedTo",
-            "Points",
-        )
-        .insert(
-            Parameter("?"),
-            Parameter("?"),
-            Parameter("?"),
-            Parameter("?"),
-            Parameter("?"),
-            # Parameter("?"),
-        )
-    )
-    return query.get_sql()
+    return """INSERT INTO Chores(ParentGoogleAccountId, Name, Description, Status, Points) \
+        OUTPUT INSERTED.ChoreId VALUES(?, ?, ?, ?, ?);"""
 
 
 def create_reward() -> str:
@@ -73,6 +55,8 @@ def create_reward() -> str:
         .columns("ParentGoogleAccountId", "Name", "Description", "Points")
         .insert(Parameter("?"), Parameter("?"), Parameter("?"), Parameter("?"))
     )
+    return """INSERT INTO Rewards (ParentGoogleAccountId, Name, Description, Points) \
+        OUTPUT INSERTED.RewardId VALUES(?, ?, ?, ?);"""
     return query.get_sql()
 
 
@@ -154,6 +138,17 @@ def get_rewards_by_parent() -> str:
     return query.get_sql()
 
 
+def get_reward_by_id_and_parent() -> str:
+    """Return the rewards for the parent requesting."""
+    query = (
+        Query.from_(rewards_table)
+        .select("*")
+        .where(rewards_table.RewardId == Parameter("?"))
+        .where(rewards_table.ParentGoogleAccountId == Parameter("?"))
+    )
+    return query.get_sql()
+
+
 # Get rewards by child is implemented in app.py through getting the parent's
 # id from the child's id query and using that in get_rewards_by_parent.
 
@@ -226,7 +221,7 @@ def update_child_points() -> str:
     """Update the amount of points for a child (given account id) by the given amount."""
     query = (
         Query.update(children_table)
-        .set(children_table.Points, Parameter("?"))
+        .set(children_table.Points, children_table.Points + Parameter("?"))
         .where(children_table.GoogleAccountId == Parameter("?"))
     )
     return query.get_sql()
@@ -237,4 +232,29 @@ def update_chore(columns: list) -> str:
     query = Query.update(chores_table).where(chores_table.ChoreId == Parameter("?"))
     for column in columns:
         query = query.set(Field(column), Parameter("?"))
+    return query.get_sql()
+
+
+##########################
+#  SQL DELETE statements #
+##########################
+
+
+def delete_chore() -> str:
+    query = (
+        Query.from_(chores_table)
+        .delete()
+        .where(chores_table.ChoreId == Parameter("?"))
+        .where(chores_table.ParentGoogleAccountId == Parameter("?"))
+    )
+    return query.get_sql()
+
+
+def delete_reward() -> str:
+    query = (
+        Query.from_(rewards_table)
+        .delete()
+        .where(rewards_table.RewardId == Parameter("?"))
+        .where(rewards_table.ParentGoogleAccountId == Parameter("?"))
+    )
     return query.get_sql()
