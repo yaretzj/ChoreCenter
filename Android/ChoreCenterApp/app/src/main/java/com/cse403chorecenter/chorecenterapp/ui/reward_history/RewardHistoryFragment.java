@@ -90,7 +90,7 @@ public class RewardHistoryFragment extends Fragment {
 
                     try {
                         // Getting JSON Array node
-                        JSONArray chores = jsonResponseObject.getJSONArray("‘RedeemedRewards");
+                        JSONArray chores = jsonResponseObject.getJSONArray("RedeemedRewards");
 
                         // looping through All Rewards
                         for (int i = 0; i < chores.length(); i++) {

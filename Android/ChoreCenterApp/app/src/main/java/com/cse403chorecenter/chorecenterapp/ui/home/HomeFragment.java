@@ -1,6 +1,7 @@
 package com.cse403chorecenter.chorecenterapp.ui.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,6 +76,28 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
                 navController.navigate(R.id.nav_reward_history);
+            }
+        });
+
+        // Verify Chore
+        Button bVerifyChore = (Button) view.findViewById(R.id.button_home_verify_chore);
+        bVerifyChore.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view) {
+                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                navController.navigate(R.id.nav_verify_chore);
+            }
+        });
+
+        // Parent Code
+        Button bParentCode = (Button) view.findViewById(R.id.button_home_parent_code);
+        bParentCode.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view) {
+                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                navController.navigate(R.id.nav_gallery);
             }
         });
 
