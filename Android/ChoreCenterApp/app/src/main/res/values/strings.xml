@@ -67,9 +67,15 @@
     <string name="verify_pop_up_failed">Verify failed</string>
     <string name="verify_pop_up_success">Verify successful</string>
 
+    <!-- Literals from parent all rewards. -->
+    <string name="menu_parent_all_rewards">All Rewards</string>
+    <string name="delete_pop_up_failed">Delete failed</string>
+    <string name="delete_pop_up_success">Delete successful</string>
+
     <!-- Literals from miscellaneous. -->
     <string name="grid_layout_manager">Grid Layout Manager</string>
     <string name="linear_layout_manager">Linear Layout Manager</string>
     <string name="element_text">Element</string>
+    <string name="delete">Delete</string>
 
 </resources>

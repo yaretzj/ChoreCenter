@@ -44,6 +44,11 @@
         android:label="@string/menu_reward_history"
         tools:layout="@layout/fragment_reward_history" />
     <fragment
+        android:id="@+id/nav_parent_all_rewards"
+        android:name="com.cse403chorecenter.chorecenterapp.ui.parent_all_rewards.AllRewardHistoryFragment"
+        android:label="@string/menu_parent_all_rewards"
+        tools:layout="@layout/fragment_parent_all_rewards" />
+    <fragment
         android:id="@+id/nav_sign_out"
         android:name="com.cse403chorecenter.chorecenterapp.ui.signout.SignoutFragment"
         android:label="@string/button_signout"

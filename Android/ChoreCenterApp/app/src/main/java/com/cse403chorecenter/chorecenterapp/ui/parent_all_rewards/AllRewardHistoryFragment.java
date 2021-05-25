@@ -1,4 +1,4 @@
-package com.cse403chorecenter.chorecenterapp.ui.reward_history;
+package com.cse403chorecenter.chorecenterapp.ui.parent_all_rewards;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -14,8 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cse403chorecenter.chorecenterapp.MainActivity;
 import com.cse403chorecenter.chorecenterapp.R;
 import com.cse403chorecenter.chorecenterapp.ServiceHandler;
-import com.cse403chorecenter.chorecenterapp.ui.redeem_reward.RedeemRewardFragment;
-import com.cse403chorecenter.chorecenterapp.ui.redeem_reward.RedeemRewardRecyclerViewAdapter;
+import com.cse403chorecenter.chorecenterapp.UserLogin;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,12 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class RewardHistoryFragment extends Fragment {
+public class AllRewardHistoryFragment extends Fragment {
 
     private static final String TAG = "RecyclerViewFragment";
-    protected List<ReedemedRewardModel> mDataset;
+    protected List<RewardModel> mDataset;
     protected RecyclerView mRecyclerView;
-    protected RHistoryViewAdapter mAdapter;
+    protected AllRewardHistoryViewAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
 
 
@@ -56,7 +55,7 @@ public class RewardHistoryFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new RHistoryViewAdapter(mDataset);
+        mAdapter = new AllRewardHistoryViewAdapter(mDataset);
         mRecyclerView.setAdapter(mAdapter);
 
         return view;
@@ -73,10 +72,10 @@ public class RewardHistoryFragment extends Fragment {
             // checking account status on the server
             ServiceHandler sh = new ServiceHandler();
             String[] params = new String[2];
-            params[0] = MainActivity.DNS + "api/parents/rewards/history";
+            params[0] = MainActivity.DNS + "api/parents/rewards";
 
             JSONObject jsonObj = new JSONObject();
-            jsonObj.put("GoogleAccountId", com.cse403chorecenter.chorecenterapp.UserLogin.ACCOUNT_ID);
+            jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);
             params[1] = jsonObj.toString();
             sh = (ServiceHandler) sh.execute(params);
 
@@ -88,18 +87,14 @@ public class RewardHistoryFragment extends Fragment {
                     Log.i(TAG, response);
                     JSONObject jsonResponseObject = new JSONObject(response);
 
-                    try {
-                        // Getting JSON Array node
-                        JSONArray chores = jsonResponseObject.getJSONArray("RedeemedRewards");
+                    // Getting JSON Array node
+                    JSONArray chores = jsonResponseObject.getJSONArray("Rewards");
 
-                        // looping through All Rewards
-                        for (int i = 0; i < chores.length(); i++) {
-                            JSONObject c = chores.getJSONObject(i);
-                            mDataset.add(new ReedemedRewardModel(c.getString("Name"), c.getString("ChildName"),
-                                    c.getString("Description"), c.getString("RewardId"), c.getString("RedeemedTime")));
-                        }
-                    } catch (final JSONException e) {
-                        Log.e(TAG, "Json parsing error: " + e.getMessage());
+                    // looping through All Rewards
+                    for (int i = 0; i < chores.length(); i++) {
+                        JSONObject c = chores.getJSONObject(i);
+                        mDataset.add(new RewardModel(c.getString("Name"), c.getString("Points"),
+                                c.getString("Description"), c.getString("RewardId"), c.getString("NumberOfRedemptions")));
                     }
 
                     return !response.equals("404") && !response.equals("500") && !response.equals("400");
@@ -117,29 +112,29 @@ public class RewardHistoryFragment extends Fragment {
     }
 
     /**
-     * ReedemedRewardModel helps handling store and retrieve information about rewards
+     * RewardModel helps handling store and retrieve information about rewards
      */
-    public static class ReedemedRewardModel {
+    public static class RewardModel {
         private final String name;
-        private final String childName;
+        private final String points;
         private final String description;
         private final String id;
-        private final String redeemedTime;
+        private final String numberOfRedemptions;
 
-        public ReedemedRewardModel(String name, String childName, String description, String id, String reedemedTime) {
+        public RewardModel(String name, String points, String description, String id, String numberOfRedemptions) {
             this.name = name;
-            this.childName = childName;
+            this.points = points;
             this.description = description;
             this.id = id;
-            this.redeemedTime = reedemedTime;
+            this.numberOfRedemptions = numberOfRedemptions;
         }
 
         public String getName() {
             return name;
         }
 
-        public String getChildName() {
-            return childName;
+        public String getPoints() {
+            return points;
         }
 
         public String getDescription() {
@@ -150,8 +145,8 @@ public class RewardHistoryFragment extends Fragment {
             return id;
         }
 
-        public String getRedeemedTime() {
-            return redeemedTime;
+        public String getNumberOfRedemptions() {
+            return numberOfRedemptions;
         }
     }
 

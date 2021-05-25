@@ -1,9 +1,12 @@
 package com.cse403chorecenter.chorecenterapp.ui.redeem_reward;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -92,9 +95,15 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
         RedeemRewardFragment.RewardModel reward = mDataSet.get(position);
         String nameAndPoints = reward.getName() + ": " + reward.getPoints() + " points";
         viewHolder.textViewName.setText(nameAndPoints);
-        viewHolder.textViewDescription.setText("Description: "+reward.getDescription());
+        String description = "Description: "+reward.getDescription();
+        viewHolder.textViewDescription.setText(description);
         viewHolder.position = position;
         viewHolder.RewardId = reward.getId();
+        String status = "Number of redemptions: " + reward.getStatus();
+        viewHolder.textViewStatus.setText(status);
+
+        // Comment out if there's no need to set visibility
+//        viewHolder.redeemRewardBtn.setVisibility((reward.getStatus().equals("Created")) ? View.VISIBLE : View.INVISIBLE);
     }
     // END_INCLUDE(recyclerViewOnBindViewHolder)
 
@@ -107,38 +116,57 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
     public static class RewardViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName;
         TextView textViewDescription;
+        TextView textViewStatus;
         View rootView;
         int position;
         String RewardId;
+        Button redeemRewardBtn;
 
         public RewardViewHolder(@NonNull View itemView) {
             super(itemView);
             rootView = itemView;
             textViewName = itemView.findViewById(R.id.redeemRewardTV);
             textViewDescription = itemView.findViewById(R.id.redeemRewardTV2);
-            itemView.findViewById(R.id.redeemRewardBtn).setOnClickListener(new View.OnClickListener() {
+            textViewStatus = itemView.findViewById(R.id.verifyChoreTV3);
+            redeemRewardBtn = itemView.findViewById(R.id.redeemRewardBtn);
+            redeemRewardBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "Clicked reward id: " + RewardId);
 
                     // redeem reward
-                    if (submitChore(RewardId, itemView.findViewById(R.id.redeemRewardTV))) {
-                        Snackbar.make(itemView.findViewById(R.id.redeemRewardTV), R.string.redeem_pop_up_success, Snackbar.LENGTH_SHORT)
-                                .show();
-                        Log.i(TAG, v.getRootView().getRootView().toString());
-                        NavigationView navigationView = (NavigationView) v.getRootView().findViewById(R.id.kid_nav_view);
-                        View headerView = navigationView.getHeaderView(0);
-                        TextView pointsTV = headerView.findViewById(R.id.accountPointsTV);
-                        String accountPoints = "Points: " + UserLogin.ACCOUNT_POINTS;
-                        pointsTV.setText(accountPoints);
-                    }
+                    new AlertDialog.Builder(v.getContext())
+                            .setTitle("Verify Chore")
+                            .setMessage("Are you sure you want redeem " + textViewName.getText())
+                            .setPositiveButton("Redeem", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // submit chore
+                                    if (redeemReward(RewardId, itemView.findViewById(R.id.redeemRewardTV))) {
+//                                        redeemRewardBtn.setVisibility(View.INVISIBLE);
+//                                        String status = "Number of redemptions: " + (Integer.parseInt(textViewStatus.getText().toString()) + 1);
+//                                        textViewStatus.setText(status);
+                                        Snackbar.make(itemView.findViewById(R.id.redeemRewardTV), R.string.redeem_pop_up_success, Snackbar.LENGTH_SHORT)
+                                                .show();
+                                        NavigationView navigationView = (NavigationView) v.getRootView().findViewById(R.id.kid_nav_view);
+                                        View headerView = navigationView.getHeaderView(0);
+                                        TextView pointsTV = headerView.findViewById(R.id.accountPointsTV);
+                                        String accountPoints = "Points: " + UserLogin.ACCOUNT_POINTS;
+                                        pointsTV.setText(accountPoints);
+                                    } else {
+                                        Snackbar.make(itemView.findViewById(R.id.redeemRewardTV), R.string.redeem_pop_up_failed, Snackbar.LENGTH_SHORT)
+                                                .show();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Cancel", null).show();
                 }
             });
         }
     }
 
-    /** submit a chore for the kid account */
-    public static boolean submitChore(String rewardId, View view) {
+    /** redeem a reward for the kid account */
+    public static boolean redeemReward(String rewardId, View view) {
         try {
             // checking account status on the server
             ServiceHandler sh = new ServiceHandler();

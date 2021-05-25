@@ -21,6 +21,10 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/menu_reward_history" />
         <item
+            android:id="@+id/nav_parent_all_rewards"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="@string/menu_parent_all_rewards" />
+        <item
             android:id="@+id/nav_verify_chore"
             android:title="@string/menu_verify_chore"
             android:icon="@drawable/ic_menu_slideshow" />
