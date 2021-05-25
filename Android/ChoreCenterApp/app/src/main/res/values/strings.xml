@@ -20,7 +20,7 @@
     <string name="menu_redeem_reward">Redeem Reward</string>
     <string name="menu_complete_chore">Complete Chore</string>
     <string name="menu_create_reward">Create Reward</string>
-    <string name="menu_verify_chore">Verify Chore</string>
+    <string name="menu_verify_chore">Chore List</string>
 
     <!-- Literals from create chore. -->
     <string name="create_chore">Create Chore</string>

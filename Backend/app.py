@@ -23,6 +23,8 @@ from db.connection import setup_db_conn
 
 
 INTIIAL_CHORE_STATUS = "Created"
+COMPLETED_CHORE_STATUS = "Completed"
+VERIFIED_CHORE_STATUS = "Verified"
 
 
 load_dotenv()
@@ -144,8 +146,7 @@ def update_chore_parent(chore_id):
     db_conn, cursor = get_db_conn()
 
     account_id = body.pop("GoogleAccountId")
-    columns = body.keys()
-    if len(columns) == 0:
+    if len(body) == 0:
         abort(400, "No fields to update")
 
     try:
@@ -157,12 +158,17 @@ def update_chore_parent(chore_id):
     if not chore:
         abort(404, "ChoreId {} does not exist".format(chore_id))
 
-    update_values = [body[key] for key in columns]
-    try:
-        cursor.execute(queries.update_chore(columns), *update_values, chore_id)
-        cursor.commit()
-    except Exception as exc:
-        abort(500, str(exc))
+    chore = ChoreModel(*chore)
+    if chore.status == VERIFIED_CHORE_STATUS:
+        abort(403, "Cannot update chore with status Verified")
+    if (
+        "Status" in body
+        and body["Status"] == VERIFIED_CHORE_STATUS
+        and chore.status != COMPLETED_CHORE_STATUS
+    ):
+        abort(403, "Cannot change chore status to Verified before it is Completed")
+
+    update_chore_parent_txn(chore, body, cursor, db_conn)
 
     try:
         cursor.execute(queries.get_chore_by_id_and_parent(), chore_id, account_id)
@@ -170,6 +176,28 @@ def update_chore_parent(chore_id):
         abort(500, str(exc))
 
     return ChoreModel(*(cursor.fetchone())).get_response()
+
+
+def update_chore_parent_txn(
+    chore: ChoreModel, req_body: dict, cursor: pyodbc.Cursor, db_conn: pyodbc.Connection
+):
+    columns = req_body.keys()
+    try:
+        cursor.execute(
+            queries.update_chore(columns),
+            *[req_body[key] for key in columns],
+            chore.chore_id
+        )
+        if "Status" in req_body and req_body["Status"] == VERIFIED_CHORE_STATUS:
+            cursor.execute(
+                queries.update_child_points(), chore.points, chore.assigned_to
+            )
+        cursor.commit()
+    except Exception as exc:
+        print(exc)
+        db_conn.rollback()
+        update_chore_parent_txn(chore, req_body, cursor, db_conn)
+        # abort(500, str(exc))
 
 
 # GetChoresParent
@@ -414,9 +442,14 @@ def update_chore_child(chore_id):
     db_conn, cursor = get_db_conn()
 
     account_id = body.pop("GoogleAccountId")
-    columns = body.keys()
-    if len(columns) == 0:
-        abort(400, "No fields to update")
+    chore_status = body.pop("Status", None)
+
+    if not chore_status:
+        abort(400, "No status to update")
+    if chore_status != COMPLETED_CHORE_STATUS:
+        abort(400, "Invalid/Unauthorized status value")
+    if len(body) > 0:
+        abort(403, "Unauthorized update fields")
 
     try:
         cursor.execute(queries.get_child_by_account_id(), account_id)
@@ -440,18 +473,23 @@ def update_chore_child(chore_id):
     if not chore or chore.ParentGoogleAccountId != child_acc.ParentGoogleAccountId:
         abort(404, "ChoreId {} does not exist".format(chore_id))
 
-    update_values = [body[key] for key in columns]
+    chore = ChoreModel(*chore)
+    if chore.status != INTIIAL_CHORE_STATUS:
+        abort(
+            403,
+            "Cannot update chore with status {} to {}".format(
+                chore.status, chore_status
+            ),
+        )
 
     try:
         db_conn.autocommit = False
-        cursor.execute(queries.update_chore(columns), *update_values, chore_id)
-
-        if chore.Status != "Completed" and body.get("Status") == "Completed":
-            cursor.execute(
-                queries.update_child_points(),
-                int(chore.Points) + int(child_acc.Points),
-                account_id,
-            )
+        cursor.execute(
+            queries.update_chore(("Status", "AssignedTo")),
+            chore_status,
+            account_id,
+            chore_id,
+        )
         cursor.commit()
     except Exception as exc:
         abort(500, str(exc))

@@ -221,7 +221,7 @@ def update_child_points() -> str:
     """Update the amount of points for a child (given account id) by the given amount."""
     query = (
         Query.update(children_table)
-        .set(children_table.Points, Parameter("?"))
+        .set(children_table.Points, children_table.Points + Parameter("?"))
         .where(children_table.GoogleAccountId == Parameter("?"))
     )
     return query.get_sql()
