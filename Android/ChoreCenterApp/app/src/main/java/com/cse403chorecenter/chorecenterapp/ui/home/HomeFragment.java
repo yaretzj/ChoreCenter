@@ -80,7 +80,7 @@ public class HomeFragment extends Fragment {
 
         // Reward List
         Button bAllRewards = (Button) view.findViewById(R.id.button_home_all_rewards);
-        bRewardHistory.setOnClickListener(new View.OnClickListener()
+        bAllRewards.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view) {
