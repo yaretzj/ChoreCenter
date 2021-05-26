@@ -81,7 +81,7 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
         // Populate Google SignIn Options
         GSO = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
-                .requestIdToken("1090737446393-3im1mga2cqjkj3nambmkcm8jf4oohtt5.apps.googleusercontent.com")  // set up Google API console project to use here
+                .requestIdToken("779106056531-mq0ef424ck8brpi4vuk4ncqog07m186g.apps.googleusercontent.com")  // set up Google API console project to use here
                 .build();
 
         // Default values without user signed in
