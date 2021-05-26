@@ -2,11 +2,10 @@
     Flask Server
 """
 # from datetime import datetime
-import os
-import pyodbc
+from typing import Tuple
 from dotenv import load_dotenv
 from flask import abort, Flask, g, request
-from typing import Tuple
+import pyodbc
 
 from models.response_models import (
     ChoreModel,
@@ -62,7 +61,7 @@ def hello_world():
 
 @app.route("/api/parents/new", methods=["POST"])
 def create_parent():
-    """CreateParentAccount, Recieves a POST request from the client
+    """CreateParentAccount, Receives a POST request from the client
     that uses the url path "/api/parents/new" and verifies all the
     parent information is valid JSON. Using the data received, an
     Insert statement is made to the database and the information
@@ -104,7 +103,7 @@ def create_parent():
 
 @app.route("/api/parents/info", methods=["POST"])
 def get_parent():
-    """GetParentInfo, Recieves a POST request from the client
+    """GetParentInfo, Receives a POST request from the client
     that uses the url path "/api/parents/info" and verifies all the
     Google account information is valid JSON. Using the data received,
     a Select statement is made to the database and the Parent information
@@ -134,7 +133,7 @@ def get_parent():
 
 @app.route("/api/parents/chores/new", methods=["POST"])
 def create_chore_parent():
-    """CreateChoreParent, Recieves a POST request from the client
+    """CreateChoreParent, Receives a POST request from the client
     that uses the url path "/api/parents/chores/new" and verifies all the
     Google account information, name of chore, description of chore, and point value of
     the chore is valid JSON. Using the data received,
@@ -169,7 +168,7 @@ def create_chore_parent():
 
 @app.route("/api/parents/chores/<chore_id>/update", methods=["POST"])
 def update_chore_parent(chore_id):
-    """UpdateChoreParent, Recieves a POST request from the client
+    """UpdateChoreParent, Receives a POST request from the client
     that uses the url path "/api/parents/chores/<chore_id>/update" and verifies the
     Google account information and any other additional other fields are valid JSON.
     Using the data received, an Update statement is made to the database and the
@@ -183,7 +182,7 @@ def update_chore_parent(chore_id):
     """
     body = request.json
     validate_request_body(["GoogleAccountId"], body)
-    db_conn, cursor = get_db_conn()
+    _, cursor = get_db_conn()
 
     account_id = body.pop("GoogleAccountId")
     columns = body.keys()
@@ -217,12 +216,12 @@ def update_chore_parent(chore_id):
 # GetChoresParent
 @app.route("/api/parents/chores", methods=["POST"])
 def get_chores_parent():
-    """GetChoresParent, Recieves a POST request from the client
+    """GetChoresParent, Receives a POST request from the client
     that uses the url path "/api/parents/chores" and verifies the
     Google account information and any other additional other fields are valid JSON.
     Using the data received, a Select statement is made to the database and the
     Chores associated with that Parent are received from the SQL table.
-    
+
     If the query was successful,
     returns a response back with Chores, list of Chore infomation as JSON object.
     If Parent account did not exist, Chores will be empty.
@@ -249,7 +248,7 @@ def get_chores_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
 # CreateReward
 @app.route("/api/parents/rewards/new", methods=["POST"])
 def create_reward():
-    """CreateReward, Recieves a POST request from the client
+    """CreateReward, Receives a POST request from the client
     that uses the url path "/api/parents/rewards/new" and verifies all the
     Google account information, name of reward, description of reward, and point cost of
     the reward is valid JSON. Using the data received,
@@ -287,12 +286,12 @@ def create_reward():
 # GetRewardsParent
 @app.route("/api/parents/rewards", methods=["POST"])
 def get_rewards_parent():
-    """GetRewardsParent, Recieves a POST request from the client
+    """GetRewardsParent, Receives a POST request from the client
     that uses the url path "/api/parents/rewards" and verifies the
     Google account information and any other additional other fields are valid JSON.
     Using the data received, a Select statement is made to the database and the
     Rewards associated with that Parent are received from the SQL table.
-    
+
     If the query was successful,
     returns a response back with Rewards, list of Reward infomation as JSON object.
     If Parent account did not exist, Rewards will be empty.
@@ -318,6 +317,17 @@ def get_rewards_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
 # GetRedeemedRewards
 @app.route("/api/parents/rewards/history", methods=["POST"])
 def get_redeemed_rewards_parent():
+    """GetRedeemedRewardsParent, Receives a POST request from the client
+    that uses the url path "/api/parents/rewards/history" and verifies the
+    Google account information and any other additional other fields are valid JSON.
+    Using the data received, a Select statement is made to the database and the
+    RedeemedRewards associated with that Parent are received from the SQL table.
+
+    If the query was successful,
+    returns a response back with RedeemedRewards, list of RedeemedReward infomation as JSON object.
+    If Parent account did not exist, RedeemedRewards will be empty.
+    If server error, return 500.
+    """
     body = request.json
     validate_request_body(["GoogleAccountId"], body)
     _, cursor = get_db_conn()
@@ -335,6 +345,19 @@ def get_redeemed_rewards_parent():
 # CreateChildAccount
 @app.route("/api/children/new", methods=["POST"])
 def create_child():
+    """CreateChildAccount, Receives a POST request from the client
+    that uses the url path "/api/children/new" and verifies all the
+    child information is valid JSON. Using the data received, an
+    Insert statement is made to the database and the information
+    is added to the SQL table.
+
+    If the insertion was successful,
+    returns a response back with a 201 code saying the Child
+    was created.
+    If incomplete request body, Child account already exists,
+    or invalid parent code, return 400.
+    If parent code not found, return 404.
+    """
     body = request.json
     validate_request_body(
         ["Name", "Email", "GoogleTokenId", "GoogleAccountId", "ParentCode"], body
@@ -365,8 +388,7 @@ def create_child():
             "Created Child Account with AccountID {}".format(body["GoogleAccountId"]),
             201,
         )
-    else:
-        abort(500)
+    abort(500)
 
 
 def create_child_account_txn(
@@ -401,7 +423,17 @@ def create_child_account_txn(
 
 @app.route("/api/children/info", methods=["POST"])
 def get_child():
-    """GetChildInfo"""
+    """GetChildInfo, Receives a POST request from the client
+    that uses the url path "/api/children/info" and verifies all the
+    Google account information is valid JSON. Using the data received,
+    a Select statement is made to the database and the Child information
+    is received from the SQL table.
+
+    If the Child exists and the query was successful,
+    returns a response back with child infomation as JSON object.
+    If server error, return 500.
+    If Child account not found, return 404.
+    """
 
     body = request.json
     validate_request_body(["GoogleAccountId", "GoogleTokenId"], body)
@@ -422,6 +454,18 @@ def get_child():
 # GetChoresChild
 @app.route("/api/children/chores", methods=["POST"])
 def get_chores_child():
+    """GetChoresChild, Receives a POST request from the client
+    that uses the url path "/api/children/chores" and verifies the
+    Google account information and any other additional other fields are valid JSON.
+    Using the data received, a Select statement is made to the database and the
+    Chores associated with that Child are received from the SQL table.
+
+    If the query was successful,
+    returns a response back with Chores, list of Chore infomation as JSON object.
+    If Child account did not exist, Chores will be empty.
+    If incomplete request body, return 400.
+    If server error, return 500.
+    """
     body = request.json
     validate_request_body(["GoogleAccountId"], body)
     _, cursor = get_db_conn()
@@ -434,6 +478,17 @@ def get_chores_child():
 # UpdateChoreChild
 @app.route("/api/children/chores/<chore_id>/update", methods=["POST"])
 def update_chore_child(chore_id):
+    """UpdateChoreChild, Receives a POST request from the client
+    that uses the url path "/api/children/chores/<chore_id>/update" and verifies the
+    Google account information and any other additional other fields are valid JSON.
+    Using the data received, an Update statement is made to the database and the
+    new Chore information is updated in the Chore SQL table to the existing chore.
+
+    If the update was successful, returns the updated chore and 200.
+    If no additional fields are providied to update the chore, returns 400.
+    If Chore Id or Account ID not found, return 404.
+    If server error, returns 500.
+    """
     body = request.json
     validate_request_body(["GoogleAccountId"], body)
     db_conn, cursor = get_db_conn()
@@ -496,6 +551,17 @@ def update_chore_child(chore_id):
 # GetRewardsChild
 @app.route("/api/children/rewards", methods=["POST"])
 def get_rewards_child():
+    """GetRewardsChild, Receives a POST request from the client
+    that uses the url path "/api/children/rewards" and verifies the
+    Google account information and any other additional other fields are valid JSON.
+    Using the data received, a Select statement is made to the database and the
+    Rewards associated with that Child are received from the SQL table.
+
+    If the query was successful,
+    returns a response back with Rewards, list of Reward infomation as JSON object.
+    If Child account did not exist, Rewards will be empty.
+    If server error, return 500.
+    """
     body = request.json
     validate_request_body(["GoogleAccountId"], body)
     _, cursor = get_db_conn()
@@ -508,6 +574,16 @@ def get_rewards_child():
 # RedeemReward
 @app.route("/api/children/rewards/redeem", methods=["POST"])
 def redeem_reward():
+    """RedeemReward, Receives a POST request from the client
+    that uses the url path "/api/children/rewards/redeem" and verifies
+    that the Google account ID and reward ID are valid JSON.
+    Using the data received, we check that the account and reward exist, and
+    the given Child has enough points in their account to redeem the reward.
+
+    If successful, returns a response back with RemainingPoints as JSON object.
+    If Child Account ID or Reward ID does not exist, return 404.
+    If insufficient points in the Child's account, return 405.
+    """
     body = request.json
     validate_request_body(["GoogleAccountId", "RewardId"], body)
     db_conn, cursor = get_db_conn()
@@ -556,6 +632,17 @@ def redeem_reward_txn(db_conn, cursor, reward_id, child_account_id):
 # GetRedeemedRewardsChild
 @app.route("/api/children/rewards/history", methods=["POST"])
 def get_redeemed_rewards_child():
+    """GetRedeemedRewardsChild, Receives a POST request from the client
+    that uses the url path "/api/children/rewards/history" and verifies the
+    Google account information and any other additional other fields are valid JSON.
+    Using the data received, a Select statement is made to the database and the
+    RedeemedRewards associated with that Child are received from the SQL table.
+
+    If the query was successful,
+    returns a response back with RedeemedRewards, list of RedeemedReward infomation as JSON object.
+    If Child account did not exist, RedeemedRewards will be empty.
+    If server error, return 500.
+    """
     body = request.json
     validate_request_body(["GoogleAccountId"], body)
     _, cursor = get_db_conn()
@@ -571,6 +658,7 @@ def get_redeemed_rewards_child():
 
 
 def validate_request_body(fields: list, body: dict) -> bool:
+    """Check that the request body has all the fields specified in the fields argument."""
     if not all(f in body for f in fields):
         abort(400, "Incomplete request body")
 
