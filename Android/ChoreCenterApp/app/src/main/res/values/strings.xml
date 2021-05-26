@@ -54,7 +54,7 @@
 
     <!-- Literals from kid signup. -->
     <string name="text_sign_up_kid">You are not a registered user. Please enter your parent code and click sign up.</string>
-    <string name="hint_parent_code">parent code</string>
+    <string name="hint_parent_code">Parent Code</string>
 
     <!-- Literals from kid main. -->
     <string name="title_activity_kid_main">ScrollingActivity</string>
@@ -68,7 +68,7 @@
     <string name="verify_pop_up_success">Verify successful</string>
 
     <!-- Literals from parent all rewards. -->
-    <string name="menu_parent_all_rewards">All Rewards</string>
+    <string name="menu_parent_all_rewards">Reward List</string>
     <string name="delete_pop_up_failed">Delete failed</string>
     <string name="delete_pop_up_success">Delete successful</string>
 

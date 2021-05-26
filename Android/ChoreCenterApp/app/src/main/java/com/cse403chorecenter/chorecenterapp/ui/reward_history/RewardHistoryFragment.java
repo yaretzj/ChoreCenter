@@ -56,7 +56,7 @@ public class RewardHistoryFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new RHistoryViewAdapter(mDataset);
+        mAdapter = new RHistoryViewAdapter(mDataset, this);
         mRecyclerView.setAdapter(mAdapter);
 
         return view;

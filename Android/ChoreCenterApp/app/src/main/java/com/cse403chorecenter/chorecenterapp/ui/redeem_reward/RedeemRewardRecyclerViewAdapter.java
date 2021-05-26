@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutionException;
  * Provide views to RecyclerView with data from mDataSet.
  */
 public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<RedeemRewardRecyclerViewAdapter.RewardViewHolder> {
-    private static final String TAG = "CustomAdapter";
+    private static final String TAG = "RedeemRewardAdapter";
 
     private List<RedeemRewardFragment.RewardModel> mDataSet;
 
@@ -99,7 +99,7 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
         viewHolder.textViewDescription.setText(description);
         viewHolder.position = position;
         viewHolder.RewardId = reward.getId();
-        String status = "Number of redemptions: " + reward.getStatus();
+        String status = "Number of redemptions: " + reward.getNumberOfRedemptions();
         viewHolder.textViewStatus.setText(status);
 
         // Comment out if there's no need to set visibility
@@ -127,7 +127,7 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
             rootView = itemView;
             textViewName = itemView.findViewById(R.id.redeemRewardTV);
             textViewDescription = itemView.findViewById(R.id.redeemRewardTV2);
-            textViewStatus = itemView.findViewById(R.id.verifyChoreTV3);
+            textViewStatus = itemView.findViewById(R.id.redeemRewardTV3);
             redeemRewardBtn = itemView.findViewById(R.id.redeemRewardBtn);
             redeemRewardBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -143,9 +143,8 @@ public class RedeemRewardRecyclerViewAdapter extends RecyclerView.Adapter<Redeem
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     // submit chore
                                     if (redeemReward(RewardId, itemView.findViewById(R.id.redeemRewardTV))) {
-//                                        redeemRewardBtn.setVisibility(View.INVISIBLE);
-//                                        String status = "Number of redemptions: " + (Integer.parseInt(textViewStatus.getText().toString()) + 1);
-//                                        textViewStatus.setText(status);
+                                        String num = "Number of redemptions: " + (Integer.parseInt(textViewStatus.getText().toString().substring(23)) + 1);
+                                        textViewStatus.setText(num);
                                         Snackbar.make(itemView.findViewById(R.id.redeemRewardTV), R.string.redeem_pop_up_success, Snackbar.LENGTH_SHORT)
                                                 .show();
                                         NavigationView navigationView = (NavigationView) v.getRootView().findViewById(R.id.kid_nav_view);

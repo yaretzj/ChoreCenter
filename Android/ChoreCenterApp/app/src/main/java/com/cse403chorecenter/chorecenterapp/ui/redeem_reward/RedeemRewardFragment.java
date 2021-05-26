@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -74,77 +75,28 @@ public class RedeemRewardFragment extends Fragment {
         rootView.setTag(TAG);
 
         // BEGIN_INCLUDE(initializeRecyclerView)
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewRedeemReward);
 
         // LinearLayoutManager is used here, this will layout the elements in a similar fashion
         // to the way ListView would layout elements. The RecyclerView.LayoutManager defines how
         // elements are laid out.
         mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
         mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
 
-        if (savedInstanceState != null) {
-            // Restore saved layout manager type.
-            mCurrentLayoutManagerType = (LayoutManagerType) savedInstanceState
-                    .getSerializable(KEY_LAYOUT_MANAGER);
-        }
-        setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
+//        if (savedInstanceState != null) {
+//            // Restore saved layout manager type.
+//            mCurrentLayoutManagerType = (LayoutManagerType) savedInstanceState
+//                    .getSerializable(KEY_LAYOUT_MANAGER);
+//        }
 
         mAdapter = new RedeemRewardRecyclerViewAdapter(mDataset, this);
         // Set CustomAdapter as the adapter for RecyclerView.
         mRecyclerView.setAdapter(mAdapter);
         // END_INCLUDE(initializeRecyclerView)
 
-//        mLinearLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.linear_layout_rb);
-//        mLinearLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER);
-//            }
-//        });
-//
-//        mGridLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.grid_layout_rb);
-//        mGridLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                setRecyclerViewLayoutManager(LayoutManagerType.GRID_LAYOUT_MANAGER);
-//            }
-//        });
-
         return rootView;
-    }
-
-    /**
-     * Set RecyclerView's LayoutManager to the one given.
-     *
-     * @param layoutManagerType Type of layout manager to switch to.
-     */
-    public void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
-        int scrollPosition = 0;
-
-        // If a layout manager has already been set, get current scroll position.
-        if (mRecyclerView.getLayoutManager() != null) {
-            scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
-                    .findFirstCompletelyVisibleItemPosition();
-        }
-
-        if (layoutManagerType == LayoutManagerType.GRID_LAYOUT_MANAGER) {
-            mLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
-            mCurrentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
-        } else {
-            mLayoutManager = new LinearLayoutManager(getActivity());
-            mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-        }
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.scrollToPosition(scrollPosition);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save currently selected layout manager.
-        savedInstanceState.putSerializable(KEY_LAYOUT_MANAGER, mCurrentLayoutManagerType);
-        super.onSaveInstanceState(savedInstanceState);
     }
 
     /**
@@ -156,6 +108,7 @@ public class RedeemRewardFragment extends Fragment {
 
         // use http request to get rewards
         getRewards();
+        getRedeemedRewards();
     }
 
     /**
@@ -163,24 +116,24 @@ public class RedeemRewardFragment extends Fragment {
      */
     public static class RewardModel {
         private final String name;
-        private final long points;
+        private final String points;
         private final String description;
         private final String id;
-        private final String status;
+        private int numberOfRedemptions;
 
-        public RewardModel(String name, long points, String description, String id, String status) {
+        public RewardModel(String name, String points, String description, String id, int numberOfRedemptions) {
             this.name = name;
             this.points = points;
             this.description = description;
             this.id = id;
-            this.status = status;
+            this.numberOfRedemptions = numberOfRedemptions;
         }
 
         public String getName() {
             return name;
         }
 
-        public long getPoints() {
+        public String getPoints() {
             return points;
         }
 
@@ -192,8 +145,20 @@ public class RedeemRewardFragment extends Fragment {
             return id;
         }
 
-        public String getStatus() {
-            return status;
+        public int getNumberOfRedemptions() {
+            return numberOfRedemptions;
+        }
+
+        public void setNumberOfRedemptions(int numberOfRedemptions) {
+            this.numberOfRedemptions = numberOfRedemptions;
+        }
+
+        @Override
+        public boolean equals(@Nullable Object obj) {
+            if (obj instanceof RewardModel) {
+                return this.id.equals(((RewardModel) obj).id);
+            }
+            return false;
         }
     }
 
@@ -225,8 +190,63 @@ public class RedeemRewardFragment extends Fragment {
                         // looping through All Rewards
                         for (int i = 0; i < chores.length(); i++) {
                             JSONObject c = chores.getJSONObject(i);
-                            mDataset.add(new RedeemRewardFragment.RewardModel(c.getString("Name"), c.getLong("Points"),
-                                    c.getString("Description"), c.getString("RewardId"), "Unknown"));
+                            mDataset.add(new RedeemRewardFragment.RewardModel(c.getString("Name"), c.getString("Points"),
+                                    c.getString("Description"), c.getString("RewardId"), 0));
+                        }
+                    } catch (final JSONException e) {
+                        Log.e(TAG, "Json parsing error: " + e.getMessage());
+                    }
+
+                    return !response.equals("404") && !response.equals("500") && !response.equals("400");
+                } else
+                    return false;
+            } catch (ExecutionException e) {
+                Log.e(TAG, "Async execution error: " + e.getMessage());
+            } catch (InterruptedException e) {
+                Log.e(TAG, "Async interrupted error: " + e.getMessage());
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Json parsing error: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /** Get all the redeemed rewards created by the parent */
+    public boolean getRedeemedRewards() {
+        try {
+            // checking account status on the server
+            ServiceHandler sh = new ServiceHandler();
+            String[] params = new String[2];
+            params[0] = MainActivity.DNS + "api/children/rewards/history";
+
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("GoogleAccountId", com.cse403chorecenter.chorecenterapp.UserLogin.ACCOUNT_ID);
+            params[1] = jsonObj.toString();
+            sh = (ServiceHandler) sh.execute(params);
+
+            // output response
+            try {
+                String response = sh.get();
+
+                if(response != null) {
+                    Log.i(TAG, response);
+                    JSONObject jsonResponseObject = new JSONObject(response);
+
+                    try {
+                        // Getting JSON Array node
+                        JSONArray chores = jsonResponseObject.getJSONArray("RedeemedRewards");
+
+                        // looping through All Rewards
+                        for (int i = 0; i < chores.length(); i++) {
+                            JSONObject c = chores.getJSONObject(i);
+                            RewardModel newReward = new RewardModel(c.getString("Name"), "0",
+                                    c.getString("Description"), c.getString("RewardId"), 0);
+                            for (RewardModel rm : mDataset) {
+                                if (newReward.equals(rm)) {
+                                    rm.setNumberOfRedemptions(rm.getNumberOfRedemptions() + 1);
+                                    break;
+                                }
+                            }
                         }
                     } catch (final JSONException e) {
                         Log.e(TAG, "Json parsing error: " + e.getMessage());

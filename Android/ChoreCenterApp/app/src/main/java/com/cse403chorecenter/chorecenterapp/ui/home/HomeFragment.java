@@ -78,6 +78,17 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // Reward List
+        Button bAllRewards = (Button) view.findViewById(R.id.button_home_all_rewards);
+        bRewardHistory.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view) {
+                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                navController.navigate(R.id.nav_parent_all_rewards);
+            }
+        });
+
         // Chore List
         Button bChoreList = (Button) view.findViewById(R.id.button_home_chore_list);
         bChoreList.setOnClickListener(new View.OnClickListener()

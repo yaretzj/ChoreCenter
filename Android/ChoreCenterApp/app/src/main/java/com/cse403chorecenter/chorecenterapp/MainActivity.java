@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Domain of server to send network requests
     public static final String DNS = "http://chorecenter.westus2.cloudapp.azure.com/";
-//    public static final String DNS = "http://10.0.2.2:80/";
+//    public static final String DNS = "http://10.0.2.2:5000/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
