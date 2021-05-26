@@ -41,6 +41,17 @@ public class HomeKidFragment extends Fragment {
             }
         });
 
+        // Sign Out
+        Button bSignOut = (Button) view.findViewById(R.id.button_home_kid_sign_out);
+        bSignOut.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view) {
+                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+                navController.navigate(R.id.nav_sign_out);
+            }
+        });
+
         return view;
     }
 }

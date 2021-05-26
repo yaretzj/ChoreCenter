@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginLeft="@dimen/margin_medium"
+android:layout_marginRight="@dimen/margin_medium"
+android:orientation="vertical"
+android:layout_marginTop="10dp"
+app:cardCornerRadius="10dp">
+
+<LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="@dimen/list_item_height"
-    android:layout_marginLeft="@dimen/margin_medium"
-    android:layout_marginRight="@dimen/margin_medium"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    tools:context=".ui.submit_chore.SubmitChoreFragment"
+    android:orientation="vertical"
+    android:layout_marginTop="10dp"
+    >
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <TextView
+        android:id="@+id/rewardHistoryTV"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.reward_history.RewardHistoryFragment">
+        android:layout_height="wrap_content"
+        android:text="@string/element_text"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        android:padding="8dp" />
 
-        <TextView
-            android:id="@+id/rewardHistoryTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/element_text"
-            android:textAlignment="center"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/rewardHistoryTV2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/element_text"
-            android:textAlignment="center"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rewardHistoryTV" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+    <TextView
+        android:id="@+id/rewardHistoryTV2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/element_text"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/rewardHistoryTV" />
+</LinearLayout>
+</androidx.cardview.widget.CardView>
