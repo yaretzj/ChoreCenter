@@ -13,12 +13,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.redeem_reward.RedeemRewardFragment"
+        tools:context=".ui.parent_all_rewards.AllRewardHistoryFragment"
         android:orientation="vertical"
         android:layout_marginTop="10dp">
 
         <TextView
-            android:id="@+id/redeemRewardTV"
+            android:id="@+id/parentGetRewardTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/element_text"
@@ -27,7 +27,7 @@
             android:padding="8dp"/>
 
         <TextView
-            android:id="@+id/redeemRewardTV2"
+            android:id="@+id/parentGetRewardTV2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/element_text"
@@ -37,7 +37,7 @@
             app:layout_constraintTop_toBottomOf="@+id/redeemRewardTV" />
 
         <TextView
-            android:id="@+id/redeemRewardTV3"
+            android:id="@+id/parentGetRewardTV3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/element_text"
@@ -46,13 +46,18 @@
             android:padding="8dp"
             app:layout_constraintTop_toBottomOf="@+id/redeemRewardTV2" />
 
-        <Button
-            android:id="@+id/redeemRewardBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/button_redeem_reward"
-            android:textAlignment="center"
-            android:textSize="14sp"
-            android:layout_gravity="center"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/parentDeleteRewardBtn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_delete"/>
+        </RelativeLayout>
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

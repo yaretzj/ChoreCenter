@@ -31,13 +31,13 @@ public class RedeemRewardTest {
             // looping through All Rewards
             for (int i = 0; i < rewards.length(); i++) {
                 JSONObject c = rewards.getJSONObject(i);
-                mDataset.add(new RedeemRewardFragment.RewardModel(c.getString("RewardName"), c.getLong("Points"),
-                        c.getString("Description"), c.getString("RewardId")));
+                mDataset.add(new RedeemRewardFragment.RewardModel(c.getString("RewardName"), c.getString("Points"),
+                        c.getString("Description"), c.getString("RewardId"), 0));
             }
 
             assertEquals(mDataset.get(0).getName(), "ice cream");
             assertEquals(mDataset.get(0).getDescription(), "a very very hot ice cream");
-            assertEquals(mDataset.get(1).getPoints(), 10000);
+            assertEquals(mDataset.get(1).getPoints(), "10000");
             assertEquals(mDataset.get(1).getId(), "105");
         } catch (final JSONException e) {
             e.printStackTrace();

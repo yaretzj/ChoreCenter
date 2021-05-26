@@ -1,66 +1,44 @@
-package com.cse403chorecenter.chorecenterapp.ui.redeem_reward;
+package com.cse403chorecenter.chorecenterapp.ui.parent_all_rewards;
 
 import android.os.Bundle;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cse403chorecenter.chorecenterapp.MainActivity;
 import com.cse403chorecenter.chorecenterapp.R;
 import com.cse403chorecenter.chorecenterapp.ServiceHandler;
-import com.cse403chorecenter.chorecenterapp.ui.submit_chore.SubmitChoreFragment;
+import com.cse403chorecenter.chorecenterapp.UserLogin;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class RedeemRewardFragment extends Fragment {
+public class AllRewardHistoryFragment extends Fragment {
+
     private static final String TAG = "RecyclerViewFragment";
-    private static final String KEY_LAYOUT_MANAGER = "layoutManager";
-    private static final int SPAN_COUNT = 2;
-
-    private enum LayoutManagerType {
-        GRID_LAYOUT_MANAGER,
-        LINEAR_LAYOUT_MANAGER
-    }
-
-    protected LayoutManagerType mCurrentLayoutManagerType;
-
-    protected RadioButton mLinearLayoutRadioButton;
-    protected RadioButton mGridLayoutRadioButton;
-
-    protected RecyclerView mRecyclerView;
-    protected RedeemRewardRecyclerViewAdapter mAdapter;
-    protected RecyclerView.LayoutManager mLayoutManager;
     protected List<RewardModel> mDataset;
+    protected RecyclerView mRecyclerView;
+    protected AllRewardHistoryViewAdapter mAdapter;
+    protected RecyclerView.LayoutManager mLayoutManager;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Initialize dataset, this data would usually come from a local content provider or
-        // remote server.
+        // Initialize dataset
         try {
             initDataset();
         } catch (FileNotFoundException e) {
@@ -68,44 +46,24 @@ public class RedeemRewardFragment extends Fragment {
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_redeem_reward, container, false);
-        rootView.setTag(TAG);
 
-        // BEGIN_INCLUDE(initializeRecyclerView)
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewRedeemReward);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_parent_all_rewards, container, false);
 
-        // LinearLayoutManager is used here, this will layout the elements in a similar fashion
-        // to the way ListView would layout elements. The RecyclerView.LayoutManager defines how
-        // elements are laid out.
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewParentAllRewardHistory);
+
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-
-//        if (savedInstanceState != null) {
-//            // Restore saved layout manager type.
-//            mCurrentLayoutManagerType = (LayoutManagerType) savedInstanceState
-//                    .getSerializable(KEY_LAYOUT_MANAGER);
-//        }
-
-        mAdapter = new RedeemRewardRecyclerViewAdapter(mDataset, this);
-        // Set CustomAdapter as the adapter for RecyclerView.
+        mAdapter = new AllRewardHistoryViewAdapter(mDataset, this);
         mRecyclerView.setAdapter(mAdapter);
-        // END_INCLUDE(initializeRecyclerView)
 
-        return rootView;
+        return view;
     }
 
-    /**
-     * Generates Strings for RecyclerView's adapter. This data would usually come
-     * from a local content provider or remote server.
-     */
     private void initDataset() throws FileNotFoundException {
         mDataset = new ArrayList<>();
-
         // use http request to get rewards
         getRewards();
         getRedeemedRewards();
@@ -162,16 +120,15 @@ public class RedeemRewardFragment extends Fragment {
         }
     }
 
-    /** Get all the rewards created by the parent */
-    public boolean getRewards() {
+    private boolean getRewards() {
         try {
             // checking account status on the server
             ServiceHandler sh = new ServiceHandler();
             String[] params = new String[2];
-            params[0] = MainActivity.DNS + "api/children/rewards";
+            params[0] = MainActivity.DNS + "api/parents/rewards";
 
             JSONObject jsonObj = new JSONObject();
-            jsonObj.put("GoogleAccountId", com.cse403chorecenter.chorecenterapp.UserLogin.ACCOUNT_ID);
+            jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);
             params[1] = jsonObj.toString();
             sh = (ServiceHandler) sh.execute(params);
 
@@ -183,18 +140,14 @@ public class RedeemRewardFragment extends Fragment {
                     Log.i(TAG, response);
                     JSONObject jsonResponseObject = new JSONObject(response);
 
-                    try {
-                        // Getting JSON Array node
-                        JSONArray chores = jsonResponseObject.getJSONArray("Rewards");
+                    // Getting JSON Array node
+                    JSONArray chores = jsonResponseObject.getJSONArray("Rewards");
 
-                        // looping through All Rewards
-                        for (int i = 0; i < chores.length(); i++) {
-                            JSONObject c = chores.getJSONObject(i);
-                            mDataset.add(new RedeemRewardFragment.RewardModel(c.getString("Name"), c.getString("Points"),
-                                    c.getString("Description"), c.getString("RewardId"), 0));
-                        }
-                    } catch (final JSONException e) {
-                        Log.e(TAG, "Json parsing error: " + e.getMessage());
+                    // looping through All Rewards
+                    for (int i = 0; i < chores.length(); i++) {
+                        JSONObject c = chores.getJSONObject(i);
+                        mDataset.add(new RewardModel(c.getString("Name"), c.getString("Points"),
+                                c.getString("Description"), c.getString("RewardId"), 0));
                     }
 
                     return !response.equals("404") && !response.equals("500") && !response.equals("400");
@@ -211,16 +164,15 @@ public class RedeemRewardFragment extends Fragment {
         return false;
     }
 
-    /** Get all the redeemed rewards created by the parent */
-    public boolean getRedeemedRewards() {
+    private boolean getRedeemedRewards() {
         try {
             // checking account status on the server
             ServiceHandler sh = new ServiceHandler();
             String[] params = new String[2];
-            params[0] = MainActivity.DNS + "api/children/rewards/history";
+            params[0] = MainActivity.DNS + "api/parents/rewards/history";
 
             JSONObject jsonObj = new JSONObject();
-            jsonObj.put("GoogleAccountId", com.cse403chorecenter.chorecenterapp.UserLogin.ACCOUNT_ID);
+            jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);
             params[1] = jsonObj.toString();
             sh = (ServiceHandler) sh.execute(params);
 
@@ -232,24 +184,20 @@ public class RedeemRewardFragment extends Fragment {
                     Log.i(TAG, response);
                     JSONObject jsonResponseObject = new JSONObject(response);
 
-                    try {
-                        // Getting JSON Array node
-                        JSONArray chores = jsonResponseObject.getJSONArray("RedeemedRewards");
+                    // Getting JSON Array node
+                    JSONArray chores = jsonResponseObject.getJSONArray("RedeemedRewards");
 
-                        // looping through All Rewards
-                        for (int i = 0; i < chores.length(); i++) {
-                            JSONObject c = chores.getJSONObject(i);
-                            RewardModel newReward = new RewardModel(c.getString("Name"), "0",
-                                    c.getString("Description"), c.getString("RewardId"), 0);
-                            for (RewardModel rm : mDataset) {
-                                if (newReward.equals(rm)) {
-                                    rm.setNumberOfRedemptions(rm.getNumberOfRedemptions() + 1);
-                                    break;
-                                }
+                    // looping through All Rewards
+                    for (int i = 0; i < chores.length(); i++) {
+                        JSONObject c = chores.getJSONObject(i);
+                        RewardModel newReward = new RewardModel(c.getString("Name"), "0",
+                                c.getString("Description"), c.getString("RewardId"), 0);
+                        for (RewardModel rm : mDataset) {
+                            if (rm.equals(newReward)) {
+                                rm.setNumberOfRedemptions(rm.getNumberOfRedemptions() + 1);
+                                break;
                             }
                         }
-                    } catch (final JSONException e) {
-                        Log.e(TAG, "Json parsing error: " + e.getMessage());
                     }
 
                     return !response.equals("404") && !response.equals("500") && !response.equals("400");

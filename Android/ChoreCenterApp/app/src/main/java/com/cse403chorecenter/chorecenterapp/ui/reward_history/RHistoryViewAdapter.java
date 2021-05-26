@@ -13,6 +13,7 @@ import com.cse403chorecenter.chorecenterapp.MainActivity;
 import com.cse403chorecenter.chorecenterapp.R;
 import com.cse403chorecenter.chorecenterapp.ServiceHandler;
 import com.cse403chorecenter.chorecenterapp.UserLogin;
+import com.cse403chorecenter.chorecenterapp.ui.redeem_reward.RedeemRewardFragment;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,13 +30,16 @@ public class RHistoryViewAdapter extends RecyclerView.Adapter<RHistoryViewAdapte
     private static final String TAG = "CustomAdapter";
     private List<RewardHistoryFragment.ReedemedRewardModel> mDataSet;
 
+    private RewardHistoryFragment mFragment;
+
     /**
      * Initialize the dataset of the Adapter.
      *
      * @param dataSet String[] containing the data to populate views to be used by RecyclerView.
      */
-    public RHistoryViewAdapter(List<RewardHistoryFragment.ReedemedRewardModel> dataSet) {
+    public RHistoryViewAdapter(List<RewardHistoryFragment.ReedemedRewardModel> dataSet, RewardHistoryFragment fragment) {
         mDataSet = dataSet;
+        mFragment = fragment;
     }
 
     @NotNull

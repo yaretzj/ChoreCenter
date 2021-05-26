@@ -25,13 +25,13 @@
             android:title="@string/menu_verify_chore"
             android:icon="@drawable/ic_menu_slideshow" />
         <item
+            android:id="@+id/nav_parent_all_rewards"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="@string/menu_parent_all_rewards" />
+        <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/hint_parent_code" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
         <item
             android:id="@+id/nav_sign_out"
             android:icon="@drawable/ic_menu_gallery"
