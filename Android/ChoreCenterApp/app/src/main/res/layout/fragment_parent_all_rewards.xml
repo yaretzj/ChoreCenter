@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,11 +8,13 @@
     android:background="@color/orange">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recyclerViewParentAllRewardHistory"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp"
         android:scrollbars="vertical"
         android:divider="@android:color/transparent"
-        tools:listitem="@layout/text_row_verify_chore_item"/>
+        tools:listitem="@layout/fragment_parent_all_rewards_text_row_item"
+        >
+    </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>
