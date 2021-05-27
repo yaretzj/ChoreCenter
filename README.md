@@ -54,8 +54,15 @@ We are using [Github Actions](https://github.com/features/actions) for our CI/CD
 - Backend: Tests and testing documentation can be found in the `Backend` directory.
 
 ## Operational Use Cases
-- Parents and children can Sign Up/Sign In with their Google account, and child accounts are linked to parent accounts with the Parent Code
-- Parents can create chores and rewards and assign points to them
+- Parents and children can Sign Up/Sign In with their Google account, and child accounts are required to enter the Parent Code on Sign Up to link their account to their parent's account
+- The app supports multiple children per parent
+- Parents can create chores and assign points to them
+- Parents can create rewards and assign points to them
 - Children can view the chores and rewards created by the parents
-- Children can complete chores by submitting them
+- Children can mark chores created by the parents as Completed, and submit them for verification
+- Parents can view the Completed chores and mark them as Verified
+- Once the parent marks the chore as Verified, points are deposited into the child's account
 - Children can redeem rewards once they have earned sufficient points by completing chores
+- Parents can delete chores and rewards
+- Children can view the rewards they have redeemed and the number of redemptions per reward
+- Parents can view the rewards they have redeemed by their children and the number of redemptions per reward
