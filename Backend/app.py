@@ -582,8 +582,8 @@ def update_chore_child(chore_id):
         abort(400, "No status to update")
     if chore_status != COMPLETED_CHORE_STATUS:
         abort(400, "Invalid/Unauthorized status value")
-    #if len(body) > 0:
-    #    abort(403, "Unauthorized update fields")
+    if len(body) > 0:
+        abort(403, "Unauthorized update fields")
 
     try:
         cursor.execute(queries.get_child_by_account_id(), account_id)
