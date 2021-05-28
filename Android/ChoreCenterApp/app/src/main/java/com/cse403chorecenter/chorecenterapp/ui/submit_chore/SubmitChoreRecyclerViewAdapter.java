@@ -145,7 +145,6 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);
             jsonObj.put("Status", "Completed");
-            jsonObj.put("AssignedTo", UserLogin.ACCOUNT_ID);
             params[1] = jsonObj.toString();
             sh = (ServiceHandler) sh.execute(params);
 
