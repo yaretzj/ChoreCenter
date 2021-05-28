@@ -184,7 +184,7 @@ def update_chore_parent(chore_id):
     """
     body = request.json
     validate_request_body(["GoogleAccountId"], body)
-    _, cursor = get_db_conn()
+    db_conn, cursor = get_db_conn()
 
     account_id = body.pop("GoogleAccountId")
     if len(body) == 0:
