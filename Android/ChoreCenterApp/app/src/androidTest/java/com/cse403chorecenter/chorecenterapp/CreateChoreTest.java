@@ -77,6 +77,7 @@ public class CreateChoreTest {
             onView(withId(R.id.verifyChoreRecyclerView))
                     .perform(actionOnItemAtPosition(0, TestViewAction.clickChildViewWithId(R.id.delete_icon)));
             onView(withText("Delete")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
+            waitViewShown(withId(R.id.snackbar_text));
             onView(withId(R.id.snackbar_text)).check(matches(withText("Delete successful")));
         }
     }
