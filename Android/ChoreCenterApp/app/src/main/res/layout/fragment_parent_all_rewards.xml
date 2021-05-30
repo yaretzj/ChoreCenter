@@ -8,7 +8,7 @@
     android:background="@color/orange">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewParentAllRewardHistory"
+        android:id="@+id/parentAllRewardHistoryRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp"

@@ -56,7 +56,7 @@ public class AllRewardHistoryFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_parent_all_rewards, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewParentAllRewardHistory);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.parentAllRewardHistoryRecyclerView);
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);

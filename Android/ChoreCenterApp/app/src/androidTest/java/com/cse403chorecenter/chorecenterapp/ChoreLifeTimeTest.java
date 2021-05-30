@@ -1,26 +1,34 @@
 package com.cse403chorecenter.chorecenterapp;
 
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 
+import com.cse403chorecenter.chorecenterapp.ui.submit_chore.SubmitChoreFragment;
+import com.cse403chorecenter.chorecenterapp.ui.submit_chore.SubmitChoreRecyclerViewAdapter;
+
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.instanceOf;
 
 @RunWith(AndroidJUnit4ClassRunner.class)
 public class ChoreLifeTimeTest {
@@ -36,7 +44,6 @@ public class ChoreLifeTimeTest {
     public void testCreateCompleteChore() {
         // Create a chore
         try (ActivityScenario<ParentNavigation> ignored = ActivityScenario.launch(ParentNavigation.class)) {
-            waitViewShown(withId(R.id.button_home_create_chore));
             onView(withId(R.id.button_home_create_chore)).perform(click());
 
             // valid input
@@ -49,12 +56,11 @@ public class ChoreLifeTimeTest {
 
         // Complete the chore
         try (ActivityScenario<KidNavigation> ignored = ActivityScenario.launch(KidNavigation.class)) {
-            waitViewShown(withId(R.id.button_home_kid_submit_chore));
             onView(withId(R.id.button_home_kid_submit_chore)).perform(click());
 
             // click submit
-            waitViewShown(withId(R.id.submitChoreBtn));
-            onView(withId(R.id.submitChoreBtn)).perform(click());
+            onView(withId(R.id.submitChoreRecyclerView))
+                    .perform(actionOnItemAtPosition(0, TestViewAction.clickChildViewWithId(R.id.submitChoreBtn)));
             onView(withText("Completed")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
             onView(withId(R.id.snackbar_text)).check(matches(withText("Submit successful")));
         }
@@ -64,17 +70,18 @@ public class ChoreLifeTimeTest {
 //            onView(withId(R.id.button_home_chore_list)).perform(click());
 //
 //            // click verify
-//            onView(withId(R.id.verifyChoreBtn)).perform(click());
+//            onView(withId(R.id.verifyChoreRecyclerView))
+//                    .perform(actionOnItemAtPosition(0, TestViewAction.clickChildViewWithId(R.id.verifyChoreBtn)));
 //            onView(withText("Verify")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
 //            onView(withId(R.id.snackbar_text)).check(matches(withText("Verify successful")));
 //        }
 
         // Delete the chore
         try (ActivityScenario<ParentNavigation> ignored = ActivityScenario.launch(ParentNavigation.class)) {
-            waitViewShown(withId(R.id.button_home_chore_list));
             onView(withId(R.id.button_home_chore_list)).perform(click());
-            waitViewShown(withId(R.id.delete_icon));
-            onView(withId(R.id.delete_icon)).perform(click());
+
+            onView(withId(R.id.verifyChoreRecyclerView))
+                    .perform(actionOnItemAtPosition(0, TestViewAction.clickChildViewWithId(R.id.delete_icon)));
             onView(withText("Delete")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
             onView(withId(R.id.snackbar_text)).check(matches(withText("Delete successful")));
         }

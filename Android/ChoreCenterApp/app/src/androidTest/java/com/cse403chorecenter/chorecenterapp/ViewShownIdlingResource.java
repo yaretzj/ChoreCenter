@@ -12,6 +12,9 @@ import java.lang.reflect.Field;
 
 import static androidx.test.espresso.Espresso.onView;
 
+/**
+ * This idling resource is used to allow Espresso function correctly on activity changes.
+ */
 public class ViewShownIdlingResource implements IdlingResource {
 
     private static final String TAG = ViewShownIdlingResource.class.getSimpleName();

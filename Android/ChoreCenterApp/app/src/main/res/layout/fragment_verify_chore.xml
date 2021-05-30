@@ -7,7 +7,7 @@
     android:background="@color/orange">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/verifyChoreRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp"

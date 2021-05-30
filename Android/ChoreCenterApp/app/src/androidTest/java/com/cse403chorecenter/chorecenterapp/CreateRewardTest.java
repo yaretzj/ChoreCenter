@@ -1,6 +1,7 @@
 package com.cse403chorecenter.chorecenterapp;
 
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
@@ -13,16 +14,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.instanceOf;
 
 @RunWith(AndroidJUnit4ClassRunner.class)
 public class CreateRewardTest {
@@ -37,7 +41,6 @@ public class CreateRewardTest {
     @Test
     public void testCreateReward() {
         try (ActivityScenario<ParentNavigation> ignored = ActivityScenario.launch(ParentNavigation.class)) {
-            waitViewShown(withId(R.id.button_home_create_reward));
             onView(withId(R.id.button_home_create_reward)).perform(click());
 
             // click without input
@@ -56,14 +59,15 @@ public class CreateRewardTest {
             onView(withId(R.id.editCreateRewardPoints)).perform(clearText(), typeText("1000")).perform(closeSoftKeyboard());
             onView(withId(R.id.button_create_reward)).perform(click());
             onView(withId(R.id.text_create_reward)).check(matches(withText("CREATED")));
+        }
 
-            // Important: Due to current unavailability of test server, we need to manually delete
-            // rewards created for testing. This also passively tests the delete reward functionality.
-            Espresso.pressBack();
-            waitViewShown(withId(R.id.button_home_all_rewards));
+        // Important: Due to current unavailability of test server, we need to manually delete
+        // rewards created for testing. This also passively tests the delete reward functionality.
+        try (ActivityScenario<ParentNavigation> ignored = ActivityScenario.launch(ParentNavigation.class)) {
             onView(withId(R.id.button_home_all_rewards)).perform(click());
-            waitViewShown(withId(R.id.parentDeleteRewardBtn));
-            onView(withId(R.id.parentDeleteRewardBtn)).perform(click());
+
+            onView(withId(R.id.parentAllRewardHistoryRecyclerView))
+                    .perform(actionOnItemAtPosition(0, TestViewAction.clickChildViewWithId(R.id.parentDeleteRewardBtn)));
             onView(withText("Delete")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
             onView(withId(R.id.snackbar_text)).check(matches(withText("Delete successful")));
         }
