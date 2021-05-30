@@ -1,9 +1,14 @@
 package com.cse403chorecenter.chorecenterapp;
 
+import android.view.View;
+
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.IdlingResource;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,9 +37,11 @@ public class CreateRewardTest {
     @Test
     public void testCreateReward() {
         try (ActivityScenario<ParentNavigation> ignored = ActivityScenario.launch(ParentNavigation.class)) {
+            waitViewShown(withId(R.id.button_home_create_reward));
             onView(withId(R.id.button_home_create_reward)).perform(click());
 
             // click without input
+            waitViewShown(withId(R.id.button_create_reward));
             onView(withId(R.id.button_create_reward)).perform(click());
             onView(withId(R.id.text_create_reward)).check(matches(withText("please input both fields")));
 
@@ -53,10 +60,22 @@ public class CreateRewardTest {
             // Important: Due to current unavailability of test server, we need to manually delete
             // rewards created for testing. This also passively tests the delete reward functionality.
             Espresso.pressBack();
+            waitViewShown(withId(R.id.button_home_all_rewards));
             onView(withId(R.id.button_home_all_rewards)).perform(click());
+            waitViewShown(withId(R.id.parentDeleteRewardBtn));
             onView(withId(R.id.parentDeleteRewardBtn)).perform(click());
             onView(withText("Delete")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
             onView(withId(R.id.snackbar_text)).check(matches(withText("Delete successful")));
+        }
+    }
+
+    public void waitViewShown(Matcher<View> matcher) {
+        IdlingResource idlingResource = new ViewShownIdlingResource(matcher);///
+        try {
+            IdlingRegistry.getInstance().register(idlingResource);
+            onView(matcher).check(matches(isDisplayed()));
+        } finally {
+            IdlingRegistry.getInstance().unregister(idlingResource);
         }
     }
 }

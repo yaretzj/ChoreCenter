@@ -3,13 +3,17 @@ package com.cse403chorecenter.chorecenterapp;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.view.View;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,9 +44,11 @@ public class CreateChoreTest {
         try (ActivityScenario<ParentNavigation> ignored = ActivityScenario.launch(ParentNavigation.class)) {
 //            Application application = ApplicationProvider.getApplicationContext();
 //            SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(application);
+            waitViewShown(withId(R.id.button_home_create_chore));
             onView(withId(R.id.button_home_create_chore)).perform(click());
 
             // click without input
+            waitViewShown(withId(R.id.button_create_chore));
             onView(withId(R.id.button_create_chore)).perform(click());
             onView(withId(R.id.text_create_chore)).check(matches(withText("please input the chore name and chore points")));
 
@@ -61,10 +67,22 @@ public class CreateChoreTest {
             // Important: Due to current unavailability of test database, we need to manually delete
             // chores created for testing. This also passively tests the delete chore functionality.
             Espresso.pressBack();
+            waitViewShown(withId(R.id.button_home_chore_list));
             onView(withId(R.id.button_home_chore_list)).perform(click());
+            waitViewShown(withId(R.id.delete_icon));
             onView(withId(R.id.delete_icon)).perform(click());
             onView(withText("Delete")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
             onView(withId(R.id.snackbar_text)).check(matches(withText("Delete successful")));
+        }
+    }
+
+    public void waitViewShown(Matcher<View> matcher) {
+        IdlingResource idlingResource = new ViewShownIdlingResource(matcher);///
+        try {
+            IdlingRegistry.getInstance().register(idlingResource);
+            onView(matcher).check(matches(isDisplayed()));
+        } finally {
+            IdlingRegistry.getInstance().unregister(idlingResource);
         }
     }
 }

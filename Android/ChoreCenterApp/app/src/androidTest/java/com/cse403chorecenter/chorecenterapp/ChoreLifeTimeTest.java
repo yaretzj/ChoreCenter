@@ -1,8 +1,13 @@
 package com.cse403chorecenter.chorecenterapp;
 
+import android.view.View;
+
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.IdlingResource;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,9 +36,11 @@ public class ChoreLifeTimeTest {
     public void testCreateCompleteChore() {
         // Create a chore
         try (ActivityScenario<ParentNavigation> ignored = ActivityScenario.launch(ParentNavigation.class)) {
+            waitViewShown(withId(R.id.button_home_create_chore));
             onView(withId(R.id.button_home_create_chore)).perform(click());
 
             // valid input
+            waitViewShown(withId(R.id.editCreateChoreName));
             onView(withId(R.id.editCreateChoreName)).perform(typeText("test")).perform(closeSoftKeyboard());
             onView(withId(R.id.editCreateChorePoints)).perform(typeText("1000")).perform(closeSoftKeyboard());
             onView(withId(R.id.button_create_chore)).perform(click());
@@ -42,9 +49,11 @@ public class ChoreLifeTimeTest {
 
         // Complete the chore
         try (ActivityScenario<KidNavigation> ignored = ActivityScenario.launch(KidNavigation.class)) {
+            waitViewShown(withId(R.id.button_home_kid_submit_chore));
             onView(withId(R.id.button_home_kid_submit_chore)).perform(click());
 
             // click submit
+            waitViewShown(withId(R.id.submitChoreBtn));
             onView(withId(R.id.submitChoreBtn)).perform(click());
             onView(withText("Completed")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
             onView(withId(R.id.snackbar_text)).check(matches(withText("Submit successful")));
@@ -62,10 +71,22 @@ public class ChoreLifeTimeTest {
 
         // Delete the chore
         try (ActivityScenario<ParentNavigation> ignored = ActivityScenario.launch(ParentNavigation.class)) {
+            waitViewShown(withId(R.id.button_home_chore_list));
             onView(withId(R.id.button_home_chore_list)).perform(click());
+            waitViewShown(withId(R.id.delete_icon));
             onView(withId(R.id.delete_icon)).perform(click());
             onView(withText("Delete")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
             onView(withId(R.id.snackbar_text)).check(matches(withText("Delete successful")));
+        }
+    }
+
+    public void waitViewShown(Matcher<View> matcher) {
+        IdlingResource idlingResource = new ViewShownIdlingResource(matcher);///
+        try {
+            IdlingRegistry.getInstance().register(idlingResource);
+            onView(matcher).check(matches(isDisplayed()));
+        } finally {
+            IdlingRegistry.getInstance().unregister(idlingResource);
         }
     }
 }
