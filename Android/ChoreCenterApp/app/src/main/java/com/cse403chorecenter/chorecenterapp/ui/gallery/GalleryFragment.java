@@ -24,6 +24,10 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
+/**
+ * This fragment activity is for displaying the parent account unique parent code.
+ * (This fragment is in-progress being designed to better fit-into the user interface.)
+ */
 public class GalleryFragment extends Fragment {
     private static final String TAG = "ParentCode";
 

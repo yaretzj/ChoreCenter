@@ -28,6 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * This is the verify chore fragment activity that displays all the chores
+ * created by this parent account {@code UserLogin.ACCOUNT_ID}.
+ * This activity also includes the functionality to delete un-verified chores.
+ */
 public class VerifyChoreFragment extends Fragment {
     private static final String TAG = "RecyclerViewFragment";
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
@@ -38,8 +43,8 @@ public class VerifyChoreFragment extends Fragment {
         LINEAR_LAYOUT_MANAGER
     }
 
+    // Views
     protected VerifyChoreFragment.LayoutManagerType mCurrentLayoutManagerType;
-
     protected RadioButton mLinearLayoutRadioButton;
     protected RadioButton mGridLayoutRadioButton;
 
@@ -170,28 +175,28 @@ public class VerifyChoreFragment extends Fragment {
             this.status = status;
         }
 
+        // Java Bean class get methods
         public String getName() {
             return name;
         }
-
         public long getPoints() {
             return points;
         }
-
         public String getDescription() {
             return description;
         }
-
         public String getId() {
             return id;
         }
-
         public String getStatus() {
             return status;
         }
     }
 
-    /** Gets all the chores created by the parent */
+    /**
+     * Uses a service handler to send asynchronous HTTP Post request to
+     * get all the chores created by this parent account {@code UserLogin.ACCOUNT_ID}.
+     */
     public boolean getChores() {
         try {
             // checking account status on the server

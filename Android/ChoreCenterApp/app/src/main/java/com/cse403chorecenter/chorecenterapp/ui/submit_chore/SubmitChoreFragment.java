@@ -29,6 +29,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * This is the submit chore fragment activity that is used by kid account to submit completed
+ * chores to the linked parent account.
+ */
 public class SubmitChoreFragment extends Fragment {
     private static final String TAG = "RecyclerViewFragment";
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
@@ -39,11 +43,8 @@ public class SubmitChoreFragment extends Fragment {
         LINEAR_LAYOUT_MANAGER
     }
 
-    protected com.cse403chorecenter.chorecenterapp.ui.submit_chore.SubmitChoreFragment.LayoutManagerType mCurrentLayoutManagerType;
-
-    protected RadioButton mLinearLayoutRadioButton;
-    protected RadioButton mGridLayoutRadioButton;
-
+    // Views
+    protected LayoutManagerType mCurrentLayoutManagerType;
     protected RecyclerView mRecyclerView;
     protected SubmitChoreRecyclerViewAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
@@ -90,6 +91,7 @@ public class SubmitChoreFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         // END_INCLUDE(initializeRecyclerView)
 
+        // This can be used to implement a second Grid layout
 //        mLinearLayoutRadioButton = (RadioButton) rootView.findViewById(R.id.linear_layout_rb);
 //        mLinearLayoutRadioButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -171,22 +173,19 @@ public class SubmitChoreFragment extends Fragment {
             this.status = status;
         }
 
+        // Java Bean class get methods
         public String getName() {
             return name;
         }
-
         public long getPoints() {
             return points;
         }
-
         public String getDescription() {
             return description;
         }
-
         public String getId() {
             return id;
         }
-
         public String getStatus() { return status; }
     }
 

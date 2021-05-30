@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+/**
+ * A view model used by the create chore fragment class.
+ */
 public class CreateChoreViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;

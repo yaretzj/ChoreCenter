@@ -79,7 +79,10 @@ public class AllRewardHistoryViewAdapter extends RecyclerView.Adapter<AllRewardH
         viewHolder.RewardId = reward.getId();
     }
 
-    public static class RewardViewHolder extends RecyclerView.ViewHolder {
+    /**
+     * An inner class holding individual views inside the recycler view adapter.
+     */
+    public class RewardViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName;
         TextView textViewDescription;
         TextView textViewStatus;
@@ -100,7 +103,7 @@ public class AllRewardHistoryViewAdapter extends RecyclerView.Adapter<AllRewardH
                 public void onClick(View v) {
                     Log.d(TAG, "Clicked reward id: " + RewardId);
 
-                    // redeem reward
+                    // delete reward alert
                     new AlertDialog.Builder(v.getContext())
                             .setTitle("Delete Reward")
                             .setMessage("Are you sure you want delete " + textViewName.getText())
@@ -110,7 +113,12 @@ public class AllRewardHistoryViewAdapter extends RecyclerView.Adapter<AllRewardH
                                     // delete reward
                                     View view = itemView.findViewById(R.id.parentGetRewardTV);
                                     if (deleteReward(RewardId, view)) {
-                                        deleteBtn.setVisibility(View.INVISIBLE);
+                                        // delete the item from mDataset
+                                        mDataSet.remove(position);
+
+                                        // update the recycler view
+                                        notifyItemRemoved(position);
+                                        notifyItemRangeChanged(position, mDataSet.size());
                                         Snackbar.make(view, R.string.delete_pop_up_success, Snackbar.LENGTH_SHORT)
                                                 .show();
                                     } else {
@@ -125,7 +133,10 @@ public class AllRewardHistoryViewAdapter extends RecyclerView.Adapter<AllRewardH
         }
     }
 
-    /** delete an unredeemed reward for the parent account */
+    /**
+     * Uses a service handelr to send asynchronous HTTP Delete request to
+     * delete an unredeemed reward for the parent account.
+     */
     public static boolean deleteReward(String rewardId, View view) {
         try {
             // populate a service handler delete request

@@ -26,6 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * This is the reward list fragment activity that displays all the rewards
+ * created by the parent account.
+ * This activity also includes the functionality to delete un-redeemed rewards.
+ */
 public class AllRewardHistoryFragment extends Fragment {
 
     private static final String TAG = "RecyclerViewFragment";
@@ -46,7 +51,7 @@ public class AllRewardHistoryFragment extends Fragment {
         }
     }
 
-
+    /** On create view set up the recycler view adapter */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_parent_all_rewards, container, false);
@@ -62,6 +67,7 @@ public class AllRewardHistoryFragment extends Fragment {
         return view;
     }
 
+    /** Initializes the dataset */
     private void initDataset() throws FileNotFoundException {
         mDataset = new ArrayList<>();
         // use http request to get rewards
@@ -87,22 +93,19 @@ public class AllRewardHistoryFragment extends Fragment {
             this.numberOfRedemptions = numberOfRedemptions;
         }
 
+        // Java Bean class get methods
         public String getName() {
             return name;
         }
-
         public String getPoints() {
             return points;
         }
-
         public String getDescription() {
             return description;
         }
-
         public String getId() {
             return id;
         }
-
         public int getNumberOfRedemptions() {
             return numberOfRedemptions;
         }
@@ -120,6 +123,11 @@ public class AllRewardHistoryFragment extends Fragment {
         }
     }
 
+    /**
+     * Uses a service handler to send an HTTP Post request for getting all the rewards
+     * created by this account {@code UserLogin.ACCOUNT_ID}.
+     * @return true on successful request, false on failed request
+     */
     private boolean getRewards() {
         try {
             // checking account status on the server
@@ -164,6 +172,12 @@ public class AllRewardHistoryFragment extends Fragment {
         return false;
     }
 
+    /**
+     * Uses a service handler to send an HTTP Post request for getting all the redeemed rewards
+     * created by this account {@code UserLogin.ACCOUNT_ID}. The redeemed rewards are used to
+     * update the dataset for displaying number of redemptions.
+     * @return true on successful request, false on failed request
+     */
     private boolean getRedeemedRewards() {
         try {
             // checking account status on the server

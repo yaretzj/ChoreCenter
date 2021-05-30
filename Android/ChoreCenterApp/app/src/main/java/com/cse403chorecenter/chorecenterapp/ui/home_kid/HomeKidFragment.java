@@ -13,11 +13,18 @@ import androidx.navigation.Navigation;
 
 import com.cse403chorecenter.chorecenterapp.R;
 
+/**
+ * The home fragment activity for kid account.
+ * A convenient way for kid users to navigate to all available functionalities of the app.
+ * This will be the main playground for users after incorporating graphics, animations and music.
+ */
 public class HomeKidFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_kid, container, false);
+
+        // The Following are all the buttons to every available functionality for kid accounts.
 
         // SubmitChore
         Button bSubmitChore = (Button) view.findViewById(R.id.button_home_kid_submit_chore);
