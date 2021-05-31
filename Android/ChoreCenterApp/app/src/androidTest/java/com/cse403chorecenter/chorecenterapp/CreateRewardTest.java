@@ -44,7 +44,7 @@ public class CreateRewardTest {
             onView(withId(R.id.button_home_create_reward)).perform(click());
 
             // click without input
-            Thread.sleep(1);
+            Thread.sleep(250);
             onView(withId(R.id.button_create_reward)).perform(click());
             onView(withId(R.id.text_create_reward)).check(matches(withText("please input both fields")));
 
@@ -68,14 +68,14 @@ public class CreateRewardTest {
         try (ActivityScenario<ParentNavigation> ignored = ActivityScenario.launch(ParentNavigation.class)) {
             onView(withId(R.id.button_home_all_rewards)).perform(click());
 
-            Thread.sleep(1);
+            Thread.sleep(250);
             onView(withId(R.id.parentAllRewardHistoryRecyclerView))
                     .perform(actionOnItemAtPosition(0, TestViewAction.clickChildViewWithId(R.id.parentDeleteRewardBtn)));
 
-            Thread.sleep(1);
+            Thread.sleep(250);
             onView(withText("Delete")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
 
-            Thread.sleep(1);
+            Thread.sleep(250);
             waitViewShown(withId(com.google.android.material.R.id.snackbar_text));
             onView(withId(com.google.android.material.R.id.snackbar_text)).check(matches(withText("Delete successful")));
         } catch (InterruptedException e) {

@@ -40,7 +40,7 @@ public class CreateChoreTest {
             onView(withId(R.id.button_home_create_chore)).perform(click());
 
             // click without input
-            Thread.sleep(1);
+            Thread.sleep(250);
             onView(withId(R.id.button_create_chore)).perform(click());
             onView(withId(R.id.text_create_chore)).check(matches(withText("please input the chore name and chore points")));
 
@@ -64,14 +64,14 @@ public class CreateChoreTest {
         try (ActivityScenario<ParentNavigation> ignored = ActivityScenario.launch(ParentNavigation.class)) {
             onView(withId(R.id.button_home_chore_list)).perform(click());
 
-            Thread.sleep(1);
+            Thread.sleep(250);
             onView(withId(R.id.verifyChoreRecyclerView))
                     .perform(actionOnItemAtPosition(0, TestViewAction.clickChildViewWithId(R.id.delete_icon)));
 
-            Thread.sleep(1);
+            Thread.sleep(250);
             onView(withText("Delete")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
 
-            Thread.sleep(1);
+            Thread.sleep(250);
             onView(withId(com.google.android.material.R.id.snackbar_text)).check(matches(withText("Delete successful")));
         } catch (InterruptedException e) {
             e.printStackTrace();
