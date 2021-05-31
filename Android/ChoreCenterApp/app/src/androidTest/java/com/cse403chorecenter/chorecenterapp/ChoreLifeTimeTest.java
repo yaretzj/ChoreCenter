@@ -47,11 +47,13 @@ public class ChoreLifeTimeTest {
             onView(withId(R.id.button_home_create_chore)).perform(click());
 
             // valid input
-            waitViewShown(withId(R.id.editCreateChoreName));
+            Thread.sleep(1);
             onView(withId(R.id.editCreateChoreName)).perform(typeText("test")).perform(closeSoftKeyboard());
             onView(withId(R.id.editCreateChorePoints)).perform(typeText("1000")).perform(closeSoftKeyboard());
             onView(withId(R.id.button_create_chore)).perform(click());
             onView(withId(R.id.text_create_chore)).check(matches(withText("CREATED")));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         // Complete the chore
@@ -59,11 +61,18 @@ public class ChoreLifeTimeTest {
             onView(withId(R.id.button_home_kid_submit_chore)).perform(click());
 
             // click submit
+            Thread.sleep(1);
             onView(withId(R.id.submitChoreRecyclerView))
                     .perform(actionOnItemAtPosition(0, TestViewAction.clickChildViewWithId(R.id.submitChoreBtn)));
+
+            Thread.sleep(1);
             onView(withText("Completed")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
+
+            Thread.sleep(1);
             waitViewShown(withId(com.google.android.material.R.id.snackbar_text));
             onView(withId(com.google.android.material.R.id.snackbar_text)).check(matches(withText("Submit successful")));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         // Verify the chore TODO: requires delete verified chore API to automate verify chore test
@@ -81,11 +90,18 @@ public class ChoreLifeTimeTest {
         try (ActivityScenario<ParentNavigation> ignored = ActivityScenario.launch(ParentNavigation.class)) {
             onView(withId(R.id.button_home_chore_list)).perform(click());
 
+            Thread.sleep(1);
             onView(withId(R.id.verifyChoreRecyclerView))
                     .perform(actionOnItemAtPosition(0, TestViewAction.clickChildViewWithId(R.id.delete_icon)));
+
+            Thread.sleep(1);
             onView(withText("Delete")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
+
+            Thread.sleep(1);
             waitViewShown(withId(com.google.android.material.R.id.snackbar_text));
             onView(withId(com.google.android.material.R.id.snackbar_text)).check(matches(withText("Delete successful")));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

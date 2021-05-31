@@ -42,11 +42,13 @@ public class RewardLifeTimeTest {
             onView(withId(R.id.button_home_create_reward)).perform(click());
 
             // valid input
-            waitViewShown(withId(R.id.editCreateReward));
+            Thread.sleep(1);
             onView(withId(R.id.editCreateReward)).perform(typeText("test")).perform(closeSoftKeyboard());
             onView(withId(R.id.editCreateRewardPoints)).perform(typeText("1000")).perform(closeSoftKeyboard());
             onView(withId(R.id.button_create_reward)).perform(click());
             onView(withId(R.id.text_create_reward)).check(matches(withText("CREATED")));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         // Redeem the reward TODO: requires delete redeemed reward API to automate redeem reward test
@@ -63,11 +65,18 @@ public class RewardLifeTimeTest {
         try (ActivityScenario<ParentNavigation> ignored = ActivityScenario.launch(ParentNavigation.class)) {
             onView(withId(R.id.button_home_all_rewards)).perform(click());
 
+            Thread.sleep(1);
             onView(withId(R.id.parentAllRewardHistoryRecyclerView))
                     .perform(actionOnItemAtPosition(0, TestViewAction.clickChildViewWithId(R.id.parentDeleteRewardBtn)));
+
+            Thread.sleep(1);
             onView(withText("Delete")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
+
+            Thread.sleep(1);
             waitViewShown(withId(com.google.android.material.R.id.snackbar_text));
             onView(withId(com.google.android.material.R.id.snackbar_text)).check(matches(withText("Delete successful")));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

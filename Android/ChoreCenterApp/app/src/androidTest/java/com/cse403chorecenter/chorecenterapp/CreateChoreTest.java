@@ -1,18 +1,10 @@
 package com.cse403chorecenter.chorecenterapp;
 
-import android.app.Application;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.View;
-import android.widget.ImageView;
 
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
-import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 
 import org.hamcrest.Matcher;
@@ -20,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -32,7 +23,6 @@ import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.instanceOf;
 
 @RunWith(AndroidJUnit4ClassRunner.class)
 public class CreateChoreTest {
@@ -47,12 +37,10 @@ public class CreateChoreTest {
     @Test
     public void testCreateChore() {
         try (ActivityScenario<ParentNavigation> ignored = ActivityScenario.launch(ParentNavigation.class)) {
-//            Application application = ApplicationProvider.getApplicationContext();
-//            SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(application);
             onView(withId(R.id.button_home_create_chore)).perform(click());
 
             // click without input
-            waitViewShown(withId(R.id.button_create_chore));
+            Thread.sleep(1);
             onView(withId(R.id.button_create_chore)).perform(click());
             onView(withId(R.id.text_create_chore)).check(matches(withText("please input the chore name and chore points")));
 
@@ -67,6 +55,8 @@ public class CreateChoreTest {
             onView(withId(R.id.editCreateChorePoints)).perform(clearText(), typeText("1000")).perform(closeSoftKeyboard());
             onView(withId(R.id.button_create_chore)).perform(click());
             onView(withId(R.id.text_create_chore)).check(matches(withText("CREATED")));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         // Important: Due to current unavailability of test database, we need to manually delete
@@ -74,11 +64,17 @@ public class CreateChoreTest {
         try (ActivityScenario<ParentNavigation> ignored = ActivityScenario.launch(ParentNavigation.class)) {
             onView(withId(R.id.button_home_chore_list)).perform(click());
 
+            Thread.sleep(1);
             onView(withId(R.id.verifyChoreRecyclerView))
                     .perform(actionOnItemAtPosition(0, TestViewAction.clickChildViewWithId(R.id.delete_icon)));
+
+            Thread.sleep(1);
             onView(withText("Delete")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
-            waitViewShown(withId(com.google.android.material.R.id.snackbar_text));
+
+            Thread.sleep(1);
             onView(withId(com.google.android.material.R.id.snackbar_text)).check(matches(withText("Delete successful")));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
