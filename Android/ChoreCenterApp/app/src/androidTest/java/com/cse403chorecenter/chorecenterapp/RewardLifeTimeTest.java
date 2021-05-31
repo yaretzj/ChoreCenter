@@ -66,8 +66,8 @@ public class RewardLifeTimeTest {
             onView(withId(R.id.parentAllRewardHistoryRecyclerView))
                     .perform(actionOnItemAtPosition(0, TestViewAction.clickChildViewWithId(R.id.parentDeleteRewardBtn)));
             onView(withText("Delete")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
-            waitViewShown(withId(R.id.snackbar_text));
-            onView(withId(R.id.snackbar_text)).check(matches(withText("Delete successful")));
+            waitViewShown(withId(com.google.android.material.R.id.snackbar_text));
+            onView(withId(com.google.android.material.R.id.snackbar_text)).check(matches(withText("Delete successful")));
         }
     }
 
