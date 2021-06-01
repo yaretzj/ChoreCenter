@@ -65,7 +65,6 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="84dp"
                 android:layout_marginEnd="9dp"
-                android:layout_toEndOf="@+id/verifyChoreBtn"
                 android:src="@drawable/ic_delete" />
         </RelativeLayout>
 
