@@ -11,7 +11,9 @@ Chores aren't fun, and parents often struggle to provide incentives for their ch
 
 ## Quickstart
 
-Our app is currently unavailable to the public, but will be on the Google Play store. This will be updated when it is released.
+We have an APK you can download and install to use the app! [(Latest version linked here)](https://github.com/yaretzj/ChoreCenter/releases/tag/v1.0.1)
+
+You can also find the different APK versions in our [GitHub Releases](https://github.com/yaretzj/ChoreCenter/releases).
 
 Check out our user setup and guide on the [wiki](https://github.com/yaretzj/ChoreCenter/wiki)!
 
@@ -28,7 +30,7 @@ More detailed repository structure can be found in the `Android` and `Backend` d
 * Reports directory: contains the weekly status reports that will be added throughout the quarter
 
 ## Instructions to Build, Run, and Test the Application
-Instructions to build, run, and test the mobile application and backend server can be found in the Android and Backend directories respectively.
+Instructions to build, run, and test the mobile application and backend server can be found in the [Android](https://github.com/yaretzj/ChoreCenter/tree/master/Android) and [Backend](https://github.com/yaretzj/ChoreCenter/tree/master/Backend) directories respectively.
 We are running an existing backend on a VM already that you can interact with using this url: http://chorecenter.westus2.cloudapp.azure.com
 
 ## Bug Tracking
