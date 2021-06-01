@@ -1,17 +1,20 @@
 """
     Flask Server
 """
-# from datetime import datetime
-from typing import Tuple
 from dotenv import load_dotenv
 from flask import abort, Flask, g, request
 import pyodbc
 
+from typing import Tuple
+from helpers import (
+    get_chores_helper,
+    get_parent_id_for_child,
+    get_rewards_helper,
+    validate_request_body,
+)
 from models.response_models import (
     ChoreModel,
     CreateParentResponseModel,
-    GetChoresResponseModel,
-    GetRewardsResponseModel,
     RewardRedemptionHistoryParentResponseModel,
     RewardRedemptionHistoryChildResponseModel,
     GetParentAccountResponseModel,
@@ -50,15 +53,6 @@ def close_db_conn(_):
     db_conn = g.pop("db_conn", None)
     if db_conn is not None:
         db_conn.close()
-
-
-@app.route("/")
-def hello_world():
-    """Dummy default path that returns "Hello World" when sent a GET request"""
-    # con, cur = get_db_conn()
-    # cur.execute("Select * from parents")
-    # print(cur.fetchall())
-    return "Hello, world!"
 
 
 @app.route("/api/parents/new", methods=["POST"])
@@ -263,16 +257,6 @@ def get_chores_parent():
     return get_chores_helper(cursor, body["GoogleAccountId"])
 
 
-def get_chores_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
-    """Helper function for GetChoresParent to get the chores given a parent account id."""
-    try:
-        cursor.execute(queries.get_chores_by_parent(), account_id)
-    except Exception as exc:
-        abort(500, str(exc))
-
-    return GetChoresResponseModel(cursor.fetchall()).get_response()
-
-
 # DeleteChore
 @app.route("/api/parents/chores/<chore_id>", methods=["DELETE"])
 def delete_chore(chore_id):
@@ -357,16 +341,6 @@ def get_rewards_parent():
     _, cursor = get_db_conn()
 
     return get_rewards_helper(cursor, body["GoogleAccountId"])
-
-
-def get_rewards_helper(cursor: pyodbc.Cursor, account_id: str) -> dict:
-    """Helper function for GetRewardsParent to get the rewards given a parent account id."""
-    try:
-        cursor.execute(queries.get_rewards_by_parent(), account_id)
-    except Exception as exc:
-        abort(500, str(exc))
-
-    return GetRewardsResponseModel(cursor.fetchall()).get_response()
 
 
 # DeleteReward
@@ -499,8 +473,6 @@ def create_child_account_txn(
         )
     else:
         return True
-    # finally:
-    #     db_conn.autocommit = True
 
 
 @app.route("/api/children/info", methods=["POST"])
@@ -533,7 +505,6 @@ def get_child():
     return GetChildAccountResponseModel(child_acc).get_response()
 
 
-# GetChoresChild
 @app.route("/api/children/chores", methods=["POST"])
 def get_chores_child():
     """GetChoresChild, Receives a POST request from the client
@@ -704,7 +675,7 @@ def redeem_reward_txn(db_conn, cursor, reward_id, child_account_id):
         remaining_points = int(child.Points) - int(reward.Points)
         cursor.execute(
             queries.update_child_points(),
-            remaining_points,
+            -int(reward.Points),
             child_account_id,
         )
         cursor.execute(
@@ -747,31 +718,3 @@ def get_redeemed_rewards_child():
         abort(404, str(exc))
 
     return RewardRedemptionHistoryChildResponseModel(cursor.fetchall()).get_response()
-
-
-def validate_request_body(fields: list, body: dict) -> bool:
-    """Check that the request body has all the fields specified in the fields argument."""
-    if not all(f in body for f in fields):
-        abort(400, "Incomplete request body")
-
-
-def get_parent_id_for_child(cursor: pyodbc.Cursor, child_account_id: str) -> str:
-    """Gets the corresponding parent id for a child's id."""
-    try:
-        cursor.execute(
-            queries.get_child_by_account_id(("ParentGoogleAccountId",)),
-            child_account_id,
-        )
-    except Exception as exc:
-        abort(400, str(exc))
-
-    child_res = cursor.fetchone()
-    if not child_res:
-        abort(404, "Child Account ID not found")
-
-    return child_res.ParentGoogleAccountId
-
-
-# cursor.execute("Select * from Parents")
-# res = cursor.fetchall()
-# print(res)
