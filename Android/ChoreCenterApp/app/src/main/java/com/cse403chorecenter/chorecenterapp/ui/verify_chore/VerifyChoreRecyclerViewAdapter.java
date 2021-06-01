@@ -212,7 +212,6 @@ public class VerifyChoreRecyclerViewAdapter extends RecyclerView.Adapter<VerifyC
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("GoogleAccountId", UserLogin.ACCOUNT_ID);
             jsonObj.put("Status", "Verified");
-            jsonObj.put("AssignedTo", UserLogin.ACCOUNT_ID);
             params[1] = jsonObj.toString();
             sh = (ServiceHandler) sh.execute(params);
 
