@@ -26,6 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * This is the reward history fragment activity for displaying all the reward redemption history
+ * for all the linked kid accounts of this parent account.
+ */
 public class RewardHistoryFragment extends Fragment {
 
     private static final String TAG = "RecyclerViewFragment";
@@ -46,7 +50,7 @@ public class RewardHistoryFragment extends Fragment {
         }
     }
 
-
+    /** Set up the recycler view adapter */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_reward_history, container, false);
@@ -62,12 +66,18 @@ public class RewardHistoryFragment extends Fragment {
         return view;
     }
 
+    /** Initializes the dataset */
     private void initDataset() throws FileNotFoundException {
         mDataset = new ArrayList<>();
         // use http request to get rewards
         getRewards();
     }
 
+    /**
+     * Uses a service handler to send an HTTP Post request for getting all the redeemed rewards
+     * created by this account {@code UserLogin.ACCOUNT_ID}.
+     * @return true on successful request, false on failed request
+     */
     private boolean getRewards() {
         try {
             // checking account status on the server
@@ -134,22 +144,19 @@ public class RewardHistoryFragment extends Fragment {
             this.redeemedTime = reedemedTime;
         }
 
+        // Java Bean class get methods
         public String getName() {
             return name;
         }
-
         public String getChildName() {
             return childName;
         }
-
         public String getDescription() {
             return description;
         }
-
         public String getId() {
             return id;
         }
-
         public String getRedeemedTime() {
             return redeemedTime;
         }

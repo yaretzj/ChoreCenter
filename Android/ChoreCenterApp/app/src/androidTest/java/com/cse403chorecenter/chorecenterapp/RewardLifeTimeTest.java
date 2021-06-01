@@ -1,6 +1,7 @@
 package com.cse403chorecenter.chorecenterapp;
 
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.IdlingRegistry;
@@ -12,8 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -23,9 +24,10 @@ import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.instanceOf;
 
 @RunWith(AndroidJUnit4ClassRunner.class)
-public class CreateChoreTest {
+public class RewardLifeTimeTest {
 
     @Before
     public void fillTestAccountInfo() {
@@ -35,43 +37,43 @@ public class CreateChoreTest {
     }
 
     @Test
-    public void testCreateChore() {
+    public void testCreateReward() {
         try (ActivityScenario<ParentNavigation> ignored = ActivityScenario.launch(ParentNavigation.class)) {
-            onView(withId(R.id.button_home_create_chore)).perform(click());
-
-            // click without input
-            Thread.sleep(250);
-            onView(withId(R.id.button_create_chore)).perform(click());
-            onView(withId(R.id.text_create_chore)).check(matches(withText("please input the chore name and chore points")));
-
-            // non-integer points input
-            onView(withId(R.id.editCreateChoreName)).perform(typeText("testing")).perform(closeSoftKeyboard());
-            onView(withId(R.id.editCreateChorePoints)).perform(typeText("1000.12")).perform(closeSoftKeyboard());
-            onView(withId(R.id.button_create_chore)).perform(click());
-            onView(withId(R.id.text_create_chore)).check(matches(withText("please input a number for the chore points")));
+            onView(withId(R.id.button_home_create_reward)).perform(click());
 
             // valid input
-            onView(withId(R.id.editCreateChoreName)).perform(clearText(), typeText("test")).perform(closeSoftKeyboard());
-            onView(withId(R.id.editCreateChorePoints)).perform(clearText(), typeText("1000")).perform(closeSoftKeyboard());
-            onView(withId(R.id.button_create_chore)).perform(click());
-            onView(withId(R.id.text_create_chore)).check(matches(withText("CREATED")));
+            Thread.sleep(250);
+            onView(withId(R.id.editCreateReward)).perform(typeText("test")).perform(closeSoftKeyboard());
+            onView(withId(R.id.editCreateRewardPoints)).perform(typeText("1000")).perform(closeSoftKeyboard());
+            onView(withId(R.id.button_create_reward)).perform(click());
+            onView(withId(R.id.text_create_reward)).check(matches(withText("CREATED")));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        // Important: Due to current unavailability of test database, we need to manually delete
-        // chores created for testing. This also passively tests the delete chore functionality.
+        // Redeem the reward TODO: requires delete redeemed reward API to automate redeem reward test
+//        try (ActivityScenario<KidNavigation> ignored = ActivityScenario.launch(KidNavigation.class)) {
+//            onView(withId(R.id.button_home_kid_redeem_reward)).perform(click());
+//
+//            // click redeem
+//            onView(withId(R.id.redeemRewardBtn)).perform(click());
+//            onView(withText("Redeem")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
+//            onView(withId(R.id.snackbar_text)).check(matches(withText("Redeem successful")));
+//        }
+
+        // Delete the reward
         try (ActivityScenario<ParentNavigation> ignored = ActivityScenario.launch(ParentNavigation.class)) {
-            onView(withId(R.id.button_home_chore_list)).perform(click());
+            onView(withId(R.id.button_home_all_rewards)).perform(click());
 
             Thread.sleep(250);
-            onView(withId(R.id.verifyChoreRecyclerView))
-                    .perform(actionOnItemAtPosition(0, TestViewAction.clickChildViewWithId(R.id.delete_icon)));
+            onView(withId(R.id.parentAllRewardHistoryRecyclerView))
+                    .perform(actionOnItemAtPosition(0, TestViewAction.clickChildViewWithId(R.id.parentDeleteRewardBtn)));
 
             Thread.sleep(250);
             onView(withText("Delete")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
 
             Thread.sleep(250);
+            waitViewShown(withId(com.google.android.material.R.id.snackbar_text));
             onView(withId(com.google.android.material.R.id.snackbar_text)).check(matches(withText("Delete successful")));
         } catch (InterruptedException e) {
             e.printStackTrace();

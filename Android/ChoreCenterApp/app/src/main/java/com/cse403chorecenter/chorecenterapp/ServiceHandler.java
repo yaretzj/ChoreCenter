@@ -10,12 +10,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * An Http Post request handler for asynchronous tasks.
+ * The {@code params} argument to {@code doInBackground} has first element
+ * as a url and the second element as the request body.
+ */
 public class ServiceHandler extends AsyncTask<String, Integer, String> {
     private static final String TAG = "ServiceHandler";
 
     @Override
     protected String doInBackground(String... params) {
         try {
+            // Set request properties
             URL url = new URL(params[0]);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
@@ -23,13 +29,14 @@ public class ServiceHandler extends AsyncTask<String, Integer, String> {
             con.setRequestProperty("Accept", "application/json");
             con.setDoOutput(true);
 
-            // write the post request
+            // Write the post request
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
             wr.writeBytes(params[1]);
             wr.flush();
             wr.close();
 
-            // get input stream
+            // Get response as stream if non-error code
+            // Otherwise return response code
             BufferedReader br = null;
             if (100 <= con.getResponseCode() && con.getResponseCode() <= 399) {
                 br = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -38,7 +45,7 @@ public class ServiceHandler extends AsyncTask<String, Integer, String> {
                 return String.valueOf(con.getResponseCode());
             }
 
-            // get input as String
+            // Get response as String
             StringBuilder response = new StringBuilder();
             String responseLine = null;
             while ((responseLine = br.readLine()) != null) {

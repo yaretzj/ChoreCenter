@@ -10,6 +10,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+/**
+ * This is the sign out activity for user account that has already signed in.
+ */
 public class UserSignout extends AppCompatActivity {
 
     @Override
@@ -17,7 +20,7 @@ public class UserSignout extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_signout);
 
-
+        // Get the Google Sign In client
         GoogleSignIn.getClient(this, UserLogin.GSO).signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
@@ -26,6 +29,7 @@ public class UserSignout extends AppCompatActivity {
                     }
                 });
 
+        // Go back to the choose account type activity
         Intent intent = new Intent(this, ChooseAccountType.class);
         startActivity(intent);
     }

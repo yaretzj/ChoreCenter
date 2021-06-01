@@ -1,5 +1,7 @@
 package com.cse403chorecenter.chorecenterapp.ui.submit_chore;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import com.cse403chorecenter.chorecenterapp.MainActivity;
 import com.cse403chorecenter.chorecenterapp.R;
 import com.cse403chorecenter.chorecenterapp.ServiceHandler;
 import com.cse403chorecenter.chorecenterapp.UserLogin;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,12 +101,15 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
     }
     // END_INCLUDE(recyclerViewOnBindViewHolder)
 
-    // Return the size of your dataset (invoked by the layout manager)
+    /** Return the size of your dataset (invoked by the layout manager) */
     @Override
     public int getItemCount() {
         return mDataSet.size();
     }
 
+    /**
+     * An inner class holding individual views inside the recycler view adapter.
+     */
     public static class ChoreViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName;
         TextView textViewDescription;
@@ -122,19 +128,37 @@ public class SubmitChoreRecyclerViewAdapter extends RecyclerView.Adapter<SubmitC
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "Clicked chore id: " + ChoreId);
-                    // Send the http request
 
-                    // submit chore
-                    if (submitChore(ChoreId)) {
-                        completeChoreBtn.setEnabled(false);
-                        completeChoreBtn.setText("Completed");
-                    }
+                    // submit chore alert
+                    new AlertDialog.Builder(v.getContext())
+                            .setTitle("Complete Chore")
+                            .setMessage("Are you sure you have completed " + textViewName.getText())
+                            .setPositiveButton("Completed", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // submit chore
+                                    View view = itemView.findViewById(R.id.submitChoreTV);
+                                    if (submitChore(ChoreId)) {
+                                        completeChoreBtn.setEnabled(false);
+                                        completeChoreBtn.setText("Completed");
+                                        Snackbar.make(view, R.string.submit_pop_up_success, Snackbar.LENGTH_SHORT)
+                                                .show();
+                                    } else {
+                                        Snackbar.make(view, R.string.submit_pop_up_failed, Snackbar.LENGTH_SHORT)
+                                                .show();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Cancel", null).show();
                 }
             });
         }
     }
 
-    /** submit a chore for the kid account */
+    /**
+     * Uses service handler to process an asynchronous HTTP Post request
+     * to submit a completed chore for the kid account.
+     */
     public static boolean submitChore(String choreId) {
         try {
             // checking account status on the server

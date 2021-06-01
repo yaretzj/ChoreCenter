@@ -14,6 +14,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.cse403chorecenter.chorecenterapp.R;
 
+/**
+ * This is an in-progress activity for providing a slideshow of tutorial to both
+ * efficiently and effectively introduce new users to the functionalities of the app.
+ */
 public class SlideshowFragment extends Fragment {
 
     private SlideshowViewModel slideshowViewModel;

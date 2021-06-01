@@ -25,6 +25,9 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
+/**
+ * This is the fragment activity for parent account to create rewards.
+ */
 public class CreateRewardFragment extends Fragment {
 
     @Override

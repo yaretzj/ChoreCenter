@@ -37,6 +37,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * This is the fragment activity for parent account to create chores.
+ */
 public class CreateChoreFragment extends Fragment {
     private CreateChoreViewModel createChoreViewModel;
 

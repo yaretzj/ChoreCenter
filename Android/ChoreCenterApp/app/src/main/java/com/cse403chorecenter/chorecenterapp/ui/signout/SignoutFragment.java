@@ -20,6 +20,9 @@ import com.cse403chorecenter.chorecenterapp.R;
 import com.cse403chorecenter.chorecenterapp.UserLogin;
 import com.cse403chorecenter.chorecenterapp.UserSignout;
 
+/**
+ * This is the sign out fragment activity for users that are on the navigation page.
+ */
 public class SignoutFragment extends Fragment {
 
 

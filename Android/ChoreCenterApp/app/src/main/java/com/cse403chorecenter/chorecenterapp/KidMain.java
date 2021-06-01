@@ -13,6 +13,9 @@ import androidx.cardview.widget.CardView;
 
 import android.view.View;
 
+/**
+ * An in-progress main page designed for the kid account.
+ */
 public class KidMain extends AppCompatActivity implements View.OnClickListener {
     public CardView card1;
 

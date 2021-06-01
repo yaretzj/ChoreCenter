@@ -35,21 +35,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * This is the redeem reward fragment activity that can be used for kid account to redeem rewards
+ * created by the linked parent account.
+ */
 public class RedeemRewardFragment extends Fragment {
     private static final String TAG = "RecyclerViewFragment";
-    private static final String KEY_LAYOUT_MANAGER = "layoutManager";
-    private static final int SPAN_COUNT = 2;
 
+    // Two possible types of layout
     private enum LayoutManagerType {
         GRID_LAYOUT_MANAGER,
         LINEAR_LAYOUT_MANAGER
     }
 
+    // Views
     protected LayoutManagerType mCurrentLayoutManagerType;
-
-    protected RadioButton mLinearLayoutRadioButton;
-    protected RadioButton mGridLayoutRadioButton;
-
     protected RecyclerView mRecyclerView;
     protected RedeemRewardRecyclerViewAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
@@ -85,6 +85,7 @@ public class RedeemRewardFragment extends Fragment {
 
         mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
 
+        // Used to implement possibly a Grid layout
 //        if (savedInstanceState != null) {
 //            // Restore saved layout manager type.
 //            mCurrentLayoutManagerType = (LayoutManagerType) savedInstanceState
@@ -129,22 +130,19 @@ public class RedeemRewardFragment extends Fragment {
             this.numberOfRedemptions = numberOfRedemptions;
         }
 
+        // Java Bean class get methods
         public String getName() {
             return name;
         }
-
         public String getPoints() {
             return points;
         }
-
         public String getDescription() {
             return description;
         }
-
         public String getId() {
             return id;
         }
-
         public int getNumberOfRedemptions() {
             return numberOfRedemptions;
         }
@@ -162,7 +160,11 @@ public class RedeemRewardFragment extends Fragment {
         }
     }
 
-    /** Get all the rewards created by the parent */
+    /**
+     * Uses a service handler to send an HTTP Post request for getting all the rewards
+     * created by the linked parent account.
+     * @return true on successful request, false on failed request
+     */
     public boolean getRewards() {
         try {
             // checking account status on the server
@@ -211,7 +213,12 @@ public class RedeemRewardFragment extends Fragment {
         return false;
     }
 
-    /** Get all the redeemed rewards created by the parent */
+    /**
+     * Uses a service handler to send an HTTP Post request for getting all the redeemed rewards
+     * created by the linked parent account. The redeemed rewards are used to
+     * update the dataset for displaying number of redemptions.
+     * @return true on successful request, false on failed request
+     */
     public boolean getRedeemedRewards() {
         try {
             // checking account status on the server

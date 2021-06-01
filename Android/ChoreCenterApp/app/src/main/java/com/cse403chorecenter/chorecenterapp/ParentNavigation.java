@@ -17,6 +17,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+/**
+ * This is the main activity for parent account to navigate among available functionalities.
+ * The functionalities are currently available through the drawer.
+ */
 public class ParentNavigation extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
@@ -27,14 +31,17 @@ public class ParentNavigation extends AppCompatActivity {
         setContentView(R.layout.activity_parent_navigation);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+        // TODO: Add email functionality to the floating button
+//        FloatingActionButton fab = findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.parent_nav_view);
         View headerLayout = navigationView.getHeaderView(0);

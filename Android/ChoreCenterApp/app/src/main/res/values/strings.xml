@@ -61,6 +61,8 @@
 
     <!-- Literals from complete chore. -->
     <string name="button_submit">Complete</string>
+    <string name="submit_pop_up_failed">Submit failed</string>
+    <string name="submit_pop_up_success">Submit successful</string>
 
     <!-- Literals from verify chore. -->
     <string name="button_verify">Verify</string>
@@ -77,5 +79,6 @@
     <string name="linear_layout_manager">Linear Layout Manager</string>
     <string name="element_text">Element</string>
     <string name="delete">Delete</string>
+    <string name="version">version v1.0.0</string>
 
 </resources>

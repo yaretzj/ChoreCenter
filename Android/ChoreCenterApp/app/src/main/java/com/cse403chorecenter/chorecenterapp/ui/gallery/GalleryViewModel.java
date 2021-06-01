@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+/**
+ * This is a view model used by the gallery fragment class.
+ */
 public class GalleryViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;

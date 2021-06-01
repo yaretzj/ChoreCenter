@@ -18,6 +18,11 @@ import androidx.navigation.Navigation;
 
 import com.cse403chorecenter.chorecenterapp.R;
 
+/**
+ * The home fragment activity for parent account.
+ * A convenient way for parent users to navigate to all available functionalities of the app.
+ * This will be the main playground for users after incorporating graphics, animations and music.
+ */
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
@@ -34,6 +39,8 @@ public class HomeFragment extends Fragment {
                 textView.setText(s);
             }
         });
+
+        // The Following are all the buttons to every available functionality for parent accounts.
 
         // Create Chore
         Button bCreateChore = (Button) view.findViewById(R.id.button_home_create_chore);

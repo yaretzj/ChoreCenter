@@ -1,9 +1,7 @@
 package com.cse403chorecenter.chorecenterapp.ui.verify_chore;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,6 +112,9 @@ public class VerifyChoreRecyclerViewAdapter extends RecyclerView.Adapter<VerifyC
         return mDataSet.size();
     }
 
+    /**
+     * An inner class holding individual views inside the recycler view adapter.
+     */
     public static class ChoreViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName;
         TextView textViewDescription;
@@ -132,6 +133,8 @@ public class VerifyChoreRecyclerViewAdapter extends RecyclerView.Adapter<VerifyC
             textViewStatus = itemView.findViewById(R.id.verifyChoreTV3);
             verifyChoreBtn = itemView.findViewById(R.id.verifyChoreBtn);
             deleteIcon = itemView.findViewById(R.id.delete_icon);
+
+            // Set onclick event for verify chore button
             verifyChoreBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -159,20 +162,46 @@ public class VerifyChoreRecyclerViewAdapter extends RecyclerView.Adapter<VerifyC
                             .setNegativeButton("Cancel", null).show();
                 }
             });
+
+            // Set onclick event for deleteIcon
             deleteIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "Clicked delete chore: " + ChoreId);
-                    if (listener != null && deleteChore(ChoreId)) {
-                        int position = getAdapterPosition();
-                        listener.onDeleteClick(position);
-                    }
+
+                    // delete chore alert
+                    new AlertDialog.Builder(v.getContext())
+                            .setTitle("Delete Chore")
+                            .setMessage("Are you sure you want delete " + textViewName.getText())
+                            .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // delete chore
+                                    View view = itemView.findViewById(R.id.verifyChoreTV);
+                                    if (listener != null && deleteChore(ChoreId)) {
+                                        // delete the item
+                                        int position = getAdapterPosition();
+                                        listener.onDeleteClick(position);
+
+                                        Snackbar.make(view, R.string.delete_pop_up_success, Snackbar.LENGTH_SHORT)
+                                                .show();
+                                    } else {
+                                        Snackbar.make(view, R.string.delete_pop_up_failed, Snackbar.LENGTH_SHORT)
+                                                .show();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Cancel", null).show();
                 }
             });
         }
     }
 
-    /** submit a chore for the kid account */
+    /**
+     * Uses service handler to send an asynchronous HTTP Post request to submit a completed chore.
+     * @param choreId the id of the chore that is completed
+     * @return true on sucess and false on failure
+     */
     public static boolean verifyChore(String choreId) {
         try {
             // checking account status on the server
@@ -206,6 +235,11 @@ public class VerifyChoreRecyclerViewAdapter extends RecyclerView.Adapter<VerifyC
         return false;
     }
 
+    /**
+     * Uses service handler to send an asynchronous HTTP Delete request to delete an un-verified chore.
+     * @param choreId the id of the chore to be deleted
+     * @return true on sucess and false on failure
+     */
     public static boolean deleteChore(String choreId) {
         try {
             // checking account status on the server

@@ -18,6 +18,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+/**
+ * This is the main activity for kid account to navigate among available functionalities.
+ * The functionalities are currently available through the drawer.
+ */
 public class KidNavigation extends AppCompatActivity  {
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -27,6 +31,8 @@ public class KidNavigation extends AppCompatActivity  {
         setContentView(R.layout.activity_kid_navigation);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // TODO: Add email functionality to the floating button
 //        FloatingActionButton fab = findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -35,6 +41,7 @@ public class KidNavigation extends AppCompatActivity  {
 //                        .setAction("Action", null).show();
 //            }
 //        });
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.kid_nav_view);
         View headerLayout = navigationView.getHeaderView(0);
