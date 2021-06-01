@@ -1,14 +1,17 @@
 package com.cse403chorecenter.chorecenterapp.ui.create_chore;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,6 +52,12 @@ public class CreateChoreFragment extends Fragment {
         EditText editChoreDesc = (EditText) view.findViewById(R.id.editChoreDescription);
 
 
+        // context and duration for the Toast
+        Context context = getActivity().getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        int yOffset = 70;
+
+
         Button button = (Button) view.findViewById(R.id.button_create_chore);
         button.setOnClickListener(new View.OnClickListener()
         {
@@ -58,6 +67,10 @@ public class CreateChoreFragment extends Fragment {
                 if (editChoreName == null || editChoreName.getText().toString().isEmpty()
                                 || editChorePoints == null || editChorePoints.getText().toString().isEmpty()) {
                     textView.setText("please input the chore name and chore points");
+
+                    Toast toastMessage = Toast.makeText(context, "Please input the chore name and chore points", duration);
+                    toastMessage.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, yOffset);
+                    toastMessage.show();
                     return;
                 }
 
@@ -79,6 +92,9 @@ public class CreateChoreFragment extends Fragment {
                     editChoreDesc.setText("");
                 } catch (NumberFormatException e) {
                     textView.setText("please input a number for the chore points");
+                    Toast toastMessage = Toast.makeText(context, "Please input a number for the chore points", duration);
+                    toastMessage.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, yOffset);
+                    toastMessage.show();
                     return;
                 }
                 // input checks passed
@@ -102,6 +118,9 @@ public class CreateChoreFragment extends Fragment {
                     String response = networkRequest.get();
                     if(response != null) {
                         textView.setText(response);
+                        Toast toastMessage = Toast.makeText(context, response, duration);
+                        toastMessage.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, yOffset);
+                        toastMessage.show();
                     } else
                         textView.setText("failed");
                 } catch (ExecutionException e) {

@@ -1,13 +1,16 @@
 package com.cse403chorecenter.chorecenterapp.ui.create_reward;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -35,6 +38,12 @@ public class CreateRewardFragment extends Fragment {
         // Reward description can be null or empty
         EditText editRewardDesc = (EditText) view.findViewById(R.id.editRewardDescription);
 
+
+        // context and duration for the Toast
+        Context context = getActivity().getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        int yOffset = 130;
+
         Button button = (Button) view.findViewById(R.id.button_create_reward);
         button.setOnClickListener(new View.OnClickListener()
         {
@@ -44,6 +53,9 @@ public class CreateRewardFragment extends Fragment {
                 if(editRewardName == null || editRewardName.getText().toString().isEmpty()
                         || editRewardPoints == null || editRewardPoints.getText().toString().isEmpty()) {
                     textView.setText("please input both fields");
+                    Toast toastMessage = Toast.makeText(context, "Please input both fields", duration);
+                    toastMessage.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, yOffset);
+                    toastMessage.show();
                     return;
                 }
 
@@ -65,6 +77,9 @@ public class CreateRewardFragment extends Fragment {
                     editRewardDesc.setText("");
                 } catch (NumberFormatException e) {
                     textView.setText("please input a number for the reward points");
+                    Toast toastMessage = Toast.makeText(context, "please input a number for the reward points", duration);
+                    toastMessage.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, yOffset);
+                    toastMessage.show();
                     return;
                 }
 
@@ -89,6 +104,9 @@ public class CreateRewardFragment extends Fragment {
                     String response = networkRequest.get();
                     if(response != null) {
                         textView.setText(response);
+                        Toast toastMessage = Toast.makeText(context, response, duration);
+                        toastMessage.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, yOffset);
+                        toastMessage.show();
                     } else
                         textView.setText("failed");
                 } catch (ExecutionException e) {
