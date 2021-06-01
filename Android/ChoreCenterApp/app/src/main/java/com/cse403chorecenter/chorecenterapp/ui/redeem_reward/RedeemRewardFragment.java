@@ -19,6 +19,7 @@ import com.cse403chorecenter.chorecenterapp.MainActivity;
 import com.cse403chorecenter.chorecenterapp.R;
 import com.cse403chorecenter.chorecenterapp.ServiceHandler;
 import com.cse403chorecenter.chorecenterapp.ui.submit_chore.SubmitChoreFragment;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -181,13 +182,18 @@ public class RedeemRewardFragment extends Fragment {
             try {
                 String response = sh.get();
 
-                if(response != null) {
+                if(response != null && response != "") {
                     Log.i(TAG, response);
                     JSONObject jsonResponseObject = new JSONObject(response);
 
                     try {
                         // Getting JSON Array node
                         JSONArray chores = jsonResponseObject.getJSONArray("Rewards");
+
+                        if (chores.length() == 0) {
+                            Snackbar.make(getActivity().findViewById(android.R.id.content), "No rewards found", Snackbar.LENGTH_SHORT)
+                                    .show();
+                        }
 
                         // looping through All Rewards
                         for (int i = 0; i < chores.length(); i++) {
@@ -201,6 +207,8 @@ public class RedeemRewardFragment extends Fragment {
 
                     return !response.equals("404") && !response.equals("500") && !response.equals("400");
                 } else
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Error loading page please refresh", Snackbar.LENGTH_SHORT)
+                            .show();
                     return false;
             } catch (ExecutionException e) {
                 Log.e(TAG, "Async execution error: " + e.getMessage());
