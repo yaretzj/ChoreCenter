@@ -18,6 +18,7 @@ import com.cse403chorecenter.chorecenterapp.ServiceHandler;
 import com.cse403chorecenter.chorecenterapp.SubmitChore;
 import com.cse403chorecenter.chorecenterapp.ui.redeem_reward.RedeemRewardRecyclerViewAdapter;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -207,13 +208,18 @@ public class SubmitChoreFragment extends Fragment {
             try {
                 String response = sh.get();
 
-                if(response != null) {
+                if(response != null && response != "") {
                     Log.i(TAG, response);
                     JSONObject jsonResponseObject = new JSONObject(response);
 
                     try {
                         // Getting JSON Array node
                         JSONArray chores = jsonResponseObject.getJSONArray("Chores");
+
+                        if (chores.length() == 0) {
+                            Snackbar.make(getActivity().findViewById(android.R.id.content), "No chores found", Snackbar.LENGTH_SHORT)
+                                    .show();
+                        }
 
                         // looping through All Rewards
                         for (int i = 0; i < chores.length(); i++) {
@@ -227,6 +233,8 @@ public class SubmitChoreFragment extends Fragment {
 
                     return !response.equals("404") && !response.equals("500") && !response.equals("400");
                 } else
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Error loading page please refresh", Snackbar.LENGTH_SHORT)
+                            .show();
                     return false;
             } catch (ExecutionException e) {
                 Log.e(TAG, "Async execution error: " + e.getMessage());
