@@ -11,7 +11,7 @@ Chores aren't fun, and parents often struggle to provide incentives for their ch
 
 ## Quickstart
 
-We have an APK you can download and install to use the app! [(Latest version linked here)](https://github.com/yaretzj/ChoreCenter/releases/tag/v1.0.1)
+We have an APK you can download and install to use the app! [(Latest version linked here)](https://github.com/yaretzj/ChoreCenter/releases/tag/v1.0.2)
 
 You can also find the different APK versions in our [GitHub Releases](https://github.com/yaretzj/ChoreCenter/releases).
 
