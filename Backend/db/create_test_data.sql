@@ -10,9 +10,11 @@ DELETE FROM Parents WHERE GoogleAccountId = 'TestParent';
 
 INSERT INTO Parents("Name", "Email", "GoogleTokenId", "GoogleAccountId", "ParentCode") VALUES ('Test Parent', 'chorecenter@gmail.com', 'TestParent', 'TestParent', 'd7abc322-e627-4b09-bd51-9da55599b7ea');
 
-INSERT INTO Parents ("Name", "Email", "GoogleTokenId", "GoogleAccountId", "ParentCode") VALUES ("Chore Center", "chorecenter@gmail.com", "exp_token", "118319520083633732066", "d5f6c648-d4cf-4f0e-ae11-d1e61c")
+INSERT INTO Children("Name", "Email", "ParentGoogleAccountId", "GoogleTokenId", "GoogleAccountId", "Points") VALUES ('Test Child', 'chorecenter@gmail.com', 'TestParent', 'TestChild', 'TestChild', 9999999);
 
-INSERT INTO Children("Name", "Email", "ParentGoogleAccountId", "GoogleTokenId", "GoogleAccountId", "Points") VALUES ('Test Child', 'chorecenter@gmail.com', 'TestParent', 'TestChild', 'TestChild', 9999999)
+INSERT INTO Parents ("Name", "Email", "GoogleTokenId", "GoogleAccountId", "ParentCode") VALUES ('Chore Center', 'chorecenter@gmail.com', 'exp_token', 'frontend_test', '5c027049-2608-4512-be3d-66465');
+
+INSERT INTO Children("Name", "Email", "ParentGoogleAccountId", "GoogleTokenId", "GoogleAccountId", "Points") VALUES ('Chore Center', 'chorecenter@gmail.com', 'frontend_test', 'exp_token', 'frontend_test', 0);
 
 INSERT INTO Chores("ChoreId", "ParentGoogleAccountId", "Name", "Description", "Status", "AssignedTo", "Points") VALUES ('42CA0914-2A14-4096-8931-A64494719FB6', 'TestParent', 'Sweep the Floor', 'Location: Kitchen', 'Created', null, 500);
 
