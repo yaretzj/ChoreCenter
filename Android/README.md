@@ -53,6 +53,8 @@ Directory Structure:
 
 ### Testing Instructions
 
+### Important: If you choose to use your own database for testing, in order for the instrumented tests to work, make sure to firstly populate your database using the SQL query in `ChoreCenter/Backend/db/create_test_data.sql`.
+
 #### How to run the tests?
 From the `ChoreCenterApp` directory, run `./gradlew check` to execute all verification tasks, including tests and linting. To only execute tests, run `./gradlew test`.
 
