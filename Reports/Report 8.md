@@ -77,13 +77,13 @@
 
     - #### Progress and Issues
         - **Progress**
-            - 
+            - fixed the open issue with delete icon to be same size
 
         - **Issues**
-            - 
+            - the size is set to be the same, but one looks smaller than the other one in different page. found the issue was related the same layout as the button. 
     
     - #### Plans and Goals
-        - 
+        - personal reflection
 
 
 - ### Yixiao
