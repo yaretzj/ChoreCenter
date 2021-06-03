@@ -111,10 +111,11 @@
 
     - #### Progress and Issues
         - **Progress**
-            - 
+            - Notifies user when there is empty array/end of stream exception
+            - added Toast to createChore/Reward
 
         - **Issues**
-            - 
+            - I had an issue with the layout of the snackbar so I used a toast instead.
 
     - #### Plans and Goals
         - 
