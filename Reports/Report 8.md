@@ -54,13 +54,15 @@
 
     - #### Progress and Issues
         - **Progress**
-            - 
+            - Got a working APK
+            - Edited and recorded the presentation
+            - Tested the app and stress tested for bugs
 
         - **Issues**
-            - 
+            - Found some bugs, but got those sorted
 
     - #### Plans and Goals
-        - 
+        - Do the personal reflection and maybe add a couple small features
         
         
 - ### Truc
