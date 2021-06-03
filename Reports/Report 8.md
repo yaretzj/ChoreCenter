@@ -8,8 +8,10 @@
 - ### Progress and Issues
     - **Progress**
         - Recorded final video and presentation
-        - Fixed some bugs discovered during presenting
-
+        - Bug fixes 
+        - Added more features to frontend
+        - Set up instrumented tests for frontend
+        - More documentation and comments
     - **Issues**
         - Annoying bugs popped up at end that took a while to squash
 - ### Plans and Goals
@@ -39,13 +41,16 @@
 
     - #### Progress and Issues
         - **Progress**
-            - 
+            - Worked on demo & presentation
+            - Fixed redeem reward api bug
+            - Refactored helpers out of main flask app script
+            - Installed app APK and did user testing
 
         - **Issues**
             - None
     
     - #### Plans and Goals
-        - 
+        - Attend final meeting
 
 - ### Jaden
     - #### Past Goals
